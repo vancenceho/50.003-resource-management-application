@@ -39,9 +39,29 @@ cd 50.003-resource-management-application
 npm i
 ```
 
-4. Configure the database connections and other environment variables.
+#### For `FRONTEND-DEVELOPMENT` **ONLY**
 
-5. Start the application:
+```shell
+cd frontend-service/react-res-management-app
+```
+
+4. Develop UI/UX in `[PROJECT_DIR]/frontend-service`
+
+5. Open Terminal and run:
+
+```shell
+npm start
+```
+
+`REACT` should host the static webpage on `localhost:3000/30001` defined in `.ENV`, depending if you have **Express.js** ran.
+
+#### For `BACKEND-DEVELOPMENT`
+
+All required folders exists in `[PROJECT_DIR]`.
+
+6. Develop **APIs** for **CRUD** functionality to `MongoDB`
+
+7. Test **APIs** by running **Express.js** server as follow in `[PROJECT_DIR]`
 
 ```shell
 npm start
