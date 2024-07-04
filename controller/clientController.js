@@ -1,4 +1,4 @@
-const User = require('../models/Post.js'); 
+const User = require('../models/client.js'); 
 const bcrypt = require('bcrypt');
 
 // Controller function to create and save new user
@@ -6,15 +6,12 @@ exports.createUser = async (req, res) => {
     try {
         console.log(req.body);
         const { firstName, lastName, userName, password, email } = req.body;
-        console.log("TESTING=.at.................");
         // Validate that all required fields are provided
         if (!firstName || !lastName || !userName || !password || !email) {
             return res.status(400).json({ message: 'All fields are required' });
         }
-        console.log("TESTING...............1at.................");
         // Hash the password before saving
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
-        console.log("TESTING...............3at.................");
 
         // Check if a user with the same userName already exists
         const existingUser = await User.findOne({ userName: userName });
@@ -47,18 +44,6 @@ exports.createUser = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
-
-/*exports.createUser = async (req, res) => {
-    try {
-        const user = await User.create(req.body);
-        res.status(201).json(user);
-    } catch (error){
-        console.error('Error creating user:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
-    
-    }
-};*/
-
 
 // Controller function to get all users
 exports.getAllUsers = async (req, res) => {
