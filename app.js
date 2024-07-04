@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var process = require('process');
-var { connectDB, db, cleanup }  = require('./models/db.js');
+var { connectDB, cleanup }  = require('./models/db.js');
 
 
 
@@ -16,7 +16,7 @@ var app = express();
 
 
 app.use('/', indexRouter);
-app.use('/getUsers', usersRouter);
+app.use('/users', usersRouter);
 app.use('/client', clientRouter);
 
 // Connect to MongoDB
@@ -33,20 +33,15 @@ connectDB().then(() => {
   });
 });
 
-
-app.get('/test', (req, res) => {
-  console.log('TESTING');
-  res.send('Test route accessed');
-});
-
-
+ 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+// Middleware to parse URL-encoded bodies
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 

@@ -5,7 +5,7 @@ var router = express.Router();
 const mongoose = require('mongoose');
 
 // Middleware to parse JSON bodies
-// router.use(express.json());
+router.use(express.json());
 
 // POST request to add a new department
 router.post('/', async function(req, res, next) {
@@ -41,7 +41,7 @@ router.post('/', async function(req, res, next) {
 
 
 /* GET all clients */
-router.get('/all', async function(req, res, next) {
+router.get('/', async function(req, res, next) {
     try {
         const clients = await clientmodel.find({}, 'userID'); // Only return the userID
         res.json(clients);
