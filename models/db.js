@@ -7,8 +7,6 @@ const connection_str = "mongodb://root:example@localhost:27017/";
 const dbName = "dell-mongodb";
 const source = "?authSource=admin";
 
-var db = null;
-
 const connectDB = async () => {
   try {
     mongoose.set("strictQuery", false);
