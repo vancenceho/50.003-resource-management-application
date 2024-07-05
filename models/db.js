@@ -18,7 +18,7 @@ const connectDB = async () => {
 }
 
 async function cleanup() {
-  await client.disconnect();
+  await mongoose.disconnect();
 }
 
 module.exports = connectDB;
