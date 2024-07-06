@@ -55,5 +55,16 @@ exports.getAllTrainers = async (req, res) => {
     }
 };
 
-// Additional controller functions can be added here for other CRUD operations
+// getTrainer details
 
+/*exports.getTrainerDetails = async (req, res) => {
+    try{
+        const trainer = await Trainer.findById(req.params.id);
+        res.status(201).json(trainer);
+    }*/
+
+//updateAllocation
+//checkscheduleconflicts
+//getTrainerList
+//markWorkoutAsComplete
+//submitLeaveRequest
