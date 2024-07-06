@@ -1,20 +1,26 @@
-const MongoClient = require("mongodb").MongoClient;
+const mongoose = require('mongoose');
 
 const connection_str = "mongodb://root:example@localhost:27017/";
 
-const client = new MongoClient(connection_str);
-const dbName = "dell-mongodb";
+const connectDB = async () => {
+  
+  try {
+    mongoose.set('strictQuery', false);
+    // Establishes connection to the MongoDB server
+    const conn = await mongoose.connect(connection_str);
+    console.log(`Database Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.error("Database connection failed: ", error);
+    //console.log(error);
+    process.exit(1);
+  }
 
-var db = null;
-
-try {
-  db = client.db(dbName);
-} catch (error) {
-  console.error("database connection failed. " + error);
 }
 
 async function cleanup() {
-  await client.disconnect();
+  await mongoose.disconnect();
 }
 
-module.exports = { db, cleanup };
+module.exports = connectDB;
+
+module.exports = { connectDB,  cleanup };

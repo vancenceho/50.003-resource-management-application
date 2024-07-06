@@ -63,6 +63,7 @@ All required folders exists in `[PROJECT_DIR]`.
 
 7. Test **APIs** by running **Express.js** server as follow in `[PROJECT_DIR]`
 
+
 ```shell
 npm start
 ```
