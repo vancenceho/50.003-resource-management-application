@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const workshopRequestController = require("../controller/workshopRequest");
+const workshopManagementController = require("../controller/workshopManagement");
 
-router.get("/", workshopRequestController.getWorkshopRequests);
-//router.get("/:id", workshopRequestController.getWorkshopRequest);
-router.post("/add/", workshopRequestController.createWorkshopRequest);
-router.put("/update/", workshopRequestController.updateWorkshopRequest);
-router.delete("/delete/", workshopRequestController.deleteWorkshopRequest);
+router.get("/", workshopManagementController.getWorkshopRequests);
+router.get("/get/", workshopManagementController.getWorkshopRequestById);
+router.post("/add/", workshopManagementController.createWorkshopRequest);
+router.put("/update/", workshopManagementController.updateWorkshopRequest);
+router.delete("/delete/", workshopManagementController.deleteWorkshopRequest);
 
 module.exports = router;
