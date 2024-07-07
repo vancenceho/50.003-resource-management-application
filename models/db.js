@@ -11,7 +11,9 @@ const connectDB = async () => {
   try {
     mongoose.set("strictQuery", false);
     const conn = await mongoose.connect(connection_str + dbName + source);
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    console.log(
+      `MongoDB Connected @ ${conn.connection.host}:${conn.connection.port}`
+    );
   } catch (err) {
     console.error("MongoDB Connection Failed: ", err);
     process.exit(1);
