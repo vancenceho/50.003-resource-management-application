@@ -75,6 +75,7 @@ exports.getWorkshopRequestById = async (req, res) => {
  */
 exports.createWorkshopRequest = async (req, res) => {
   try {
+    console.log("TESTING...............5at.................");
     const workshop = new Workshop({
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
@@ -88,10 +89,12 @@ exports.createWorkshopRequest = async (req, res) => {
       maxParticipants: req.body.maxParticipants,
       trainerId: req.body.trainerId,
     });
-
+    console.log("TESTING...............6at.................");
     const data = await workshop.save();
+    console.log("TESTING...............7at.................");
     console.log("Workshop request created: ", data);
     res.status(201).json(data);
+   
   } catch (error) {
     console.log("Error creating workshop request: ", error);
     if (!res.headersSent) {
@@ -120,6 +123,8 @@ exports.deleteWorkshopRequest = async (req, res) => {
   try {
     const id = req.query.id;
     const data = await Workshop.findByIdAndDelete(id);
+    console.log(id);  
+    console.log(data);  
     if (!data) {
       res.status(404).json({ message: "Workshop not found" });
     }

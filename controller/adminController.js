@@ -20,7 +20,7 @@ exports.createAdmin = async (req, res) => {
         // Check if a user with the same userName already exists
         const existingAdmin = await Admin.findOne({ name: name });
         if (existingAdmin) {
-            return res.status(409).json({ message: 'Insert Full Name' });
+            return res.status(409).json({ message: 'Admin already exist' });
         }
         
         // Create a new user instance
@@ -41,7 +41,7 @@ exports.createAdmin = async (req, res) => {
             })
             .catch(err => {
                 res.status(500).send({
-                    message: err.message || 'Some error occurred while creating the user.'
+                    message: err.message || 'Some error occurred while creating the admin.'
                 });
             });
     } catch (error) {
@@ -64,9 +64,9 @@ exports.Adminlogin = async (req, res) => {
       console.log("TESTING...............2at.................");
       const token = jwt.sign(
         {
-          email: admin.email,
-          userId: admin._id,
-        },
+            role: admin.role, 
+            userId: admin._id,
+          },
         secretKey,
         {
           expiresIn: "1h",

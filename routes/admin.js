@@ -5,14 +5,14 @@ const workshopController = require("../controller/workshopManagement");
 const adminController = require("../controller/adminController");
 
 // Middleware functions
-//const {authenticateUser, authorizeRole} = require('../middleware/auth');
+const {authenticateUser, authorizeRole} = require('../middleware/auth');
 
 // Example routes with authentication and authorization
 router.post("/createadmin", adminController.createAdmin);
 router.get("/adminlogin", adminController.Adminlogin);
-router.get("/getadmin", adminController.getAllAdmin); //not working yet as need adminlogin first 
+router.get("/getadmin", adminController.getAllAdmin); 
 
-/*
+
 router.get("/", authenticateUser, authorizeRole('admin'), workshopController.getWorkshopRequests);
 
 router.get("/get/:id", authenticateUser, authorizeRole('admin'), workshopController.getWorkshopRequestById);
@@ -21,6 +21,6 @@ router.post("/add", authenticateUser, authorizeRole('admin'), workshopController
 
 router.put("/update/:id", authenticateUser, authorizeRole('admin'), workshopController.updateWorkshopRequest);
 
-router.delete("/delete/:id", authenticateUser, authorizeRole('admin'), workshopController.deleteWorkshopRequest);*/
+router.delete("/delete/:id", authenticateUser, authorizeRole('admin'), workshopController.deleteWorkshopRequest);
 
 module.exports = router;
