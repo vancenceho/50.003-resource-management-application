@@ -1,5 +1,6 @@
 const User = require('../models/client.js'); 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+
 
 // Controller function to create and save new user
 exports.createUser = async (req, res) => {

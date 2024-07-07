@@ -1,5 +1,6 @@
 const Trainer = require('../models/trainer.js'); 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
+
 
 // Controller function to create and save new user
 exports.createTrainer = async (req, res) => {

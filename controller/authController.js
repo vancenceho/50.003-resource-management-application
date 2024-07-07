@@ -1,10 +1,10 @@
-const Admin = require("../models/admin");
-const bcrypt = require("bcrypt");
+//const Admin = require("../models/admin");
+/*const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 
 const secretKey = "root";
 
-exports.signup = async (req, res) => {
+/*exports.signup = async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     const admin = new Admin({
@@ -22,9 +22,9 @@ exports.signup = async (req, res) => {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
-};
+};*/
 
-exports.login = async (req, res) => {
+/*exports.login = async (req, res) => {
   try {
     const admin = await Admin.findOne({ email: req.body.email });
     if (!admin) {
@@ -53,4 +53,16 @@ exports.login = async (req, res) => {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
+}; */
+
+/*exports.verifyToken = (req, res, next) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const decoded = jwt.verify(token, secretKey);
+    req.userData = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Authentication failed" });
+  }
 };
+*/
