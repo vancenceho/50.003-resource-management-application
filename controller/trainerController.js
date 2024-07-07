@@ -55,16 +55,30 @@ exports.getAllTrainers = async (req, res) => {
     }
 };
 
-// getTrainer details
+// Controller function to let the signed in trainer access only their details
+exports.getOwnDetails = async (req, res) => {
+    try {
+        const trainer = await Trainer.findOne({ userName: req.params.userName });
+        if (!trainer) {
+          return res.status(404).send({ message: 'Trainer not found' });
+        }
+        res.status(200).json(trainer);
+      } catch (error) {
+        res.status(500).send({ message: 'Server error' });
+      }
+    };
 
-/*exports.getTrainerDetails = async (req, res) => {
-    try{
-        const trainer = await Trainer.findById(req.params.id);
-        res.status(201).json(trainer);
-    }*/
-
-//updateAllocation
-//checkscheduleconflicts
+//updateWorkshopAllocation
+//checkScheduleConflicts
 //getTrainerList
 //markWorkoutAsComplete
 //submitLeaveRequest
+//updateAvailabilityStatus
+//updateLeaveStatus
+//notfifyLeaveRequestStatus
+//retreiveWorkshopDetails
+//retrieveallLeaveRequests
+//selectWorkshop
+//validateTrainer
+//maekWorkshopAsComplete
+
