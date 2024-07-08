@@ -1,10 +1,51 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const userController = require('../controller/clientController.js'); // Import the user controller
+const userController = require("../controller/clientController.js"); // Import the user controller
+const workshopController = require("../controller/workshopManagement.js"); // Import the workshop controller
 
-// Define routes and associate them with controller actions
-router.post('/', userController.createUser); // Route to create a new user
-router.get('/', userController.getAllUsers); // Route to get all users
+const { authenticateUser, authorizeRole } = require("../middleware/auth.js"); // Import the authentication middleware
 
-// Export the router
+/**
+ * // Client Default Routes
+ *
+ * @details
+ * Route 1: Route to login a client
+ * Route 2: Route to get all users
+ * Route 3: Route to create a new client
+ *
+ * @returns
+ * Route 1: Returns a 200 status code with the client login data.
+ * Route 2: Returns a 200 status code with the clients data.
+ * Route 3: Returns a 200 status code with the new client data.
+ *
+ */
+//router.get("/clientLogin", userController.clientLogin);
+//router.get("/", userController.getAllUsers);
+//router.post("/", userController.createUser);
+
+/**
+ * // Workshop Request Routes
+ *
+ * @details
+ * Route 1: Route to get all client specific workshop requests
+ * Route 2: Route to create a new workshop request
+ *
+ * @returns
+ * Route 1: Returns a 200 status code with the client specific workshop requests data.
+ * Route 2: Returns a 200 status code with the new workshop request data.
+ *
+ */
+router.post(
+  "/addworkshop",
+  authenticateUser,
+  authorizeRole("client"),
+  workshopController.createWorkshopRequest
+);
+router.get(
+  "/getworkshop:id",
+  authenticateUser,
+  authorizeRole("client"),
+  workshopController.getWorkshopRequestById
+);
+
 module.exports = router;

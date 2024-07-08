@@ -75,7 +75,7 @@ exports.getWorkshopRequestById = async (req, res) => {
  */
 exports.createWorkshopRequest = async (req, res) => {
   try {
-    console.log("TESTING...............5at.................");
+    //console.log("TESTING...............5at.................");
     const workshop = new Workshop({
       _id: new mongoose.Types.ObjectId(),
       name: req.body.name,
@@ -89,9 +89,9 @@ exports.createWorkshopRequest = async (req, res) => {
       maxParticipants: req.body.maxParticipants,
       trainerId: req.body.trainerId,
     });
-    console.log("TESTING...............6at.................");
+    //console.log("TESTING...............6at.................");
     const data = await workshop.save();
-    console.log("TESTING...............7at.................");
+    //console.log("TESTING...............7at.................");
     console.log("Workshop request created: ", data);
     res.status(201).json(data);
    
@@ -121,14 +121,17 @@ exports.createWorkshopRequest = async (req, res) => {
  */
 exports.deleteWorkshopRequest = async (req, res) => {
   try {
+    //console.log("TESTING...............13.................");
     const id = req.query.id;
     const data = await Workshop.findByIdAndDelete(id);
     console.log(id);  
     console.log(data);  
+    //console.log("TESTING...............14................");
     if (!data) {
       res.status(404).json({ message: "Workshop not found" });
     }
     res.status(200).json(data);
+    console.log("Successfully deleting workshop request");
   } catch (error) {
     console.error("Error deleting workshop request: ", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -158,11 +161,16 @@ exports.deleteWorkshopRequest = async (req, res) => {
 exports.updateWorkshopRequest = async (req, res) => {
   try {
     const id = req.query.id;
-    const data = await Workshop.findByIdAndUpdate(id, req.body);
+    console.log(id);
+    //console.log("TESTING...............10at.................");
+    const data = await Workshop.findByIdAndUpdate(id, req.body, { new: true }); // Add { new: true } to return the updated document
     if (!data) {
+      //console.log("TESTING...............11at.................");
       res.status(404).json({ message: "Workshop not found" });
     }
+    //console.log("TESTING...............12at.................");
     res.status(200).json(data);
+    
   } catch (error) {
     console.error("Error updating workshop request: ", error);
     if (!res.headersSent) {

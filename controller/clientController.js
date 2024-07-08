@@ -37,11 +37,11 @@ exports.createUser = async (req, res) => {
             })
             .catch(err => {
                 res.status(500).send({
-                    message: err.message || 'Some error occurred while creating the user.'
+                    message: err.message || 'Some error occurred while creating the client.'
                 });
             });
     } catch (error) {
-        console.error('Error creating user:', error);
+        console.error('Error creating client:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
@@ -52,9 +52,64 @@ exports.getAllUsers = async (req, res) => {
         const users = await User.find();
         res.status(201).json(users);
     } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('Error fetching clients:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
 
 // Additional controller functions can be added here for other CRUD operations
+exports.getUserById = async (req, res) => {
+    try {
+      const id = req.query.id;
+      const user = await User.findById(id);
+      if (!user) {
+        res.status(404).json({ message: "Client not found" });
+      }
+      res.status(200).json(user);
+    } catch (error) {
+      console.error("Error getting client by id: ", error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };
+  
+
+  exports.updateUser = async (req, res) => {
+    try {
+      const id = req.query.id;
+      console.log(id);
+      console.log("TESTING...............10at.................");
+      const data = await User.findByIdAndUpdate(id, req.body, { new: true }); // Add { new: true } to return the updated document
+      if (!data) {
+        console.log("TESTING...............11at.................");
+        res.status(404).json({ message: "Client not found" });
+      }
+      console.log("TESTING...............12at.................");
+      res.status(200).json(data);
+      
+    } catch (error) {
+      console.error("Error updating client details: ", error);
+      if (!res.headersSent) {
+        res.status(500).json({ message: "Internal Server Error" });
+      }
+    }
+  };
+
+  
+  exports.deleteUser = async (req, res) => {
+    try {
+      console.log("TESTING...............13.................");
+      const id = req.query.id;
+      const data = await Workshop.findByIdAndDelete(id);
+      console.log(id);  
+      console.log(data);  
+      console.log("TESTING...............14................");
+      if (!data) {
+        res.status(404).json({ message: "Client not found" });
+      }
+      res.status(200).json(data);
+      console.log("Successfully deleting client details");
+    } catch (error) {
+      console.error("Error deleting client details: ", error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  };

@@ -13,6 +13,7 @@ var indexRouter = require('./routes/index');
 var clientRouter = require('./routes/client');
 var trainerRouter = require('./routes/trainer');
 var adminRouter = require('./routes/admin');
+//var workshopRouter = require('./routes/workshop');
 var app = express();
 
 app.use(bodyParser.json()); // to parse application/json
@@ -23,6 +24,7 @@ app.use('/', indexRouter);
 app.use('/client', clientRouter);
 app.use('/trainer', trainerRouter);
 app.use('/admin', adminRouter);
+//app.use('/workshop', workshopRouter);
 
 // Connect to MongoDB
 connectDB().then(() => {

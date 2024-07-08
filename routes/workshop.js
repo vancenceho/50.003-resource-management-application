@@ -1,11 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const workshopManagementController = require("../controller/workshopManagement");
+const workshopController = require("../controller/workshopManagement");
+// Middleware functions
 
-router.get("/", workshopManagementController.getWorkshopRequests);
-router.get("/get/", workshopManagementController.getWorkshopRequestById);
-router.post("/add/", workshopManagementController.createWorkshopRequest);
-router.put("/update/", workshopManagementController.updateWorkshopRequest);
-router.delete("/delete/", workshopManagementController.deleteWorkshopRequest);
+const {authenticateUser, authorizeRole} = require('../middleware/auth');
 
+/*
+router.get("/get", authenticateUser, authorizeRole('admin'), workshopController.getWorkshopRequests);
+
+router.get("/get/:id", authenticateUser, authorizeRole('admin'), workshopController.getWorkshopRequestById);
+
+router.post("/add", authenticateUser, authorizeRole('admin'), workshopController.createWorkshopRequest);
+
+router.put("/update", authenticateUser, authorizeRole('admin'), workshopController.updateWorkshopRequest);
+
+router.delete("/delete", authenticateUser, authorizeRole('admin'), workshopController.deleteWorkshopRequest);
+*/
 module.exports = router;
