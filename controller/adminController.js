@@ -55,17 +55,17 @@ exports.Adminlogin = async (req, res) => {
     try {
       const admin = await Admin.findOne({ email: req.body.email });
       if (!admin) {
-        return res.status(401).json({ message: "Authentication failed" });
+        return res.status(401).json({ message: "Admin Authentication failed" });
       }
       const result = await bcrypt.compare(req.body.password, admin.password);
       if (!result) {
-        return res.status(401).json({ message: "Authentication failed" });
+        return res.status(401).json({ message: "Admin Authentication failed" });
       }
       console.log("TESTING...............2at.................");
       const token = jwt.sign(
         {
             role: admin.role, 
-            userId: admin._id,
+            AdminId: admin._id,
           },
         secretKey,
         {
@@ -75,7 +75,7 @@ exports.Adminlogin = async (req, res) => {
       console.log("TESTING...............3at.................");
       return res
         .status(200)
-        .json({ message: "Authentication successful", token: token });
+        .json({ message: "Admin Authentication successful", token: token });
         
     } catch (error) {
       console.log("Error logging in admin: ", error);

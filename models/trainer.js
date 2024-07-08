@@ -9,6 +9,7 @@ const trainerSchema = mongoose.Schema({
   leaveRequests: { type: Array, required: false },
   leaveStatus: { type: String, required: false },
   clientID: { type: Array, required: false },
+  role: {type: String, required: true, default: "trainer"},
 
 })
 

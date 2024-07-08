@@ -83,15 +83,15 @@ router.delete("/deleteworkshop", authenticateUser, authorizeRole('admin'), works
  * Route 1 - 5: Returns a 500 status code with an error message if there is an error.
  *
  */
-router.get("/getclient", authenticateUser, authorizeRole('admin'), clientController.getAllUsers);
+router.get("/getclient", authenticateUser, authorizeRole('admin'), clientController.getAllClients);
 
-router.get("/getclient/:id", authenticateUser, authorizeRole('admin'), clientController.getUserById);
+router.get("/getclient/:id", authenticateUser, authorizeRole('admin'), clientController.getClientById);
 
-router.post("/addclient", authenticateUser, authorizeRole('admin'), clientController.createUser);
+router.post("/addclient", authenticateUser, authorizeRole('admin'), clientController.createClient);
 
-router.put("/updateclient", authenticateUser, authorizeRole('admin'), clientController.updateUser);
+router.put("/updateclient", authenticateUser, authorizeRole('admin'), clientController.updateClient);
 
-router.delete("/deleteclient", authenticateUser, authorizeRole('admin'), clientController.deleteUser);
+router.delete("/deleteclient", authenticateUser, authorizeRole('admin'), clientController.deleteClient);
 
 
 

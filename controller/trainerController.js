@@ -26,6 +26,7 @@ exports.createTrainer = async (req, res) => {
             userName: userName,
             password: hashedPassword,
             email: email,
+            role: role,
         });
         console.log("TESTING...............2at.................");
         // Save the trainer details to the database
