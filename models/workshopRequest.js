@@ -45,7 +45,11 @@ const workshopSchema = new Schema({
     type: Number,
     required: true,
   },
-  trainerId: mongoose.Schema.Types.ObjectId,
+  trainerId:{
+    type: String,
+    ref: "Trainer",
+    required: false,
+  }
 });
 
 module.exports = mongoose.model("Workshop", workshopSchema);

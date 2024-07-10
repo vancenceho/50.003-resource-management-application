@@ -35,17 +35,15 @@ router.post("/", clientController.createClient);
  * Route 2: Returns a 200 status code with the new workshop request data.
  *
  */
-router.post(
-  "/addworkshop",
-  authenticateUser,
-  authorizeRole("client"),
-  workshopController.createWorkshopRequest
-);
-router.get(
-  "/getworkshop:id",
-  authenticateUser,
-  authorizeRole("client"),
-  workshopController.getWorkshopRequestById
-);
+router.post( "/addworkshop", authenticateUser, authorizeRole("client"), workshopController.createWorkshopRequest);
+router.get("/getworkshop:id", authenticateUser, authorizeRole("client"), workshopController.getWorkshopRequestById);
+
+/*
+// not done yet---------------------------------------------------
+router.get("/editClientRequest", clientController.editClientRequest);
+router.get("/editWorkshopDetails", authenticateUser, authorizeRole("client"), workshopController.editWorkshopDetails);
+*/
+
+
 
 module.exports = router;

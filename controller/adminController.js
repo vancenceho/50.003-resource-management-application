@@ -32,7 +32,7 @@ exports.createAdmin = async (req, res) => {
             password: hashedPassword,
             role: role,
         });
-        console.log("TESTING...............2at.................");
+        console.log("TESTING...............AC1.................");
         // Save the user to the database
         await admins
             .save()
@@ -51,7 +51,7 @@ exports.createAdmin = async (req, res) => {
 };
 
 exports.Adminlogin = async (req, res) => {
-    console.log("TESTING...............1at.................");
+    console.log("TESTING...............AL1.................");
     try {
       const admin = await Admin.findOne({ email: req.body.email });
       if (!admin) {
@@ -61,7 +61,7 @@ exports.Adminlogin = async (req, res) => {
       if (!result) {
         return res.status(401).json({ message: "Admin Authentication failed" });
       }
-      console.log("TESTING...............2at.................");
+      console.log("TESTING...............AL2.................");
       const token = jwt.sign(
         {
             role: admin.role, 
@@ -72,7 +72,7 @@ exports.Adminlogin = async (req, res) => {
           expiresIn: "1h",
         }
       );
-      console.log("TESTING...............3at.................");
+      console.log("TESTING...............AL3.................");
       return res
         .status(200)
         .json({ message: "Admin Authentication successful", token: token });

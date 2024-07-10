@@ -3,6 +3,7 @@ const router = express.Router();
 const workshopController = require("../controller/workshopManagement");
 const adminController = require("../controller/adminController");
 const clientController = require("../controller/clientController");
+const trainerController = require("../controller/trainerController");
 
 // Middleware functions
 const {authenticateUser, authorizeRole} = require('../middleware/auth');
@@ -64,14 +65,14 @@ router.delete("/deleteworkshop", authenticateUser, authorizeRole('admin'), works
 
 
 /**
- * // Admin Workshop Request Routes
+ * // Admin Client Request Routes
  *
  * @details
- * Route 1: Route to get all workshop requests
- * Route 2: Route to get a specific workshop request by id
- * Route 3: Route to create a new workshop request
- * Route 4: Route to update a workshop request
- * Route 5: Route to delete a workshop request
+ * Route 1: Route to get all cllient details
+ * Route 2: Route to get a specific client by id
+ * Route 3: Route to create a new client
+ * Route 4: Route to update a client details
+ * Route 5: Route to delete a client 
  *
  * @returns
  * Route 1: Returns a 200 status code with the workshop requests data.
@@ -93,6 +94,18 @@ router.put("/updateclient", authenticateUser, authorizeRole('admin'), clientCont
 
 router.delete("/deleteclient", authenticateUser, authorizeRole('admin'), clientController.deleteClient);
 
+/**
+ * // Admin Trainer Request Routes
+ */
+router.post("/allocatetrainer", authenticateUser, authorizeRole('admin'), workshopController.allocateTrToWorkshop);
 
+
+/*
+//NOT DONE YET -----------------------------------------------------
+router.post("/addtrainer", authenticateUser, authorizeRole('admin'), trainerController.createTrainer);
+//to say if workshop req is confirmed -> then need notify trainer & client
+router.put("/updateWorkshopStatus", authenticateUser, authorizeRole('admin'), workshopController.updateWorkshopStatus);
+router.post("/allocatetrainer", authenticateUser, authorizeRole('admin'), workshop.allocateTrainer);
+*/
 
 module.exports = router;

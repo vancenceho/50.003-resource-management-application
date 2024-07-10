@@ -8,12 +8,12 @@ const secretKey = "root";
 
 
 const authenticateUser = async (req, res, next) => {
-    console.log("TESTING...............0.................");
+    console.log("TESTING...............AU0.................");
     if (!req.headers.authorization) {
         return res.status(401).send({ error: "No authorization token provided" });
     }
     const token = req.headers.authorization.replace('Bearer ', '');
-    console.log("TESTING...............1.................");
+    console.log("TESTING...............AU1.................");
     try {
       console.log("TESTING...............authenticate1.................");  
       const decoded = jwt.verify(token, secretKey);
@@ -44,12 +44,12 @@ const authenticateUser = async (req, res, next) => {
         console.log(user)
         return res.status(404).send({ error: "No users found" });
       }
-      console.log("TESTING...............6.................");  
+      console.log("TESTING...............AU3.................");  
       req.user = user;
       req.user.role = decoded.role;
-      console.log("TESTING...............4.................");  
+      console.log("TESTING...............AU4.................");  
       next();
-      console.log("TESTING...............5.................");  
+      console.log("TESTING...............AU5.................");  
     } catch (error) {
       console.error("Authentication error:", error);
       res.status(401).send({ error:  "Authentication failed"});

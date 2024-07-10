@@ -1,4 +1,5 @@
 const Workshop = require("../models/workshopRequest");
+const Trainer = require("../models/trainer");
 const mongoose = require("mongoose");
 
 /**
@@ -178,3 +179,82 @@ exports.updateWorkshopRequest = async (req, res) => {
     }
   }
 };
+
+/*
+exports.markWorkshopComplete = async (req, res) => {
+  try {
+    const workshopId = req.query.workshopId;
+
+    console.log(workshopId);
+    //wait but markWorkshopComplete is kinda just updateWorkshopRequest to 
+    //change an attribute from incomplete to complete??
+    if (!workshopId) {
+      return res.status(400).json({ message: "Workshop ID is required" });
+    }
+
+
+    // Find the workshop by ID
+    const workshop = await Workshop.findById(workshopId);
+    if (!workshop) {
+      return res.status(404).json({ message: "Workshop not found" });
+    }
+
+
+  } catch (error) {
+    console.error("Error updating workshop request: ", error);
+    if (!res.headersSent) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+};
+*/
+
+exports.allocateTrToWorkshop = async (req, res) => {
+  try {
+    const { workshopId, trainerId } = req.query;
+
+    console.log(workshopId);
+    console.log(trainerId);  
+    
+    if (!workshopId) {
+      return res.status(400).json({ message: "Workshop ID is required" });
+    }
+
+    console.log("TESTING...............allocate..1.................")
+    if (!trainerId) {
+      return res.status(400).json({ message: "Trainer ID is required" });
+    }
+
+    // Find the workshop by ID
+    const workshop = await Workshop.findById(workshopId);
+    if (!workshop) {
+      return res.status(404).json({ message: "Workshop not found" });
+    }
+    console.log("TESTING...............allocate..2.................")
+    // Find the trainer by ID
+    const trainer = await Trainer.findById(trainerId);
+    if (!trainer) {
+      return res.status(404).json({ message: "Trainer not found" });
+    }
+    if (!trainer.AvailabilityStatus) {
+      return res.status(400).json({ message: "Trainer is not available" });
+    }
+
+    // Allocate a trainer to the workshop
+    //workshop.trainerAllocated = true; // Assuming the workshop model has a 'trainerAllocated' field
+    workshop.trainerId = trainer._id;
+
+    // Save the updated workshop
+    await workshop.save();
+    await trainer.save();
+
+    // Respond with the updated workshop information
+    res.json({ message: "Trainer allocated successfully", workshop });
+  } catch (error) {
+    console.error("Error allocating trainers to workshop request: ", error);
+    if (!res.headersSent) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+};
+
