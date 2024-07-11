@@ -98,13 +98,14 @@ router.delete("/deleteclient", authenticateUser, authorizeRole('admin'), clientC
  * // Admin Trainer Request Routes
  */
 router.post("/allocatetrainer", authenticateUser, authorizeRole('admin'), workshopController.allocateTrToWorkshop);
+router.put("/updateWorkshopStatus", authenticateUser, authorizeRole('admin'), workshopController.updateWorkshopStatustoAcceptedorRejected);
 
 
 /*
 //NOT DONE YET -----------------------------------------------------
 router.post("/addtrainer", authenticateUser, authorizeRole('admin'), trainerController.createTrainer);
 //to say if workshop req is confirmed -> then need notify trainer & client
-router.put("/updateWorkshopStatus", authenticateUser, authorizeRole('admin'), workshopController.updateWorkshopStatus);
+
 router.post("/allocatetrainer", authenticateUser, authorizeRole('admin'), workshop.allocateTrainer);
 */
 

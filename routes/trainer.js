@@ -10,6 +10,8 @@ router.get('/getTrainerDetails', trainerController.getAllTrainers); //getTrainer
 router.get("/trainerlogin", trainerController.Trainerlogin);
 
 
+//router.put("/markWorkshop", authenticateUser, authorizeRole('trainer'), workshopController.updateWorkshopStatustoComplete);
+
 /*
 // not done yet---------------------------------------------------
 //need to add leave requests in the database?

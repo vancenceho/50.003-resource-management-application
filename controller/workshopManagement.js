@@ -180,34 +180,6 @@ exports.updateWorkshopRequest = async (req, res) => {
   }
 };
 
-/*
-exports.markWorkshopComplete = async (req, res) => {
-  try {
-    const workshopId = req.query.workshopId;
-
-    console.log(workshopId);
-    //wait but markWorkshopComplete is kinda just updateWorkshopRequest to 
-    //change an attribute from incomplete to complete??
-    if (!workshopId) {
-      return res.status(400).json({ message: "Workshop ID is required" });
-    }
-
-
-    // Find the workshop by ID
-    const workshop = await Workshop.findById(workshopId);
-    if (!workshop) {
-      return res.status(404).json({ message: "Workshop not found" });
-    }
-
-
-  } catch (error) {
-    console.error("Error updating workshop request: ", error);
-    if (!res.headersSent) {
-      res.status(500).json({ message: "Internal Server Error" });
-    }
-  }
-};
-*/
 
 exports.allocateTrToWorkshop = async (req, res) => {
   try {
@@ -252,6 +224,89 @@ exports.allocateTrToWorkshop = async (req, res) => {
     res.json({ message: "Trainer allocated successfully", workshop });
   } catch (error) {
     console.error("Error allocating trainers to workshop request: ", error);
+    if (!res.headersSent) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+};
+
+
+//update workshop status from pending to accepted or rejected
+exports.updateWorkshopStatustoAcceptedorRejected = async (req, res) => {
+  try {
+    const workshopId = req.query.workshopId;
+
+    console.log(workshopId);
+    if (!workshopId) {
+      return res.status(400).json({ message: "Workshop ID is required" });
+    }
+
+    // Find the workshop by ID and update its status
+    const workshop = await Workshop.findById(workshopId);
+    if (!workshop) {
+      return res.status(404).json({ message: "Workshop not found" });
+    }
+
+    if (workshop.status !== 'pending') {
+      return res.status(400).json({ message: "Workshop status is not pending" });
+    }
+
+    let updateStatus = {};
+    if (workshop.trainerId) {
+      updateStatus = { status: 'scheduled' };
+    } else {
+      updateStatus = { status: 'rejected' };
+    }
+
+    const updatedWorkshop = await Workshop.findByIdAndUpdate(workshopId, updateStatus, { new: true });
+
+    if (!updatedWorkshop) {
+      return res.status(400).json({ message: "Workshop status was not updated" });
+    }
+
+    res.json({ 
+      message: `Workshop updated from pending to ${updatedWorkshop.status}`,
+      workshop: updatedWorkshop 
+    });
+  } catch (error) {
+    console.error("Error updating workshop request: ", error);
+    if (!res.headersSent) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+};
+
+
+//trainer permission
+exports.updateWorkshopStatustoComplete = async (req, res) => {
+  try {
+    const workshopId = req.query.workshopId;
+
+    console.log(workshopId);
+    if (!workshopId) {
+      return res.status(400).json({ message: "Workshop ID is required" });
+    }
+
+    // Find the workshop by ID and update its status
+    const workshop = await Workshop.findById(workshopId);
+    if (!workshop) {
+      return res.status(404).json({ message: "Workshop not found" });
+    }
+
+    // Check if the workshop is already in the desired state
+    if (workshop.status === 'complete') {
+      return res.status(400).json({ message: "Workshop is already marked as complete" });
+    }
+
+    if (workshop.status === 'accepted') {
+      // Assuming the status you want to change is from 'accepted' to 'complete'
+      await Workshop.findByIdAndUpdate(workshopId, { status: 'complete' });
+
+    }
+
+    res.json({ message: "Workshop marked as complete" });
+  } catch (error) {
+    console.error("Error updating workshop request: ", error);
     if (!res.headersSent) {
       res.status(500).json({ message: "Internal Server Error" });
     }
