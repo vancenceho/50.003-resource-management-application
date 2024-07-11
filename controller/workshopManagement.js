@@ -183,19 +183,22 @@ exports.updateWorkshopRequest = async (req, res) => {
 
 exports.allocateTrToWorkshop = async (req, res) => {
   try {
-    const { workshopId, trainerId } = req.query;
+    const { workshopId, trainerIds } = req.query;
 
     console.log(workshopId);
-    console.log(trainerId);  
+    console.log(trainerIds);  
     
     if (!workshopId) {
       return res.status(400).json({ message: "Workshop ID is required" });
     }
 
     console.log("TESTING...............allocate..1.................")
-    if (!trainerId) {
-      return res.status(400).json({ message: "Trainer ID is required" });
+    if (!trainerIds) {
+      return res.status(400).json({ message: "Trainer IDs are required" });
     }
+
+    // Split the trainer IDs string into an array
+    const trainerIdsArray = trainerIds.split(",");
 
     // Find the workshop by ID
     const workshop = await Workshop.findById(workshopId);
@@ -203,25 +206,37 @@ exports.allocateTrToWorkshop = async (req, res) => {
       return res.status(404).json({ message: "Workshop not found" });
     }
     console.log("TESTING...............allocate..2.................")
-    // Find the trainer by ID
-    const trainer = await Trainer.findById(trainerId);
-    if (!trainer) {
-      return res.status(404).json({ message: "Trainer not found" });
+    
+    let allocatedTrainers = [];
+    for (const trainerId of trainerIdsArray) {
+      console.log(`Processing trainer ID: ${trainerId}`); // Log the current trainer ID being processed
+      const trainer = await Trainer.findById(trainerId);
+      if (!trainer) {
+        console.log(`Trainer with ID ${trainerId} not found`); // Log if trainer not found
+        res.status(404).json({ message: `Trainer with ID ${trainerId} not found`});
+        continue;
+      }
+      if (!trainer.AvailabilityStatus) {
+        console.log(`Trainer with ID ${trainerId} is not available`); // Log if trainer not available
+        res.status(400).json({ message: `Trainer with ID ${trainerId} is not available` });
+        continue;
+      }
+      console.log(`Adding trainer ID ${trainerId} to allocatedTrainers`); // Log successful addition
+      allocatedTrainers.push(trainer._id);
+      await trainer.save();
     }
-    if (!trainer.AvailabilityStatus) {
-      return res.status(400).json({ message: "Trainer is not available" });
+    if (allocatedTrainers.length === 0) {
+      console.log('No trainers were allocated. Check the conditions above.'); // Log if no trainers were added
     }
-
-    // Allocate a trainer to the workshop
-    //workshop.trainerAllocated = true; // Assuming the workshop model has a 'trainerAllocated' field
-    workshop.trainerId = trainer._id;
-
+    // Allocate trainers to the workshop
+    workshop.trainerId = allocatedTrainers;
+    console.log(allocatedTrainers)
     // Save the updated workshop
     await workshop.save();
-    await trainer.save();
+    console.log(workshop)
 
     // Respond with the updated workshop information
-    res.json({ message: "Trainer allocated successfully", workshop });
+    res.json({ message: "Trainers allocated successfully", workshop });
   } catch (error) {
     console.error("Error allocating trainers to workshop request: ", error);
     if (!res.headersSent) {
