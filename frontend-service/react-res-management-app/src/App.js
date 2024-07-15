@@ -5,6 +5,7 @@ import LeaveRequests from './components/Admin/LeaveRequests';
 import './App.css';
 import TrainerWorkshopRequests from './components/Trainer/TrainerWorkshopRequests.js';
 import AdminDashboard from './components/Admin/AdminDashboard.js';
+import EditWorkshopRequest from './components/Admin/EditWorkshopRequest.js';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/leave-requests" element={<LeaveRequests />} />
           <Route path="/dashboard" element={<AdminDashboard />} />
           <Route path="/trainer-workshop-requests" element={<TrainerWorkshopRequests />} />
+          <Route path="/edit-request" element={<EditWorkshopRequest />} />
         </Routes>
       </div>
     </Router>

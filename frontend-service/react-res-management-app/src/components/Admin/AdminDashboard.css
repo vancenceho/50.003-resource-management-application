@@ -64,6 +64,11 @@ body {
     color: #007bff;
   }
 
+  h2 {
+    text-align: center;
+    color: #ffffff;
+  }
+
   h7 {
     text-align: center;
     color: #ffffff;
