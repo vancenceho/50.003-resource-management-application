@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import AdminWorkshopRequests from './components/Admin/AdminWorkshopRequests';
 import LeaveRequests from './components/Admin/LeaveRequests';
 import './App.css';
+import TrainerWorkshopRequests from './components/Trainer/TrainerWorkshopRequests.js';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/workshop-requests" element={<AdminWorkshopRequests />} />
           <Route path="/leave-requests" element={<LeaveRequests />} />
+          <Route path="/trainer-workshop-requests" element={<TrainerWorkshopRequests />} />
         </Routes>
       </div>
     </Router>
