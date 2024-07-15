@@ -53,15 +53,15 @@ router.get("/getadmin", adminController.getAllAdmin);
 
 
 router.get("/getworkshop", authenticateUser, authorizeRole('admin'), workshopController.getWorkshopRequests);
-
+// API link : http://localhost:3000/admin/getworkshop
 router.get("/getworkshop/:id", authenticateUser, authorizeRole('admin'), workshopController.getWorkshopRequestById);
-
+// API link : http://localhost:3000/admin/getworkshop/:id?id={workshopId}
 router.post("/addworkshop", authenticateUser, authorizeRole('admin'), workshopController.createWorkshopRequest);
-
+// API link : http://localhost:3000/admin/addworkshop
 router.put("/updateworkshop", authenticateUser, authorizeRole('admin'), workshopController.updateWorkshopRequest);
-
+// http://localhost:3000/admin/updateworkshop?id={workshopId}
 router.delete("/deleteworkshop", authenticateUser, authorizeRole('admin'), workshopController.deleteWorkshopRequest);
-
+// API link : http://localhost:3000/admin/deleteworkshop?id={workshopId}
 
 
 /**
@@ -98,8 +98,9 @@ router.delete("/deleteclient", authenticateUser, authorizeRole('admin'), clientC
  * // Admin Trainer Request Routes
  */
 router.post("/allocatetrainer", authenticateUser, authorizeRole('admin'), workshopController.allocateTrToWorkshop);
+// API link = http://localhost:3000/admin/allocatetrainer?workshopId={workshopId}&trainerId={trainerId}
 router.put("/updateWorkshopStatus", authenticateUser, authorizeRole('admin'), workshopController.updateWorkshopStatustoAcceptedorRejected);
-
+// API link = http://localhost:3000/admin/updateWorkshopStatus?workshopId={workshopId}
 
 /*
 //NOT DONE YET -----------------------------------------------------
