@@ -1,0 +1,83 @@
+.leave-requests {
+  padding: 20px;
+}
+
+.leave-requests h1 {
+  font-weight: bold;
+  color: #0672CB;
+  font-size: 50px;
+  margin-bottom: 20px;
+}
+
+.filters {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 15px;
+}
+
+.filters label {
+  display: flex;
+  align-items: center;
+}
+
+.filters .filter-label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.filters select,
+.filters button,
+.filters .react-datepicker-wrapper {
+  margin-left: 5px;
+  color: #0672CB;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.filters .react-datepicker__input-container input {
+  width: 100px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th,
+table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+table th {
+  background-color: #f2f2f2;
+}
+
+.leave-requests {
+  padding: 20px;
+  padding-bottom: 60px; /* Adjust this value as needed */
+}
+
+
+.footer {
+  background-color: #0672CB;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  margin: 0;
+  margin-top:100px;
+  margin-bottom:-100px;
+  margin-left: 0px;
+
+}

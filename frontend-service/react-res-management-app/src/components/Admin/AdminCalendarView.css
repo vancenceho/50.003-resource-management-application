@@ -1,0 +1,17 @@
+.admin-calendar-view {
+    padding: 20px;
+  }
+  
+  .admin-calendar-view h1 {
+    font-weight: bold;
+    color: #0672CB;
+    font-size: 50px;
+    margin-bottom: 20px;
+  }
+  
+  /* New styles for fixing date picker overlap */
+  .react-datepicker-popper {
+    z-index: 2000; /* Increased z-index to ensure it's above other elements */
+    position: relative; /* Ensure the popper is positioned correctly */
+  }
+  

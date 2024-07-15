@@ -1,25 +1,33 @@
-import logo from './logo.svg';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import AdminWorkshopRequests from './components/Admin/AdminWorkshopRequests';
+import LeaveRequests from './components/Admin/LeaveRequests';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <nav className="navbar">
+            <ul className="navbar-list">
+              <li><Link to="/">Home</Link></li>
+              <li><Link to="/workshop-requests">Workshop Requests</Link></li>
+              <li><Link to="/dashboard">Dashboard</Link></li>
+              <li><Link to="/leave-requests">Leave Requests</Link></li>
+            </ul>
+          </nav>
+        </header>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/workshop-requests" element={<AdminWorkshopRequests />} />
+          <Route path="/leave-requests" element={<LeaveRequests />} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
+
+const Home = () => <div>Welcome to Home Page</div>;
 
 export default App;
