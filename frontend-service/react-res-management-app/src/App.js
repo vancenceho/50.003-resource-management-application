@@ -6,6 +6,7 @@ import './App.css';
 import TrainerWorkshopRequests from './components/Trainer/TrainerWorkshopRequests.js';
 import AdminDashboard from './components/Admin/AdminDashboard.js';
 import EditWorkshopRequest from './components/Admin/EditWorkshopRequest.js';
+import AdminHome from './components/Admin/AdminHome.js';
 
 function App() {
   return (
@@ -14,7 +15,7 @@ function App() {
         <header className="App-header">
           <nav className="navbar">
             <ul className="navbar-list">
-              <li><Link to="/">Home</Link></li>
+              <li><Link to="/admin-home">Home</Link></li>
               <li><Link to="/workshop-requests">Workshop Requests</Link></li>
               <li><Link to="/dashboard">Dashboard</Link></li>
               <li><Link to="/leave-requests">Leave Requests</Link></li>
@@ -23,6 +24,7 @@ function App() {
         </header>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/admin-home" element={<AdminHome />} />
           <Route path="/workshop-requests" element={<AdminWorkshopRequests />} />
           <Route path="/leave-requests" element={<LeaveRequests />} />
           <Route path="/dashboard" element={<AdminDashboard />} />

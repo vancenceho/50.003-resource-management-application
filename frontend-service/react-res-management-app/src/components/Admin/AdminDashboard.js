@@ -100,19 +100,19 @@ const AdminDashboard = () => {
         <div className="stats">
           <div className="stat">
             <p>Total Requests</p>
-            <h2>406</h2>
+            <h8>406</h8>
           </div>
           <div className="stat">
             <p>Accepted Requests</p>
-            <h2>293</h2>
+            <h8>293</h8>
           </div>
           <div className="stat">
             <p>Pending Requests</p>
-            <h2>89</h2>
+            <h8>89</h8>
           </div>
           <div className="stat">
             <p>Rejected Requests</p>
-            <h2>24</h2>
+            <h8>24</h8>
           </div>
         </div>
         <div className="charts">
