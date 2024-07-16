@@ -72,6 +72,65 @@ tags:
   - name: leaveRequest
     description: Access operations to leave requests
 paths:
+  /admin/login:
+    get:
+      tags:
+        - admin
+      summary: Logs admin into the system
+      description: Logs admin into the system
+      operationId: adminLogin
+      parameters:
+        - name: credential
+          in: query
+          description: The username / email for login
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "authentication: successful operation"
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "401":
+          description: username or password incorrect
+        "404":
+          description: Invalid username/password supplied
+        "500":
+          description: "Error Logging In: Internal Server Error"
+  /admin/logout:
+    get:
+      tags:
+        - admin
+      summary: Logs out current logged in admin session
+      description: Logs out current logged in admin session
+      operationId: adminLogout
+      responses:
+        "200":
+          description: successful operation
+        "500":
+          description: "Error Logging Out: Internal Server Error"
   /admin/getAdmins:
     get:
       tags:
@@ -129,6 +188,65 @@ paths:
           description: Invalid input
         "422":
           description: Validation exception
+  /client/login:
+    get:
+      tags:
+        - client
+      summary: Logs client into the system
+      description: Logs client into the system
+      operationId: clientLogin
+      parameters:
+        - name: credential
+          in: query
+          description: The username / email for login
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "authentication: successful operation"
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "401":
+          description: usernmae or password incorrect
+        "404":
+          description: Invalid username/password supplied
+        "500":
+          description: "Error Logging In: Internal Server Error"
+  /client/logout:
+    get:
+      tags:
+        - client
+      summary: Logs out current logged in client session
+      description: Logs out current logged in client session
+      operationId: clientLogout
+      responses:
+        "200":
+          description: successful operation
+        "500":
+          description: "Error Logging Out: Internal Server Error"
   /client/getClients:
     get:
       tags:
@@ -188,6 +306,65 @@ paths:
           description: Validation exception
         "500":
           description: "Error Creating Client: Internal Server Error"
+  /trainer/login:
+    get:
+      tags:
+        - trainer
+      summary: Logs trainer into the system
+      description: Logs trainer into the system
+      operationId: trainerLogin
+      parameters:
+        - name: credential
+          in: query
+          description: The username / email for login
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "authentication: successful operation"
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "401":
+          description: username or password incorrect
+        "404":
+          description: Invalid username/password supplied
+        "500":
+          description: "Error Logging In: Internal Server Error"
+  /trainer/logout:
+    get:
+      tags:
+        - trainer
+      summary: Logs out current logged in trainer session
+      description: Logs out current logged in trainer session
+      operationId: trainerLogout
+      responses:
+        "200":
+          description: successful operation
+        "500":
+          description: "Error Logging Out: Internal Server Error"
   /trainer/getTrainers:
     get:
       tags:
@@ -847,38 +1024,6 @@ components:
           example: "Going on a holiday!"
       xml:
         name: leaveRequest
-    User:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          example: 10
-        username:
-          type: string
-          example: theUser
-        firstName:
-          type: string
-          example: John
-        lastName:
-          type: string
-          example: James
-        email:
-          type: string
-          example: john@email.com
-        password:
-          type: string
-          example: "12345"
-        phone:
-          type: string
-          example: "12345"
-        userStatus:
-          type: integer
-          description: User Status
-          format: int32
-          example: 1
-      xml:
-        name: user
     Tag:
       type: object
       properties:

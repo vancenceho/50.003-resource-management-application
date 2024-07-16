@@ -60,4 +60,44 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+exports.clientLogin = async (req, res) => {
+  console.log("TESTING...............1at.................");
+  try {
+    const credential = req.query.credential;
+    const password = req.query.password;
+
+    let query = {};
+    if (credential.includes("@")) {
+      query = { email: credential };
+    } else {
+      query = { username: credential };
+    }
+
+    const user = await User.findOne(query);
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error logging in user:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+exports.clientLogout = async (req, res) => {
+  try {
+    // TODO: Implement logout functionality
+    res.status(200).json({ message: "User logged out" });
+  } catch (error) {
+    console.error("Error logging out user:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 // Additional controller functions can be added here for other CRUD operations

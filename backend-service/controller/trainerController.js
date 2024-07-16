@@ -57,15 +57,24 @@ exports.createTrainer = async (req, res) => {
 
 exports.trainerLogin = async (req, res) => {
   try {
-    const trainer = await Trainer.findOne({
-      $or: [{ userName: req.body.userName }, { email: req.body.email }],
-    });
+    const credential = req.query.credential;
+    const password = req.query.password;
+
+    let query = {};
+    if (credential.includes("@")) {
+      query = { email: credential };
+    } else {
+      query = { username: credential };
+    }
+
+    const trainer = await Trainer.findOne(query);
+
     if (!trainer) {
       return res.status(401).json({ message: "Incorrect username or email." });
     }
-    const result = await bcrypt.compare(req.body.password, trainer.password);
+    const result = await bcrypt.compare(password, trainer.password);
     if (!result) {
-      return res.status(401).json({ message: "Incorrect password." });
+      return res.status(401).json({ message: "Invalid credentials" });
     }
     const token = jwt.sign(
       {
@@ -95,6 +104,16 @@ exports.getAllTrainers = async (req, res) => {
     res.status(200).json(trainers);
   } catch (error) {
     console.error("Error fetching trainers:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+exports.trainerLogout = async (req, res) => {
+  try {
+    // TODO: Implement logout functionality
+    res.status(200).json({ message: "Trainer logged out" });
+  } catch (error) {
+    console.error("Error logging out trainer:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

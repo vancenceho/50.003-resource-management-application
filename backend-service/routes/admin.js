@@ -13,18 +13,21 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth");
  * Route 1: Route to create a new admin
  * Route 2: Route to login as an admin
  * Route 3: Route to get all admins
+ * Route 4: Route to logout as an admin
  *
  * @returns
  * Route 1: Returns a 200 status code with the new admin data.
- * Route 2: Returns a 200 status code with the admin data.
+ * Route 2: Returns a 200 status code with a message that authentication was successful.
  * Route 3: Returns a 200 status code with all the admin data.
+ * Route 4: Returns a 200 status code with a message that the admin has logged out.
  *
- * Route 1 - 3: Returns a 500 status code with an error message if there is an error.
+ * Route 1 - 4: Returns a 500 status code with an error message if there is an error.
  *
  */
 router.post("/createAdmin", adminController.createAdmin);
-router.get("/adminlogin", adminController.Adminlogin);
+router.get("/login", adminController.adminLogin);
 router.get("/getAdmins", adminController.getAllAdmin);
+router.get("/logout", adminController.adminLogout);
 
 /**
  * // Admin Workshop Request Routes

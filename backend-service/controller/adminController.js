@@ -51,14 +51,24 @@ exports.createAdmin = async (req, res) => {
   }
 };
 
-exports.Adminlogin = async (req, res) => {
+exports.adminLogin = async (req, res) => {
   console.log("TESTING...............1at.................");
   try {
-    const admin = await Admin.findOne({ email: req.body.email });
-    if (!admin) {
-      return res.status(401).json({ message: "Authentication failed" });
+    const credential = req.query.credential;
+    const password = req.query.password;
+
+    let query = {};
+    if (credential.includes("@")) {
+      query = { email: credential };
+    } else {
+      query = { username: credential };
     }
-    const result = await bcrypt.compare(req.body.password, admin.password);
+
+    const admin = await Admin.findOne(query);
+    if (!admin) {
+      return res.status(401).json({ message: "Admin not found failed" });
+    }
+    const result = await bcrypt.compare(password, admin.password);
     if (!result) {
       return res.status(401).json({ message: "Authentication failed" });
     }
@@ -82,6 +92,17 @@ exports.Adminlogin = async (req, res) => {
     if (!res.headersSent) {
       res.status(500).json({ message: "Internal Server Error" });
     }
+  }
+};
+
+exports.adminLogout = async (req, res) => {
+  try {
+    console.log("TESTING...............3at.................");
+    // TODO: Implement logout functionality
+    res.status(200).json({ message: "Admin logged out successfully" });
+  } catch (error) {
+    console.error("Error logging out admin: ", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

@@ -14,12 +14,14 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth.js"); //
  * Route 3: Route to create a new client
  *
  * @returns
- * Route 1: Returns a 200 status code with the client login data.
- * Route 2: Returns a 200 status code with the clients data.
- * Route 3: Returns a 200 status code with the new client data.
+ * Route 1: Returns a 200 status code with a message login successful & a token.
+ * Route 2: Returns a 200 status code with a message logout successful.
+ * Route 3: Returns a 200 status code with the clients data.
+ * Route 4: Returns a 200 status code with the new client data.
  *
  */
-//router.get("/clientLogin", userController.clientLogin);
+router.get("/login", userController.clientLogin);
+router.get("/logout", userController.clientLogout);
 router.get("/getClients", userController.getAllUsers);
 router.post("/createClient", userController.createUser);
 
