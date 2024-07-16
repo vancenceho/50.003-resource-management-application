@@ -7,14 +7,20 @@ var logger = require("morgan");
 var process = require("process");
 var { connectDB, cleanup } = require("./models/db.js");
 
+const cors = require("cors");
+
 var indexRouter = require("./routes/index");
 var clientRouter = require("./routes/client");
 var trainerRouter = require("./routes/trainer");
 var adminRouter = require("./routes/admin");
+// Test for workshopRequest
+var workshopRequestRouter = require("./routes/workshop");
 // Test for leaveRequest
 var leaveRequestRouter = require("./routes/leaveRequest");
 var app = express();
 
+// Enable CORS
+app.use(cors()); // remember to remove once we deploy / configured cors
 app.use(bodyParser.json()); // to parse application/json
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -22,6 +28,8 @@ app.use("/", indexRouter);
 app.use("/client", clientRouter);
 app.use("/trainer", trainerRouter);
 app.use("/admin", adminRouter);
+// Test for workshopRequest
+app.use("/workshop", workshopRequestRouter);
 // Test for leaveRequest
 app.use("/leaveRequest", leaveRequestRouter);
 

@@ -94,7 +94,7 @@ exports.createLeaveRequest = async (req, res) => {
       duration: moment(endDate).diff(moment(startDate), "days"),
     });
     await leaveRequest.save();
-    res.status(201).json(leaveRequest);
+    res.status(200).json(leaveRequest);
   } catch (error) {
     console.error("Error creating leave request: ", error);
     res.status(500).json({ message: "Internal Server Error" });

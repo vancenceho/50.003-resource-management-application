@@ -23,9 +23,12 @@ const workshopManagementController = require("../controller/workshopManagement")
  *
  */
 router.get("/", workshopManagementController.getWorkshopRequests);
-router.get("/get/", workshopManagementController.getWorkshopRequestById);
+router.get("/get/:id", workshopManagementController.getWorkshopRequestById);
 router.post("/add/", workshopManagementController.createWorkshopRequest);
-router.put("/update/", workshopManagementController.updateWorkshopRequest);
-router.delete("/delete/", workshopManagementController.deleteWorkshopRequest);
+router.put("/update/:id", workshopManagementController.updateWorkshopRequest);
+router.delete(
+  "/delete/:id",
+  workshopManagementController.deleteWorkshopRequest
+);
 
 module.exports = router;

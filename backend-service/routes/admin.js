@@ -22,9 +22,9 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth");
  * Route 1 - 3: Returns a 500 status code with an error message if there is an error.
  *
  */
-router.post("/createadmin", adminController.createAdmin);
+router.post("/createAdmin", adminController.createAdmin);
 router.get("/adminlogin", adminController.Adminlogin);
-router.get("/getadmin", adminController.getAllAdmin);
+router.get("/getAdmins", adminController.getAllAdmin);
 
 /**
  * // Admin Workshop Request Routes

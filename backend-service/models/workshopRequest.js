@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const moment = require("moment");
 const { time, timeEnd } = require("console");
+const { type } = require("os");
 
 moment.locale("en-sg");
 
@@ -62,7 +63,16 @@ const workshopSchema = new Schema({
     type: Number,
     required: true,
   },
-  trainerId: mongoose.Schema.Types.ObjectId,
+  client: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Client",
+    required: true,
+  },
+  trainer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Trainer",
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Workshop", workshopSchema);

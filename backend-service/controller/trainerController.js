@@ -1,6 +1,7 @@
 const Trainer = require("../models/trainer.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 
 const secretKey = "root";
 
@@ -8,16 +9,16 @@ const secretKey = "root";
 exports.createTrainer = async (req, res) => {
   try {
     console.log(req.body);
-    const { fullName, userName, password, email } = req.body;
+    const { username, firstName, lastName, email, password } = req.body;
     // Validate that all required fields are provided
-    if (!fullName || !userName || !password || !email) {
+    if (!username || !firstName || !lastName || !email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     // Check if a trainer with the same userName already exists
-    const existingTrainer = await Trainer.findOne({ userName: userName });
+    const existingTrainer = await Trainer.findOne({ username: username });
     if (existingTrainer) {
       return res
         .status(409)
@@ -26,17 +27,23 @@ exports.createTrainer = async (req, res) => {
 
     // Create a new user instance
     const trainers = new Trainer({
-      fullName: fullName,
-      userName: userName,
-      password: hashedPassword,
+      _id: new mongoose.Types.ObjectId(),
+      username: username,
+      firstName: firstName,
+      lastName: lastName,
       email: email,
+      password: hashedPassword,
+      role: "trainer",
+      workshops: [],
+      leaveRequests: [],
+      status: "available",
     });
     console.log("TESTING...............2at.................");
     // Save the trainer details to the database
     await trainers
       .save()
       .then((data) => {
-        res.send(data);
+        res.status(200).send(data);
       })
       .catch((err) => {
         res.status(500).send({
@@ -50,11 +57,44 @@ exports.createTrainer = async (req, res) => {
   }
 };
 
+exports.trainerLogin = async (req, res) => {
+  try {
+    const trainer = await Trainer.findOne({
+      $or: [{ userName: req.body.userName }, { email: req.body.email }],
+    });
+    if (!trainer) {
+      return res.status(401).json({ message: "Incorrect username or email." });
+    }
+    const result = await bcrypt.compare(req.body.password, trainer.password);
+    if (!result) {
+      return res.status(401).json({ message: "Incorrect password." });
+    }
+    const token = jwt.sign(
+      {
+        role: trainer.role,
+        userId: trainer._id,
+      },
+      secretKey,
+      {
+        expiresIn: "1h",
+      }
+    );
+    return res
+      .status(200)
+      .json({ message: "Authentication successful", token: token });
+  } catch (error) {
+    console.error("Error logging in trainer: ", error);
+    if (!res.headersSent) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+};
+
 // Controller function to get all trainers
 exports.getAllTrainers = async (req, res) => {
   try {
     const trainers = await Trainer.find();
-    res.status(201).json(trainers);
+    res.status(200).json(trainers);
   } catch (error) {
     console.error("Error fetching trainers:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -74,18 +114,50 @@ exports.getOwnDetails = async (req, res) => {
   }
 };
 
-// Controller function to let the signed in trainer to submit a leave request
-exports.submitLeaveRequest = async (req, res) => {
+exports.getTrainerById = async (req, res) => {
   try {
-    const trainer = await Trainer.findOne({ userName: req.params.userName });
+    const trainer = await Trainer.findById(req.params.id);
     if (!trainer) {
       return res.status(404).send({ message: "Trainer not found" });
     }
-    trainer.leaveRequests.push(req.body);
-    await trainer.save();
-    res.status(201).send({ message: "Leave request submitted successfully" });
+    res.status(200).json(trainer);
   } catch (error) {
-    res.status(500).send({ message: "Server error" });
+    res
+      .status(500)
+      .send({ message: "Error Retreiving Trainer: Internal Server Error" });
+  }
+};
+
+exports.updateTrainer = async (req, res) => {
+  try {
+    const query = { _id: req.params.id };
+    let updateData = req.body;
+    delete updateData._id;
+    const update = { $set: updateData };
+    const options = { new: true, upsert: false };
+    const trainer = await Trainer.findOneAndUpdate(query, update, options);
+    if (!trainer) {
+      return res.status(404).send({ message: "Trainer not found" });
+    }
+    res.status(200).json(trainer);
+  } catch (error) {
+    res.status(500).send({
+      message: "Error Updating Trainer: Internal Server Error" + error,
+    });
+  }
+};
+
+exports.deleteTrainer = async (req, res) => {
+  try {
+    const trainer = await Trainer.findByIdAndDelete(req.params.id);
+    if (!trainer) {
+      return res.status(404).send({ message: "Trainer not found" });
+    }
+    res.status(200).json(trainer);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: "Error Deleting Trainer: Internal Server Error" });
   }
 };
 

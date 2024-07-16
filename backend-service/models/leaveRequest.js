@@ -7,8 +7,9 @@ const Schema = mongoose.Schema;
 
 const leaveRequestSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  trainerId: {
+  trainer: {
     type: mongoose.Schema.Types.ObjectId,
+    ref: "Trainer",
     required: true,
   },
   startDate: {
@@ -35,6 +36,10 @@ const leaveRequestSchema = new Schema({
     type: String,
     required: true,
     default: "leave",
+  },
+  reason: {
+    type: String,
+    required: false,
   },
 });
 
