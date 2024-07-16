@@ -1,6 +1,7 @@
 const Trainer = require('../models/trainer.js'); 
 const bcrypt = require('bcryptjs');
-
+const jwt = require("jsonwebtoken");
+const secretKey = "root";
 
 // Controller function to create and save new trainer
 exports.createTrainer = async (req, res) => {
@@ -60,7 +61,7 @@ exports.Trainerlogin = async (req, res) => {
       if (!trainer) {
         return res.status(401).json({ message: "Trainer Authentication failed" });
       }
-      const result = await bcrypt.compare(req.body.password, admin.password);
+      const result = await bcrypt.compare(req.body.password, trainer.password);
       if (!result) {
         return res.status(401).json({ message: "Trainer Authentication failed" });
       }
@@ -112,18 +113,4 @@ exports.getOwnDetails = async (req, res) => {
         res.status(500).send({ message: 'Server error' });
       }
     };
-
-//updateWorkshopAllocation
-//checkScheduleConflicts
-//getTrainerList
-//markWorkoutAsComplete
-//submitLeaveRequest
-//updateAvailabilityStatus
-//updateLeaveStatus
-//notfifyLeaveRequestStatus
-//retreiveWorkshopDetails
-//retrieveallLeaveRequests
-//selectWorkshop
-//validateTrainer
-//maekWorkshopAsComplete
 

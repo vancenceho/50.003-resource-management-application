@@ -1,6 +1,7 @@
 const Workshop = require("../models/workshopRequest");
 const Trainer = require("../models/trainer");
 const mongoose = require("mongoose");
+//const moment = require('moment'); // Import moment
 
 /**
  * // Get Workshop Requests
@@ -50,7 +51,7 @@ exports.getWorkshopRequestById = async (req, res) => {
     if (!workshop) {
       res.status(404).json({ message: "Workshop not found" });
     }
-    res.status(200).json(workshop);
+    res.json(workshop);
   } catch (error) {
     console.error("Error getting workshop by id: ", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -235,37 +236,7 @@ exports.allocateTrToWorkshop = async (req, res) => {
     await workshop.save();
     console.log(workshop)
 
-    // Respond with the updated workshop information
-    res.json({ message: "Trainers allocated successfully", workshop });
-  } catch (error) {
-    console.error("Error allocating trainers to workshop request: ", error);
-    if (!res.headersSent) {
-      res.status(500).json({ message: "Internal Server Error" });
-    }
-  }
-};
-
-
-//update workshop status from pending to accepted or rejected
-exports.updateWorkshopStatustoAcceptedorRejected = async (req, res) => {
-  try {
-    const workshopId = req.query.workshopId;
-
-    console.log(workshopId);
-    if (!workshopId) {
-      return res.status(400).json({ message: "Workshop ID is required" });
-    }
-
-    // Find the workshop by ID and update its status
-    const workshop = await Workshop.findById(workshopId);
-    if (!workshop) {
-      return res.status(404).json({ message: "Workshop not found" });
-    }
-
-    if (workshop.status !== 'pending') {
-      return res.status(400).json({ message: "Workshop status is not pending" });
-    }
-
+    
     let updateStatus = {};
     if (workshop.trainerId) {
       updateStatus = { status: 'scheduled' };
@@ -279,17 +250,19 @@ exports.updateWorkshopStatustoAcceptedorRejected = async (req, res) => {
       return res.status(400).json({ message: "Workshop status was not updated" });
     }
 
-    res.json({ 
-      message: `Workshop updated from pending to ${updatedWorkshop.status}`,
-      workshop: updatedWorkshop 
+    // Respond with the updated workshop information
+    res.json({
+      message: `Trainers allocated successfully. Workshop status updated to ${updatedWorkshop.status}`,
+      workshop: updatedWorkshop
     });
   } catch (error) {
-    console.error("Error updating workshop request: ", error);
+    console.error("Error allocating trainers to workshop request: ", error);
     if (!res.headersSent) {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
 };
+
 
 
 //trainer permission
@@ -328,3 +301,84 @@ exports.updateWorkshopStatustoComplete = async (req, res) => {
   }
 };
 
+//trainer permission
+exports.getAllocatedWorkshops = async (req, res) => {
+  try {
+    const trainerId = req.query.trainerId;
+    if (!trainerId) {
+      return res.status(400).json({ message: "Trainer ID is required" });
+    }
+    console.log ("-----getting allocated workshops 1-------");
+    //Query the DB for all workshops allocated to the trainer
+    const workshops = await Workshop.find({ trainerId:  trainerId });
+    console.log("Workshops found:", workshops);
+
+    if (workshops.length === 0) {
+      console.log("No workshops found for this trainer.");
+    }
+
+    res.json(workshops);
+
+  } catch (error) {
+    console.error("Error retrieving allocated workshops: ", error);
+    if (!res.headersSent) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+};
+
+
+/*
+//admin permission
+exports.checkforSchedConflict = async (req, res) => {
+  try {
+    const { trainerId, workshopId } = req.query; // Assuming workshopDate is passed as a query parameter
+    if (!trainerId || !workshopId) {
+      return res.status(400).json({ message: "Trainer ID and Workshop ID are required" });
+    }
+
+    // Query the DB for all workshops allocated to the trainer
+    const workshopsAllocToTR = await Workshop.find({ trainerId });
+
+    // Query the DB for the workshop with the given ID
+    const requestedWorkshop = await Workshop.findById(workshopId);
+    if (!requestedWorkshop) {
+      return res.status(404).json({ message: "Requested workshop not found" });
+    }
+
+    const requestedStartMoment = moment(requestedWorkshop.dateStart);
+    const requestedEndMoment = moment(requestedWorkshop.dateEnd);
+
+    let conflicts = [];
+    workshopsAllocToTR.forEach(workshop => {
+      const workshopStartMoment = moment(workshop.dateStart);
+      const workshopEndMoment = moment(workshop.dateEnd);
+
+      // Check for conflicts
+      if (workshop._id.toString() !== workshopId &&
+          (requestedStartMoment.isBetween(workshopStartMoment, workshopEndMoment, null, '[]') ||
+           requestedEndMoment.isBetween(workshopStartMoment, workshopEndMoment, null, '[]') ||
+           workshopStartMoment.isBetween(requestedStartMoment, requestedEndMoment, null, '[]') ||
+           workshopEndMoment.isBetween(requestedStartMoment, requestedEndMoment, null, '[]'))) {
+        conflicts.push({
+          workshopId: workshop._id,
+          title: workshop.title,
+          dateStart: workshop.dateStart,
+          dateEnd: workshop.dateEnd,
+          duration: workshop.duration
+        });
+      }
+    });
+
+    if (conflicts.length > 0) {
+      return res.status(409).json({ message: "Schedule conflicts found", conflicts });
+    } else {
+      res.json({ message: "No schedule conflicts" });
+    }
+  } catch (error) {
+    console.error("Error checking for schedule conflicts: ", error);
+    if (!res.headersSent) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+};*/

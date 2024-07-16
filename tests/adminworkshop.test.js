@@ -2,24 +2,9 @@ const request = require("supertest");
 const mongoose = require("mongoose");
 //const app = require("../app");
 const { connectDB, cleanup } = require("../models/db.js");
-const Workshop = require("../models/workshopRequest");
 const jwt = require("jsonwebtoken");
 
-/*// Sample workshop data
-const sampleWorkshop = {
-    _id: new mongoose.Types.ObjectId(),
-    name: "Workshop 1",
-    description: "Description 1",
-    dateStart: new Date("2023-01-01"),
-    dateEnd: new Date("2023-01-02"),
-    location: "Location 1",
-    duration: 2,
-    status: "Scheduled",
-    type: "Technical",
-    maxParticipants: 20,
-    trainerId: ["6331abc9e9ececcc2d449e55"]
-  };
-  */
+
  describe("Testing Workshop Endpoints", () => {
     //let app;
     const adminToken = jwt.sign({ AdminId: "668a6698f2e74ea82b18c120", role: "admin" }, "root", { expiresIn: "1h" });
@@ -27,7 +12,7 @@ const sampleWorkshop = {
   /* Connecting to the database before all test. */
   beforeAll(async () => {
       await connectDB();
-      app = require("../app");
+      app = require("../app.js");
     });
   
     describe("POST /admin/addworkshop", () => {
@@ -65,19 +50,22 @@ const sampleWorkshop = {
 
   describe("GET /admin/getworkshop/:id", () => {
     it("should return a workshop", async () => {
+      const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
       const res = await request(app)
-      .get(`/admin/getworkshop/:id?id=66947e982995c683f3a964e0`)
+      .get(`/admin/getworkshop/:id?id=${workshopId}`)
       .set("Authorization", `Bearer ${adminToken}`);
       console.log('Workshop :', res.body); // Print the workshops
       expect(res.statusCode).toBe(200);
-      expect(res.body.name).toBe("Workshop 2");
+      // Add assertions here to validate the response
+      expect(res.body).toHaveProperty('_id', workshopId);
     });
   });  //// works
   
   describe("PUT /admin/updateworkshop", () => {
     it("should update a product", async () => {
+      const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
       const res = await request(app)
-      .put(`/admin/updateworkshop?id=66947e982995c683f3a964e0`)
+      .put(`/admin/updateworkshop?id=${workshopId}`)
       .set("Authorization", `Bearer ${adminToken}`)
       .send({
             name: "Workshop Updated",
@@ -99,17 +87,22 @@ const sampleWorkshop = {
   
   describe("DELETE /admin/deleteworkshop", () => {
     it("should delete a product", async () => {
+      const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
       const res = await request(app)
-        .delete(`/admin/deleteworkshop?id=66947e982995c683f3a964e0`)
+        .delete(`/admin/deleteworkshop?id=${workshopId}`)
         .set("Authorization", `Bearer ${adminToken}`);
         console.log('deleted Workshop:');
       expect(res.statusCode).toBe(200);
     });
   });
 
+
+
+
+  
     /* Closing database connection after all test. */
     afterAll(async () => {
-      await mongoose.connection.close();
+      cleanup();
     });
 
   });

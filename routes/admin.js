@@ -60,6 +60,7 @@ router.post("/addworkshop", authenticateUser, authorizeRole('admin'), workshopCo
 // API link : http://localhost:3000/admin/addworkshop
 router.put("/updateworkshop", authenticateUser, authorizeRole('admin'), workshopController.updateWorkshopRequest);
 // http://localhost:3000/admin/updateworkshop?id={workshopId}
+ 
 router.delete("/deleteworkshop", authenticateUser, authorizeRole('admin'), workshopController.deleteWorkshopRequest);
 // API link : http://localhost:3000/admin/deleteworkshop?id={workshopId}
 
@@ -99,15 +100,12 @@ router.delete("/deleteclient", authenticateUser, authorizeRole('admin'), clientC
  */
 router.post("/allocatetrainer", authenticateUser, authorizeRole('admin'), workshopController.allocateTrToWorkshop);
 // API link = http://localhost:3000/admin/allocatetrainer?workshopId={workshopId}&trainerId={trainerId}
-router.put("/updateWorkshopStatus", authenticateUser, authorizeRole('admin'), workshopController.updateWorkshopStatustoAcceptedorRejected);
-// API link = http://localhost:3000/admin/updateWorkshopStatus?workshopId={workshopId}
 
-/*
-//NOT DONE YET -----------------------------------------------------
+
+
 router.post("/addtrainer", authenticateUser, authorizeRole('admin'), trainerController.createTrainer);
 //to say if workshop req is confirmed -> then need notify trainer & client
 
-router.post("/allocatetrainer", authenticateUser, authorizeRole('admin'), workshop.allocateTrainer);
-*/
+//router.get("/checkforSchedConflict", authenticateUser, authorizeRole("trainer"), workshopController.checkforSchedConflict);
 
 module.exports = router;

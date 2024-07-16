@@ -4,6 +4,9 @@ const trainerController = require('../controller/trainerController.js'); // Impo
 const workshopController = require('../controller/workshopManagement.js'); // Import the workshop controller
 //const LeaveReqController = require('../controller/leaveRequestController.js'); // Import the workshop controller
 
+// Middleware functions
+const {authenticateUser, authorizeRole} = require('../middleware/auth');
+
 // Define routes and associate them with controller actions
 router.post('/add', trainerController.createTrainer); 
 router.get('/getTrainerDetails', trainerController.getAllTrainers); //getTrainerDetails
@@ -21,15 +24,16 @@ router.put("/updateLeaveStatus", trainerController.updateLeaveStatus);
 router.get("/getworkshop", authenticateUser, authorizeRole('trainer'), workshopController.getWorkshopRequests);
 router.put("/markWorkshop", authenticateUser, authorizeRole('trainer'), workshopController.markWorkshopComplete);
 
-//admin update workshop details to show allocation of trainers to workshop details
-router.put("/allocateTrToWorkshop", authenticateUser, authorizeRole('admin'), workshopController.allocateTrToWorkshop);
 
 router.post("/addTrainer", authenticateUser, authorizeRole("trainer"), LeaveReqController.createLeaveRequest);
 router.get("/updateAvailStatus:id", authenticateUser, authorizeRole("trainer"), LeaveReqController.getLeaveRequestById);
+
+
+//*/
+
 router.get("/getAllocatedWorkshops", authenticateUser, authorizeRole("trainer"), workshopController.getAllocatedWorkshops);
 //use trainer id to reteive allocated workshops and then compare dates of workshop 
-router.get("/checkforSchedConflict", authenticateUser, authorizeRole("trainer"), workshopController.checkforSchedConflict);
-//*/
+//router.get("/checkforSchedConflict", authenticateUser, authorizeRole("trainer"), workshopController.checkforSchedConflict);
 
 // Export the router
 module.exports = router;
