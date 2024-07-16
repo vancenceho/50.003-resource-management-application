@@ -6,13 +6,18 @@ const jwt = require("jsonwebtoken");
 
 
  describe("Testing Workshop Endpoints", () => {
-    //let app;
+    let randomWorkshopId; 
     const adminToken = jwt.sign({ AdminId: "668a6698f2e74ea82b18c120", role: "admin" }, "root", { expiresIn: "1h" });
 
   /* Connecting to the database before all test. */
   beforeAll(async () => {
       await connectDB();
       app = require("../app.js");
+      // Fetch all workshops
+      const res = await request(app).get("/admin/getworkshop").set("Authorization", `Bearer ${adminToken}`);
+      const workshops = res.body;
+      // Select a random workshop ID
+      randomWorkshopId = workshops[Math.floor(Math.random() * workshops.length)]._id;
     });
   
     describe("POST /admin/addworkshop", () => {
@@ -21,19 +26,19 @@ const jwt = require("jsonwebtoken");
         .post("/admin/addworkshop")
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
-          name: "Workshop 2",
-          description: "Description 2",
+          name: "Workshop 3",
+          description: "Description 3",
           dateStart: "2023-01-01",
           dateEnd: "2023-01-02",
-          location: "Location 2",
-          duration: 2,
-          status: "Scheduled",
+          location: "Location 3",
+          duration: 3,
+          status: "scheduled",
           type: "Technical",
           maxParticipants: 20,
           trainerId: "6331abc9e9ececcc2d449e55"
       });
       expect(res.statusCode).toBe(201);
-      expect(res.body.name).toBe("Workshop 2");
+      expect(res.body.name).toBe("Workshop 3");
   });
   });  //// works
     
@@ -50,22 +55,23 @@ const jwt = require("jsonwebtoken");
 
   describe("GET /admin/getworkshop/:id", () => {
     it("should return a workshop", async () => {
-      const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
+      //const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
       const res = await request(app)
-      .get(`/admin/getworkshop/:id?id=${workshopId}`)
+      .get(`/admin/getworkshop/:id?id=${randomWorkshopId}`)
       .set("Authorization", `Bearer ${adminToken}`);
       console.log('Workshop :', res.body); // Print the workshops
       expect(res.statusCode).toBe(200);
       // Add assertions here to validate the response
-      expect(res.body).toHaveProperty('_id', workshopId);
+      expect(res.body).toHaveProperty('_id', randomWorkshopId);
+      console.log('randomWorkshopId:', randomWorkshopId);
     });
   });  //// works
   
   describe("PUT /admin/updateworkshop", () => {
     it("should update a product", async () => {
-      const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
+      //const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
       const res = await request(app)
-      .put(`/admin/updateworkshop?id=${workshopId}`)
+      .put(`/admin/updateworkshop?id=${randomWorkshopId}`)
       .set("Authorization", `Bearer ${adminToken}`)
       .send({
             name: "Workshop Updated",
@@ -87,9 +93,9 @@ const jwt = require("jsonwebtoken");
   
   describe("DELETE /admin/deleteworkshop", () => {
     it("should delete a product", async () => {
-      const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
+      //const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
       const res = await request(app)
-        .delete(`/admin/deleteworkshop?id=${workshopId}`)
+        .delete(`/admin/deleteworkshop?id=${randomWorkshopId}`)
         .set("Authorization", `Bearer ${adminToken}`);
         console.log('deleted Workshop:');
       expect(res.statusCode).toBe(200);
