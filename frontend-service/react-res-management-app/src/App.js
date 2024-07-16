@@ -9,13 +9,14 @@ import EditWorkshopRequest from './components/Admin/EditWorkshopRequest.js';
 import AdminHome from './components/Admin/AdminHome.js';
 import NewWorkshopRequest from './components/Client/NewWorkshopRequest.js';
 import TrainerHome from './components/Trainer/TrainerHome.js';
+import LoginPage from './components/Login.js';
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<LoginPage />} />
           <Route path="/admin-home" element={<AdminHome />} />
           <Route path="/workshop-requests" element={<AdminWorkshopRequests />} />
           <Route path="/leave-requests" element={<LeaveRequests />} />
