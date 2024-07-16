@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 const moment = require("moment");
-const { time, timeEnd } = require("console");
-const { type } = require("os");
 
 moment.locale("en-sg");
 

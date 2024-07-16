@@ -8,8 +8,6 @@ const trainerSchema = mongoose.Schema({
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   role: { type: String, required: true, default: "trainer" },
-  workshops: { type: Array, required: false },
-  leaveRequests: { type: Array, required: false },
   status: { type: String, required: false, default: "available" },
 });
 

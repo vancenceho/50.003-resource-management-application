@@ -728,20 +728,6 @@ components:
             - admin
             - trainer
             - client
-        workshops:
-          type: array
-          xml:
-            name: workshops
-            wrapped: true
-          items:
-            $ref: "#/components/schemas/WorkshopRequest"
-        leaveRequests:
-          type: array
-          xml:
-            name: leaveRequests
-            wrapped: true
-          items:
-            $ref: "#/components/schemas/LeaveRequest"
         status:
           type: string
           example: available
@@ -809,7 +795,7 @@ components:
           example: 20
         client:
           $ref: "#/components/schemas/Client"
-        Trainer:
+        trainer:
           $ref: "#/components/schemas/Trainer"
       xml:
         name: workshop

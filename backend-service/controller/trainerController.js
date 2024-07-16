@@ -34,8 +34,6 @@ exports.createTrainer = async (req, res) => {
       email: email,
       password: hashedPassword,
       role: "trainer",
-      workshops: [],
-      leaveRequests: [],
       status: "available",
     });
     console.log("TESTING...............2at.................");
