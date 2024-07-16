@@ -63,6 +63,19 @@ function AdminWorkshopRequests() {
   };
 
   return (
+    <>
+    <header className="App-header">
+          <nav className="navbar">
+            <ul className="navbar-list">
+              <li><Link to="/admin-home">Home</Link></li>
+              <li><Link to="/workshop-requests">Workshop Requests</Link></li>
+              <li><Link to="/dashboard">Dashboard</Link></li>
+              <li><Link to="/leave-requests">Leave Requests</Link></li>
+            </ul>
+          </nav>
+    </header>
+
+
     <div className="admin-workshop-requests">
       <div className="content">
         <h1>Workshop Requests</h1>
@@ -140,7 +153,8 @@ function AdminWorkshopRequests() {
           </div>
         )}
       </div>
-      <footer className="footer">
+    </div>
+    <footer className="footer">
         <div className="footer-content">
           <div className="footer-logo">
             <img src="/Users/hardikshah/50.003-resource-management-application/frontend-service/react-res-management-app/public/logo192.png" alt="Logo" />
@@ -167,7 +181,7 @@ function AdminWorkshopRequests() {
           <a href="#">Cookies Settings</a>
         </div>
       </footer>
-    </div>
+    </>
   );
 }
 

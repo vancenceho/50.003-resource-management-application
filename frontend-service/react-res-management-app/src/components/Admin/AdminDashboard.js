@@ -94,6 +94,17 @@ const AdminDashboard = () => {
 
   return (
     <>
+    <header className="App-header">
+          <nav className="navbar">
+            <ul className="navbar-list">
+              <li><Link to="/admin-home">Home</Link></li>
+              <li><Link to="/workshop-requests">Workshop Requests</Link></li>
+              <li><Link to="/dashboard">Dashboard</Link></li>
+              <li><Link to="/leave-requests">Leave Requests</Link></li>
+            </ul>
+          </nav>
+    </header>
+
     <div className="container">
       <main>
         <h1>DASHBOARD</h1>

@@ -1,21 +1,19 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import './AdminHome.css';
+import './TrainerHome.css';
 
-const AdminHome = () => {
+const TrainerHome = () => {
   return (
     <>
     
     <header className="App-header">
           <nav className="navbar">
             <ul className="navbar-list">
-              <li><Link to="/admin-home">Home</Link></li>
-              <li><Link to="/workshop-requests">Workshop Requests</Link></li>
-              <li><Link to="/dashboard">Dashboard</Link></li>
-              <li><Link to="/leave-requests">Leave Requests</Link></li>
+              <li><Link to="/trainer-home">Home</Link></li>
+              <li><Link to="/trainer-workshop-requests">Workshop Requests</Link></li>
             </ul>
           </nav>
-    </header>
+        </header>
 
     <div className="home-container">
 
@@ -23,19 +21,9 @@ const AdminHome = () => {
         <h1>Requests & Resource Management</h1>
         <div className="cards-container">
           <div className="card">
-            <img src="/images/admin_home_1.jpg" alt="Dashboard" />
-            <h2>Dashboard</h2>
-            <a href="/dashboard">View Dashboard</a>
-          </div>
-          <div className="card">
-            <img src="/images/admin_home_2.jpg" alt="Leave Requests" />
-            <h2>Leave Requests</h2>
-            <a href="/leave-requests">View Current Leave Requests</a>
-          </div>
-          <div className="card">
             <img src="/images/admin_home_3.jpg" alt="Workshop Requests" />
             <h2>Workshop Requests</h2>
-            <a href="/workshop-requests">View Current Workshop Requests</a>
+            <a href="/trainer-workshop-requests">View Current Workshop Requests</a>
           </div>
         </div>
       </main>
@@ -71,4 +59,4 @@ const AdminHome = () => {
   );
 };
 
-export default AdminHome;
+export default TrainerHome;

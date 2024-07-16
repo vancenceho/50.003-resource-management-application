@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import './EditWorkshopRequest.css';
+import './NewWorkshopRequest.css';
 
-const EditWorkshopRequest = () => {
+const NewWorkshopRequest = () => {
     const [formData, setFormData] = useState({
         clientCompany: '',
         clientType: '',
@@ -18,8 +18,7 @@ const EditWorkshopRequest = () => {
         venue: '',
         numberOfAttendees: '',
         resourcesRequired: '',
-        comments: '',
-        trainer: ''
+        comments: ''
     });
 
     const handleChange = (e) => {
@@ -44,17 +43,17 @@ const EditWorkshopRequest = () => {
         <header className="App-header">
           <nav className="navbar">
             <ul className="navbar-list">
-              <li><Link to="/admin-home">Home</Link></li>
-              <li><Link to="/workshop-requests">Workshop Requests</Link></li>
-              <li><Link to="/dashboard">Dashboard</Link></li>
-              <li><Link to="/leave-requests">Leave Requests</Link></li>
+              <li><Link to="/client-home">Home</Link></li>
+              <li><Link to="/client-new-request">New Workshop Request</Link></li>
+              <li><Link to="/client-request-details">Request Details</Link></li>
+              <li><Link to="/client-workshop-history">Workshop History</Link></li>
             </ul>
           </nav>
-    </header>
+        </header>
         <div className="edit-workshop-request">
-            <h2>Edit Workshop Request</h2>
+            <h2>New Workshop Request</h2>
             <form onSubmit={handleSubmit}>
-                <h3>Fill in the modified details below to edit the workshop request</h3>
+                <h3>Fill in the details below to create a new workshop request</h3>
                 <div className="form-group">
                     <label htmlFor="clientCompany">Client Company</label>
                     <input
@@ -221,26 +220,8 @@ const EditWorkshopRequest = () => {
                         onChange={handleChange}
                     ></textarea>
                 </div>
-                <div className="form-group">
-                    <label htmlFor="trainer">Trainer</label>
-                    <select
-                        id="trainer"
-                        name="trainer"
-                        value={formData.trainer}
-                        onChange={handleChange}
-                    >
-                        <option value="" disabled>Select Trainer</option>
-                        <option value="Trainer A">Trainer A</option>
-                        <option value="Trainer B">Trainer B</option>
-                        {/* Add other options here */}
-                    </select>
-                </div>
                 <div className="form-actions">
-                    <button type="submit" className="accept-btn">Accept</button>
-                    <button type="button" className="reject-btn">Reject</button>
-                </div>
-                <div className="form-actions">
-                    <button type="button" className="confirm-changes-btn">Confirm Changes</button>
+                    <button type="button" className="submit-request-btn">Submit</button>
                 </div>
             </form>
         </div>
@@ -275,4 +256,4 @@ const EditWorkshopRequest = () => {
     );
 };
 
-export default EditWorkshopRequest;
+export default NewWorkshopRequest;

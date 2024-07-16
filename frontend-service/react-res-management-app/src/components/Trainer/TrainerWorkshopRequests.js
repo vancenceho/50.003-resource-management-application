@@ -63,6 +63,15 @@ function TrainerWorkshopRequests() {
   };
 
   return (
+    <>
+    <header className="App-header">
+          <nav className="navbar">
+            <ul className="navbar-list">
+              <li><Link to="/trainer-home">Home</Link></li>
+              <li><Link to="/trainer-workshop-requests">Workshop Requests</Link></li>
+            </ul>
+          </nav>
+        </header>
     <div className="trainer-workshop-requests">
       <div className="content">
         <h1>Workshop Requests</h1>
@@ -166,6 +175,7 @@ function TrainerWorkshopRequests() {
         </div>
       </footer>
     </div>
+    </>
   );
 }
 

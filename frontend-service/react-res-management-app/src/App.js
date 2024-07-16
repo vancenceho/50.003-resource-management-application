@@ -7,29 +7,23 @@ import TrainerWorkshopRequests from './components/Trainer/TrainerWorkshopRequest
 import AdminDashboard from './components/Admin/AdminDashboard.js';
 import EditWorkshopRequest from './components/Admin/EditWorkshopRequest.js';
 import AdminHome from './components/Admin/AdminHome.js';
+import NewWorkshopRequest from './components/Client/NewWorkshopRequest.js';
+import TrainerHome from './components/Trainer/TrainerHome.js';
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <header className="App-header">
-          <nav className="navbar">
-            <ul className="navbar-list">
-              <li><Link to="/admin-home">Home</Link></li>
-              <li><Link to="/workshop-requests">Workshop Requests</Link></li>
-              <li><Link to="/dashboard">Dashboard</Link></li>
-              <li><Link to="/leave-requests">Leave Requests</Link></li>
-            </ul>
-          </nav>
-        </header>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/admin-home" element={<AdminHome />} />
           <Route path="/workshop-requests" element={<AdminWorkshopRequests />} />
           <Route path="/leave-requests" element={<LeaveRequests />} />
           <Route path="/dashboard" element={<AdminDashboard />} />
+          <Route path="/trainer-home" element={<TrainerHome />} />
           <Route path="/trainer-workshop-requests" element={<TrainerWorkshopRequests />} />
           <Route path="/edit-request" element={<EditWorkshopRequest />} />
+          <Route path="/client-new-request" element={<NewWorkshopRequest />} />
         </Routes>
       </div>
     </Router>
