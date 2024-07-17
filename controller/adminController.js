@@ -53,7 +53,14 @@ exports.createAdmin = async (req, res) => {
 exports.Adminlogin = async (req, res) => {
     console.log("TESTING...............AL1.................");
     try {
-      const admin = await Admin.findOne({ email: req.body.email });
+      const admin = await Admin.findOne({
+        $or: [
+          // admin have the option of using email or name to login
+          { email: req.body.email },
+          { name: req.body.name }
+        ]
+      });
+
       if (!admin) {
         return res.status(401).json({ message: "Admin Authentication failed" });
       }

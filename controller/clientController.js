@@ -52,7 +52,13 @@ exports.createClient = async (req, res) => {
 exports.clientLogin = async (req, res) => {
   console.log("TESTING..............clientlogin1..............");
   try {
-    const client = await Client.findOne({ email: req.body.email });
+    const client = await Client.findOne({
+      $or: [
+        // client have the option of using email or username to login
+        { email: req.body.email },
+        { userName: req.body.userName }
+      ]
+    });
     if (!client) {
       return res.status(401).json({ message: "Client Authentication failed" });
     }

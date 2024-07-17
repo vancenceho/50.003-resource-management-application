@@ -20,8 +20,8 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth.js"); //
  *
  */
 router.get("/clientLogin", clientController.clientLogin);
-router.get("/", clientController.getAllClients);
-router.post("/", clientController.createClient);
+router.get("/getclient", clientController.getAllClients);
+router.post("/addclient", clientController.createClient);
 
 /**
  * // Workshop Request Routes
