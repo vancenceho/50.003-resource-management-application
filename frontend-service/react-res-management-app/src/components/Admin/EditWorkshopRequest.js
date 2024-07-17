@@ -48,6 +48,8 @@ const EditWorkshopRequest = () => {
               <li><Link to="/workshop-requests">Workshop Requests</Link></li>
               <li><Link to="/dashboard">Dashboard</Link></li>
               <li><Link to="/leave-requests">Leave Requests</Link></li>
+              <li><Link to="/create-admin">New Admin</Link></li>
+              <li><Link to="/create-trainer">New Trainer</Link></li>
             </ul>
           </nav>
     </header>

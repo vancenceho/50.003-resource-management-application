@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import './Login.css';
+import { Link } from 'react-router-dom';
+import './ClientLogin.css';
+import dellLogo from './dell-logo.png';
 
-const LoginPage = () => {
+const ClientLoginPage = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -15,12 +17,8 @@ const LoginPage = () => {
   return (
     <div className="body">
       <div className="login-container">
-        <img
-          src="https://www.delltechnologies.com/assets/images/merch/salesforce-oss/assets/images/dell-logo-blue-1024.png"
-          alt="Dell Technologies"
-          className="img"
-        />
-        <h2 className="h2">Sign in to my Account</h2>
+      <img src={dellLogo} alt="Dell Technologies" className="logo" />
+        <h2 className="h2">Sign In To Client Account</h2>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -49,4 +47,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default ClientLoginPage;
