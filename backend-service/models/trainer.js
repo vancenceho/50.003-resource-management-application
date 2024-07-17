@@ -1,19 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const trainerSchema = mongoose.Schema({
-  fullName: { type: String, required: true },
-  userName: { type: String, unique: true, required: true },
-  password: { type: String, required: true },
+  _id: mongoose.Schema.Types.ObjectId,
+  username: { type: String, required: true, unique: true },
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
   email: { type: String, unique: true, required: true },
-  //workshopID: { type: Array, required: false },
-  //leaveRequests: { type: Array, required: false },
-  //leaveStatus: { type: String, required: false },
-  //clientID: { type: Array, required: false },
-  //NumberofAllocatedWorkshops: { type: Number, required: false },
-  AvailabilityStatus: { type: Boolean, required: true, default: true },
-  role: {type: String, required: true, default: "trainer"},
+  password: { type: String, required: true },
+  role: { type: String, required: true, default: "trainer" },
+  status: { type: String, required: false, default: "available" },
+});
 
-})
-
-
-module.exports =  mongoose.model('Trainer', trainerSchema);
+module.exports = mongoose.model("Trainer", trainerSchema);

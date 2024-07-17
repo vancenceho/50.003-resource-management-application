@@ -48,51 +48,45 @@ exports.createClient = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
-
 exports.clientLogin = async (req, res) => {
-  console.log("TESTING..............clientlogin1..............");
+  console.log("TESTING...............1at.................");
   try {
-    const client = await Client.findOne({
-      $or: [
-        // client have the option of using email or username to login
-        { email: req.body.email },
-        { userName: req.body.userName }
-      ]
-    });
-    if (!client) {
-      return res.status(401).json({ message: "Client Authentication failed" });
+    const credential = req.query.credential;
+    const password = req.query.password;
+
+    let query = {};
+    if (credential.includes("@")) {
+      query = { email: credential };
+    } else {
+      query = { username: credential };
     }
-    console.log("TESTING...............clientlogin4.................");
-    const result = await bcrypt.compare(req.body.password, client.password);
-    if (!result) {
-      return res.status(401).json({ message: "Client Authentication failed" });
+
+    const user = await User.findOne(query);
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
     }
-    console.log("TESTING...............clientlogin2.................");
-    const token = jwt.sign(
-      {
-          role: client.role, 
-          clientId: client._id,
-        },
-      secretKey,
-      {
-        expiresIn: "1h",
-      }
-    );
-    console.log("TESTING...............clientlogin3.................");
-    return res
-      .status(200)
-      .json({ message: "Client Authentication successful", token: token });
-      
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    res.status(200).json(user);
   } catch (error) {
-    console.log("Error logging in client: ", error);
-    if (!res.headersSent) {
-      res.status(500).json({ message: "Internal Server Error" });
-    }
+    console.error("Error logging in user:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
-}; 
+};
 
-
-
+exports.clientLogout = async (req, res) => {
+  try {
+    // TODO: Implement logout functionality
+    res.status(200).json({ message: "User logged out" });
+  } catch (error) {
+    console.error("Error logging out user:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 
 // Controller function to get all clients
 exports.getAllClients = async (req, res) => {
