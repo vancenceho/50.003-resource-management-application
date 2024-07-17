@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const leaveRequestController = require("../controller/leaveRequestController.js");
 const trainerController = require("../controller/trainerController.js");
+const workshopController = require("../controller/workshopManagement.js"); // Import the workshop controller
 
 // Middleware Controller
 const { authenticateUser, authorizeRole } = require("../middleware/auth");
@@ -79,5 +80,12 @@ router.delete(
   authorizeRole("trainer"),
   leaveRequestController.deleteLeaveRequest
 );
+
+
+router.get(
+  "/getAllocatedWorkshops", 
+  authenticateUser, 
+  authorizeRole("trainer"), 
+  workshopController.getAllocatedWorkshops);
 
 module.exports = router;

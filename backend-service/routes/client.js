@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const userController = require("../controller/clientController.js"); // Import the user controller
+const clientController = require("../controller/clientController.js"); // Import the client controller
 const workshopController = require("../controller/workshopManagement.js"); // Import the workshop controller
 
 const { authenticateUser, authorizeRole } = require("../middleware/auth.js"); // Import the authentication middleware
@@ -20,10 +20,10 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth.js"); //
  * Route 4: Returns a 200 status code with the new client data.
  *
  */
-router.get("/login", userController.clientLogin);
-router.get("/logout", userController.clientLogout);
-router.get("/getClients", userController.getAllUsers);
-router.post("/createClient", userController.createUser);
+router.get("/login", clientController.clientLogin);
+router.get("/logout", clientController.clientLogout);
+router.get("/getClients", clientController.getAllClients);
+router.post("/createClient", clientController.createClient);
 
 /**
  * // Workshop Request Routes

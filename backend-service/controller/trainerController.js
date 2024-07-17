@@ -178,15 +178,3 @@ exports.deleteTrainer = async (req, res) => {
   }
 };
 
-//updateWorkshopAllocation
-//checkScheduleConflicts
-//getTrainerList
-//markWorkoutAsComplete
-//updateAvailabilityStatus
-//updateLeaveStatus
-//notfifyLeaveRequestStatus
-//retreiveWorkshopDetails
-//retrieveallLeaveRequests
-//selectWorkshop
-//validateTrainer
-//maekWorkshopAsComplete
