@@ -129,4 +129,4 @@ dist
 .pnp.*
 
 # Docker image data volume
-.data/
+/backend-service/data/*
