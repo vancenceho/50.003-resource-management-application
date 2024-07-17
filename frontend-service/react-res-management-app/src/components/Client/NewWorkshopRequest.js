@@ -8,9 +8,6 @@ const NewWorkshopRequest = () => {
         clientType: '',
         workshopName: '',
         workshopType: '',
-        businessValueDiscovery: '',
-        aiPlatform: '',
-        infrastructureAndDemo: '',
         startDate: '',
         endDate: '',
         dealSizePotential: '',
@@ -97,40 +94,11 @@ const NewWorkshopRequest = () => {
                         onChange={handleChange}
                     >
                         <option value="" disabled>Select Workshop Type</option>
-                        <option value="Workshop Type A">Workshop Type A</option>
-                        <option value="Workshop Type B">Workshop Type B</option>
+                        <option value="Business Value Discovery">Business Value Discovery</option>
+                        <option value="AI Platform">AI Platform</option>
+                        <option value="Infrastructure and Demo">AI Platform</option>
                         {/* Add other options here */}
                     </select>
-                </div>
-                <div className="form-group">
-                    <label htmlFor="businessValueDiscovery">Business Value Discovery</label>
-                    <input
-                        type="text"
-                        id="businessValueDiscovery"
-                        name="businessValueDiscovery"
-                        value={formData.businessValueDiscovery}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="aiPlatform">AI Platform</label>
-                    <input
-                        type="text"
-                        id="aiPlatform"
-                        name="aiPlatform"
-                        value={formData.aiPlatform}
-                        onChange={handleChange}
-                    />
-                </div>
-                <div className="form-group">
-                    <label htmlFor="infrastructureAndDemo">Infrastructure and Demo</label>
-                    <input
-                        type="text"
-                        id="infrastructureAndDemo"
-                        name="infrastructureAndDemo"
-                        value={formData.infrastructureAndDemo}
-                        onChange={handleChange}
-                    />
                 </div>
                 <div className="form-group">
                     <label htmlFor="startDate">Start Date</label>
