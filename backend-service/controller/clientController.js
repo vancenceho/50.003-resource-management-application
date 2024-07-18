@@ -2,7 +2,127 @@ const User = require("../models/client.js");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 
-// Controller function to create and save new user
+/**
+ * // Client Login
+ *
+ * @details
+ * Step 1: This function first retrieves the username or email and password from the request query.
+ * Step 2: It then attempts to find the client with the given username or email in the database.
+ * Step 3: If the client is not found, it returns a 401 status code with an error message.
+ * Step 4: If the client is found, it compares the password with the hashed password in the database.
+ * Step 5: If the password does not match, it returns a 401 status code with an error message.
+ * Step 6: If the password matches, it returns a 200 status code with the client data.
+ *
+ * @param {*} req
+ * @param {*} res
+ *
+ * @returns
+ * If the client is found and the password matches, returns a 200 status code with the client data.
+ * If the client is not found, returns a 401 status code with an error message.
+ * If the password does not match, returns a 401 status code with an error message.
+ * If there is an error logging in the client, returns a 500 status code with an error message.
+ */
+exports.clientLogin = async (req, res) => {
+  console.log("TESTING...............1at.................");
+  try {
+    const credential = req.query.credential;
+    const password = req.query.password;
+
+    let query = {};
+    if (credential.includes("@")) {
+      query = { email: credential };
+    } else {
+      query = { username: credential };
+    }
+
+    const user = await User.findOne(query);
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Error logging in user:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+/**
+ * // Client Logout
+ *
+ * @details
+ * Step 1: This function logs out the client user.
+ * Step 2: It returns a 200 status code with a success message.
+ *
+ * @param {*} req
+ * @param {*} res
+ *
+ * @returns
+ * Returns a 200 status code with a success message.
+ * If there is an error logging out the user, returns a 500 status code with an error message.
+ */
+exports.clientLogout = async (req, res) => {
+  try {
+    // TODO: Implement logout functionality
+    res.status(200).json({ message: "User logged out" });
+  } catch (error) {
+    console.error("Error logging out user:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+/**
+ * // Get all Client users
+ *
+ * @details
+ * Step 1: This function retrieves all the client users from the database.
+ * Step 2: It then returns a 200 status code with the client users data.
+ * Step 3: If there is an error retrieving the client users, it returns a 500 status code with an error message.
+ *
+ * @param {*} req
+ * @param {*} res
+ *
+ * @returns
+ * If successful, returns a 200 status code with the client users data.
+ * If there is an error retrieving the client users, returns a 500 status code with an error message.
+ */
+exports.getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+/**
+ * // Create Client user
+ *
+ * @details
+ * Step 1: This function creates a new client user in the database.
+ * Step 2: It first retrieves the username, firstName, lastName, email, password, and role from the request body.
+ * Step 3: It then validates that all required fields are provided.
+ * Step 4: It hashes the password before saving it to the database.
+ * Step 5: It checks if a user with the same username already exists.
+ * Step 6: If a user with the same username exists, it returns a 409 status code with an error message.
+ * Step 7: If a user with the same username does not exist, it creates a new user instance.
+ * Step 8: It then saves the user to the database.
+ *
+ * @param {*} req
+ * @param {*} res
+ *
+ * @returns
+ * If successful, returns a 200 status code with the created user data.
+ * If there is an error creating the user, returns a 500 status code with an error message.
+ * If required fields are not provided, returns a 400 status code with an error message.
+ * If a user with the same username already exists, returns a 409 status code with an error message.
+ */
 exports.createUser = async (req, res) => {
   try {
     console.log(req.body);
@@ -45,57 +165,6 @@ exports.createUser = async (req, res) => {
       });
   } catch (error) {
     console.error("Error creating user:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-// Controller function to get all users
-exports.getAllUsers = async (req, res) => {
-  try {
-    const users = await User.find();
-    res.status(200).json(users);
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-exports.clientLogin = async (req, res) => {
-  console.log("TESTING...............1at.................");
-  try {
-    const credential = req.query.credential;
-    const password = req.query.password;
-
-    let query = {};
-    if (credential.includes("@")) {
-      query = { email: credential };
-    } else {
-      query = { username: credential };
-    }
-
-    const user = await User.findOne(query);
-    if (!user) {
-      return res.status(401).json({ message: "User not found" });
-    }
-
-    const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-      return res.status(401).json({ message: "Invalid credentials" });
-    }
-
-    res.status(200).json(user);
-  } catch (error) {
-    console.error("Error logging in user:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-exports.clientLogout = async (req, res) => {
-  try {
-    // TODO: Implement logout functionality
-    res.status(200).json({ message: "User logged out" });
-  } catch (error) {
-    console.error("Error logging out user:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
