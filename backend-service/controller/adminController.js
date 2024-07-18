@@ -185,4 +185,65 @@ exports.createAdmin = async (req, res) => {
   }
 };
 
+/**
+ * // Update Admin
+ *
+ * @details
+ * Step 1: This function first retrieves the id of the admin to be updated from the request params.
+ * Step 2: It then attempts to find the admin with the given id in the database.
+ * Step 3: If the admin is not found, it returns a 404 status code with an error message.
+ * Step 4: If the admin is found, it updates the admin with the new data from the request body.
+ * Step 5: It then saves the updated admin to the database.
+ * Step 6: If successful, it returns a 200 status code with the updated admin data.
+ * Step 7: If there is an error updating the admin, it returns a 500 status code with an error message.
+ *
+ * @param {*} req
+ * @param {*} res
+ *
+ * @returns
+ * If successful, returns a 200 status code with the updated admin data.
+ * If the admin is not found, returns a 404 status code with an error message.
+ * If there is an error updating the admin, returns a 500 status code with an error message.
+ */
+// TODO: Implement update admin functionality
+
+/**
+ * // Delete Admin user
+ *
+ * @details
+ * Step 1: This function first retrieves the id of the admin to be deleted from the request params.
+ * Step 2: It then attempts to find the admin with the given id in the database.
+ * Step 3: If the admin is not found, it returns a 404 status code with an error message.
+ * Step 4: If the admin is found, it deletes the admin from the database.
+ * Step 5: It then returns a 200 status code with the deleted admin data.
+ * Step 6: If there is an error deleting the admin, it returns a 500 status code with an error message.
+ *
+ * @param {*} req
+ * @param {*} res
+ *
+ * @returns
+ * If successful, returns a 200 status code with the deleted admin data.
+ * If the admin is not found, returns a 404 status code with an error message.
+ * If there is an error deleting the admin, returns a 500 status code with an error message.
+ */
+exports.deleteAdmin = async (req, res) => {
+  try {
+    const admin = await Admin.findByIdAndDelete(req.params.id);
+    if (!admin) {
+      res.status(404).json({ message: "Admin not found" });
+    }
+    const response = {
+      code: 200,
+      message: "Admin successfully deleted",
+      admin: admin,
+    };
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error deleting admin: ", error);
+    res
+      .status(500)
+      .json({ message: "Error Deleting Admin: Internal Server Error" });
+  }
+};
+
 // Additional controller functions can be added here for other CRUD operations

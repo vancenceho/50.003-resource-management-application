@@ -20,14 +20,26 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth");
  * Route 2: Returns a 200 status code with a message that authentication was successful.
  * Route 3: Returns a 200 status code with all the admin data.
  * Route 4: Returns a 200 status code with a message that the admin has logged out.
+ * Route 5: Returns a 200 status code with the deleted admin data.
  *
- * Route 1 - 4: Returns a 500 status code with an error message if there is an error.
+ * Route 1 - 5: Returns a 500 status code with an error message if there is an error.
  *
  */
-router.post("/createAdmin", adminController.createAdmin);
+router.post(
+  "/createAdmin",
+  authenticateUser,
+  authorizeRole("admin"),
+  adminController.createAdmin
+);
 router.get("/login", adminController.adminLogin);
 router.get("/getAdmins", adminController.getAllAdmin);
 router.get("/logout", adminController.adminLogout);
+router.delete(
+  "/delete/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  adminController.deleteAdmin
+);
 
 /**
  * // Admin Workshop Request Routes
