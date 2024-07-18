@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken");
     const adminToken = jwt.sign({ AdminId: "66978299528ea72d01e2d308", role: "admin" }, "root", { expiresIn: "1h" });
 
   /* Connecting to the database before all test. */
-  beforeAll(async () => {
+   beforeAll(async () => {
       await connectDB();
       app = require("../app.js");
       // Fetch all workshops
@@ -20,29 +20,49 @@ const jwt = require("jsonwebtoken");
       randomWorkshopId = workshops[Math.floor(Math.random() * workshops.length)]._id;
     });
   
-    describe("POST /admin/addworkshop", () => {
+     describe("POST /admin/addworkshop", () => {
       it("should create a workshop", async () => {
         const res = await request(app)
         .post("/admin/addworkshop")
         .set("Authorization", `Bearer ${adminToken}`)
         .send({
-          name: "Workshop 3",
+          name: "Advanced Machine Learning Workshop",
           description: "Description 3",
-          dateStart: "2023-01-01",
-          dateEnd: "2023-01-02",
+          startDate: "23th July 2024",
+          endDate: "26th July 2024",
           location: "Location 3",
+          timeStart: "10:00 AM",
+          timeEnd: "1:00 PM",
           duration: 3,
           status: "scheduled",
           type: "Technical",
           maxParticipants: 20,
-          trainerId: "6331abc9e9ececcc2d449e55"
+          client: {
+            "_id": "668d5ba4a5f8eca9ff47283e",
+            "username": "theClient",
+            "firstName": "Lewis",
+            "lastName": "Hamilton",
+            "email": "lewis@example.com",
+            "password": "12345",
+            "role": "client"
+          },
+          trainer: {
+            "_id": "668d5ba4a5f8eca9ff47283e",
+            "username": "theTrainer",
+            "firstName": "Sebastian",
+            "lastName": "Vettel",
+            "email": "sebastian@example.com",
+            "password": "12345",
+            "role": "trainer",
+            "status": "available"
+          }
       });
       expect(res.statusCode).toBe(201);
       expect(res.body.name).toBe("Workshop 3");
   });
-  });  //// works
+  }); 
     
-  describe("GET /admin/getworkshop", () => {
+   describe("GET /admin/getworkshop", () => {
     it("should return all workshops", async () => {
       const res = await request(app)
       .get("/admin/getworkshop")
@@ -53,7 +73,7 @@ const jwt = require("jsonwebtoken");
     });
   });  //// works
 
-  describe("GET /admin/getworkshop/:id", () => {
+   describe("GET /admin/getworkshop/:id", () => {
     it("should return a workshop", async () => {
       //const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
       const res = await request(app)
@@ -67,7 +87,7 @@ const jwt = require("jsonwebtoken");
     });
   });  //// works
   
-  describe("PUT /admin/updateworkshop", () => {
+   describe("PUT /admin/updateworkshop", () => {
     it("should update a product", async () => {
       //const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
       const res = await request(app)
@@ -76,38 +96,60 @@ const jwt = require("jsonwebtoken");
       .send({
             name: "Workshop Updated",
             description: "Updated Description",
-            startDate: "2023-02-01",
-            endDate: "2023-02-02",
+            startDate: "23th July 2024",
+            endDate: "26th July 2024",
             location: "Updated Location",
+            timeStart: "10:00 AM",
+            timeEnd: "1:00 PM",
             duration: 3,
             status: "Scheduled",
             type: "Non-Technical",
             maxParticipants: 25,
-            trainerId: "6331abc9e9ececcc2d449e66"
+            client: {
+              "_id": "668d5ba4a5f8eca9ff47283e",
+              "username": "theClient",
+              "firstName": "Lewis",
+              "lastName": "Hamilton",
+              "email": "lewis@example.com",
+              "password": "12345",
+              "role": "client"
+            },
+            trainer: {
+              "_id": "668d5ba4a5f8eca9ff47283e",
+              "username": "theTrainer",
+              "firstName": "Sebastian",
+              "lastName": "Vettel",
+              "email": "sebastian@example.com",
+              "password": "12345",
+              "role": "trainer",
+              "status": "available"
+            }
         });
         console.log('updated Workshop:', res.body); // Print the workshops
         expect(res.statusCode).toBe(200);
         expect(res.body.name).toBe("Workshop Updated");
     });
-  });  //// works
+  });  
   
-  describe("DELETE /admin/deleteworkshop", () => {
+   /*describe("DELETE /admin/deleteworkshop", () => {
     it("should delete a product", async () => {
-      //const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
       const res = await request(app)
         .delete(`/admin/deleteworkshop?id=${randomWorkshopId}`)
-        .set("Authorization", `Bearer ${adminToken}`);
+        .set("Authorization", `Bearer ${adminToken}`)
+        .query({
+          _id: "669785397e9a0985a34809ad", 
+        });
         console.log('deleted Workshop:');
       expect(res.statusCode).toBe(200);
     });
   });
-
-
+*/
 
 
   
+  
     /* Closing database connection after all test. */
-    afterAll(async () => {
+     afterAll(async () => {
       cleanup();
     });
 

@@ -158,3 +158,16 @@ router.post(
 //router.get("/checkforSchedConflict", authenticateUser, authorizeRole("trainer"), workshopController.checkforSchedConflict);
 
 module.exports = router;
+
+
+/*
+{
+    _id: ObjectId('669785397e9a0985a34809ad'),
+    username: 'theClient',
+    firstName: 'Lewis',
+    lastName: 'Hamilton',
+    email: 'lewis@example.com',
+    password: '$2a$10$GhDnYRcn.GZSBDIDvpG29uhF1IPxLMmgEhQuMCLo6rU.1Pp2FIby2',
+    role: 'client',
+    __v: 0
+}*/

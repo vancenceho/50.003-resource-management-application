@@ -18,8 +18,11 @@ const mongoose = require("mongoose");
  */
 exports.getWorkshopRequests = async (req, res) => {
   try {
-    const workshops = await Workshop.find();
+    const workshops = await Workshop.find() 
+    .populate("client")
+    .populate("trainer");
     res.status(200).json(workshops);
+    console.log(workshops);
   } catch (error) {
     console.error("Error getting workshops: ", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -45,7 +48,9 @@ exports.getWorkshopRequests = async (req, res) => {
 exports.getWorkshopRequestById = async (req, res) => {
   try {
     const id = req.query.id;
-    const workshop = await Workshop.findById(id);
+    const workshop = await Workshop.findById(id)
+    .populate("client")
+    .populate("trainer");
     if (!workshop) {
       res.status(404).json({ message: "Workshop not found" });
     }
@@ -83,6 +88,8 @@ exports.createWorkshopRequest = async (req, res) => {
       startDate: req.body.startDate,
       endDate: req.body.endDate,
       location: req.body.location,
+      timeStart: req.body.timeStart,
+      timeEnd: req.body.timeEnd,
       duration: req.body.duration,
       status: req.body.status,
       type: req.body.type,
