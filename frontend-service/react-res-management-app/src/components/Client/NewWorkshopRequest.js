@@ -96,7 +96,7 @@ const NewWorkshopRequest = () => {
                         <option value="" disabled>Select Workshop Type</option>
                         <option value="Business Value Discovery">Business Value Discovery</option>
                         <option value="AI Platform">AI Platform</option>
-                        <option value="Infrastructure and Demo">AI Platform</option>
+                        <option value="Infrastructure and Demo">Infrastructure and Demo</option>
                         {/* Add other options here */}
                     </select>
                 </div>
