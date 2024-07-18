@@ -1,0 +1,228 @@
+
+  /* Style the app header */
+  .App-header {
+    background-color: #ffffff;
+    padding: 20px;
+  }
+  
+  /* Style the navigation bar */
+  .navbar {
+    display: flex;
+    justify-content: center;
+    background-color: #fff;
+    padding: 10px 0;
+  }
+  
+  /* Style the navigation list */
+  .navbar-list {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Style the navigation list items */
+  .navbar-list li {
+    display: inline;
+  }
+  
+  /* Style the navigation links */
+  .navbar-list li a {
+    text-decoration: none;
+    color: #0672CB;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+  
+  /* Style the navigation links on hover */
+  .navbar-list li a:hover {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+  }
+  
+  /* Style the main navigation list in the header to display as flex with no list style */
+  .header .main-nav ul {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Add margin to the right of each list item in the main navigation */
+  .header .main-nav ul li {
+    margin-right: 20px;
+  }
+  
+  /* Push the icons to the right of the navigation bar */
+  .header .main-nav .icons {
+    margin-left: auto;
+  }
+  
+  /* Add margin to the left of each icon in the navigation bar */
+  .header .main-nav .icons i {
+    margin-left: 10px;
+  }
+  
+  .logo {
+    font-size: 1.5em;
+    font-weight: bold;
+  }
+  
+  nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+  }
+  
+  nav ul li {
+    display: inline;
+  }
+  
+  nav ul li a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  main {
+    padding: 20px 0;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #007bff;
+  }
+
+  h8 {
+    text-align: center;
+    color: #ffffff;
+    font-size: 55px;
+  }
+
+  h7 {
+    text-align: center;
+    color: #ffffff;
+    font-size: 70px;
+    font-weight: bolder;
+    
+  }
+  
+  .stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+  }
+  
+  .stat {
+    background: #0672cb;
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    width: 22%;
+  }
+  
+  .charts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  
+  .chart {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .chart.wide {
+    grid-column: span 2;
+  }
+  
+  .chart.small {
+    background-color: #7faedf;
+    grid-column: span 1;
+    height: 200px;
+    width: 400px;
+    margin:25px 50px;
+  }
+
+  .chart.medium {
+    background-color: #fefeff;
+    grid-column: span 1;
+  }
+  
+  .chart h3 {
+    margin-bottom: 20px;
+    color: #333;
+  }
+  
+  .chart canvas {
+    width: 100%;
+    height: 300px;
+  }
+  
+  /* Footer Styles */
+.footer {
+    background-color: #007bff;
+    color: white;
+    padding: 20px 0;
+    font-size: 12px; /* Adjust font size to be smaller */
+    width: 100%;
+    left: 0px;
+}
+  
+  .footer-content {
+    display: flex;
+    flex-direction: column; /* Arrange logo and details in a column */
+    align-items: flex-start; /* Align items to the left */
+    padding: 5px; /* Add padding to the left and right */
+  }
+  
+  .footer-logo img {
+    max-width: 100px; /* Adjust as needed */
+    margin-bottom: 20px; /* Space between logo and details */
+  }
+  
+  .footer-details p {
+    margin: 5px 5px;
+    text-align: left;
+  }
+  
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between; /* Distribute items evenly */
+    align-items: center; /* Align items vertically */
+    padding: 10px 20px; /* Add padding to the left and right */
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-bottom a {
+    color: white;
+    text-decoration: none;
+    margin-right: 20px; /* Adjust the spacing between links */
+}
+
+.footer-bottom p {
+    margin: 0; /* Remove default margins */
+    color: white;
+    font-size: 12px; /* Adjust font size to be smaller */
+}
