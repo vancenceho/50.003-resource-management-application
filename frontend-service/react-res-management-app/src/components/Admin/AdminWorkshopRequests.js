@@ -19,12 +19,12 @@ function AdminWorkshopRequests() {
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
 
   const workshopData = [
-    { id: '00001', name: 'Workshop 1', address: '089 Kutch Green Apt. 448', date: '2024-07-11', type: 'Type A', status: 'Accepted' },
-    { id: '00002', name: 'Workshop 2', address: '979 Immanuel Ferry Suite 526', date: '2024-07-12', type: 'Type B', status: 'Pending' },
+    { id: '00001', name: 'Workshop 1', address: '089 Kutch Green Apt. 448', date: '2024-07-17', type: 'Type A', status: 'Accepted' },
+    { id: '00002', name: 'Workshop 2', address: '979 Immanuel Ferry Suite 526', date: '2024-07-19', type: 'Type B', status: 'Pending' },
     { id: '00003', name: 'Workshop 3', address: '8587 Frida Ports', date: '2024-07-13', type: 'Type C', status: 'Rejected' },
-    { id: '00004', name: 'Workshop 4', address: '768 Destiny Lake Suite 600', date: '2024-07-14', type: 'Type A', status: 'Accepted' },
-    { id: '00005', name: 'Workshop 5', address: '042 Mylene Throughway', date: '2024-07-15', type: 'Type B', status: 'Pending' },
-    { id: '00006', name: 'Workshop 6', address: '543 Weinman Mountain', date: '2024-07-16', type: 'Type C', status: 'Completed' },
+    { id: '00004', name: 'Workshop 4', address: '768 Destiny Lake Suite 600', date: '2024-07-21', type: 'Type A', status: 'Accepted' },
+    { id: '00005', name: 'Workshop 5', address: '042 Mylene Throughway', date: '2024-07-24', type: 'Type B', status: 'Pending' },
+    { id: '00006', name: 'Workshop 6', address: '543 Weinman Mountain', date: '2024-07-26', type: 'Type C', status: 'Completed' },
   ];
 
   const handleFilterChange = (name, value) => {

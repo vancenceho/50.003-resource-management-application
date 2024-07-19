@@ -4,14 +4,14 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './AdminCalendarView.css';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import AdminWorkshopRequests from './components/Admin/AdminWorkshopRequests';
-import LeaveRequests from './components/Admin/LeaveRequests';
-import './App.css';
-import TrainerWorkshopRequests from './components/Trainer/TrainerWorkshopRequests.js';
-import AdminDashboard from './components/Admin/AdminDashboard.js';
-import EditWorkshopRequest from './components/Admin/EditWorkshopRequest.js';
-import AdminHome from './components/Admin/AdminHome.js';
-import NewWorkshopRequest from './components/Client/NewWorkshopRequest.js';
+import AdminWorkshopRequests from './AdminWorkshopRequests';
+import LeaveRequests from './LeaveRequests';
+import TrainerWorkshopRequests from '../Trainer/TrainerWorkshopRequests.js';
+import AdminDashboard from './AdminDashboard.js';
+import EditWorkshopRequest from './EditWorkshopRequest.js';
+import AdminHome from './AdminHome.js';
+import NewWorkshopRequest from '../Client/NewWorkshopRequest.js';
+
 
 const localizer = momentLocalizer(moment);
 

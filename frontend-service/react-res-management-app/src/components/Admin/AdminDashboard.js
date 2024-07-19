@@ -94,96 +94,95 @@ const AdminDashboard = () => {
 
   return (
     <>
-    <header className="App-header">
-          <nav className="navbar">
-            <ul className="navbar-list">
-              <li><Link to="/admin-home">Home</Link></li>
-              <li><Link to="/workshop-requests">Workshop Requests</Link></li>
-              <li><Link to="/dashboard">Dashboard</Link></li>
-              <li><Link to="/leave-requests">Leave Requests</Link></li>
-              <li><Link to="/create-admin">New Admin</Link></li>
-              <li><Link to="/create-trainer">New Trainer</Link></li>
-            </ul>
-          </nav>
-    </header>
+      <header className="App-header">
+        <nav className="navbar">
+          <ul className="navbar-list">
+            <li><Link to="/admin-home">Home</Link></li>
+            <li><Link to="/workshop-requests">Workshop Requests</Link></li>
+            <li><Link to="/dashboard">Dashboard</Link></li>
+            <li><Link to="/leave-requests">Leave Requests</Link></li>
+            <li><Link to="/create-admin">New Admin</Link></li>
+            <li><Link to="/create-trainer">New Trainer</Link></li>
+          </ul>
+        </nav>
+      </header>
 
-    <div className="container">
-      <main>
-        <h1>DASHBOARD</h1>
-        <div className="stats">
-          <div className="stat">
-            <p>Total Requests</p>
-            <h8>406</h8>
-          </div>
-          <div className="stat">
-            <p>Accepted Requests</p>
-            <h8>293</h8>
-          </div>
-          <div className="stat">
-            <p>Pending Requests</p>
-            <h8>89</h8>
-          </div>
-          <div className="stat">
-            <p>Rejected Requests</p>
-            <h8>24</h8>
-          </div>
-        </div>
-        <div className="charts">
-          <div className="chart wide">
-            <h2>Workshop Deal Sizes</h2>
-            <canvas id="dealSizesChart" ref={dealSizesChartRef}></canvas>
-          </div>
-          <div className="chart medium">
-            <h2>Pipeline Breakdown</h2>
-            <canvas id="pipelineChart" ref={pipelineChartRef}></canvas>
-          </div>
-          <div className="chart medium">
-            <div className="chart small">
-            <h3>Total Pipeline</h3>
-            <h7>75000</h7>
+      <div className="container">
+        <main>
+          <h1>DASHBOARD</h1>
+          <div className="stats">
+            <div className="stat">
+              <p>Total Requests</p>
+              <h8>406</h8>
             </div>
-            <div className="chart small">
-            <h3>Total Trainers</h3>
-            <h7>27</h7>
+            <div className="stat">
+              <p>Accepted Requests</p>
+              <h8>293</h8>
+            </div>
+            <div className="stat">
+              <p>Pending Requests</p>
+              <h8>89</h8>
+            </div>
+            <div className="stat">
+              <p>Rejected Requests</p>
+              <h8>24</h8>
             </div>
           </div>
-          <div className="chart wide">
-            <h3>Trainer Breakdown</h3>
-            <canvas id="trainerBreakdownChart" ref={trainerBreakdownChartRef}></canvas>
+          <div className="charts">
+            <div className="chart wide">
+              <h2>Workshop Deal Sizes</h2>
+              <canvas data-testid="deal-sizes-chart" ref={dealSizesChartRef}></canvas>
+            </div>
+            <div className="chart medium">
+              <h2>Pipeline Breakdown</h2>
+              <canvas data-testid="pipeline-chart" ref={pipelineChartRef}></canvas>
+            </div>
+            <div className="chart medium">
+              <div className="chart small">
+                <h3>Total Pipeline</h3>
+                <h7>75000</h7>
+              </div>
+              <div className="chart small">
+                <h3>Total Trainers</h3>
+                <h7>27</h7>
+              </div>
+            </div>
+            <div className="chart wide">
+              <h3>Trainer Breakdown</h3>
+              <canvas data-testid="trainer-breakdown-chart" ref={trainerBreakdownChartRef}></canvas>
+            </div>
+          </div>
+        </main>
+      </div>
+      <footer className="footer">
+        <div className="footer-content">
+          <div className="footer-logo">
+            <img src="/Users/hardikshah/50.003-resource-management-application/frontend-service/react-res-management-app/public/logo192.png" alt="Logo" />
+          </div>
+          <div className="footer-details">
+            <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
+            <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
+            <p>1672 345 0987</p>
+            <p>1672 345 0987</p>
+            <p>info@company.io</p>
+          </div>
+          <div className="footer-social">
+            <a href="#"><i className="fab fa-facebook-f"></i></a>
+            <a href="#"><i className="fab fa-twitter"></i></a>
+            <a href="#"><i className="fab fa-instagram"></i></a>
+            <a href="#"><i className="fab fa-linkedin-in"></i></a>
+            <a href="#"><i className="fab fa-youtube"></i></a>
           </div>
         </div>
-      </main>
-    </div>
-    <footer className="footer">
-    <div className="footer-content">
-      <div className="footer-logo">
-        <img src="/Users/hardikshah/50.003-resource-management-application/frontend-service/react-res-management-app/public/logo192.png" alt="Logo" />
-      </div>
-      <div className="footer-details">
-        <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
-        <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
-        <p>1672 345 0987</p>
-        <p>1672 345 0987</p>
-        <p>info@company.io</p>
-      </div>
-      <div className="footer-social">
-        <a href="#"><i className="fab fa-facebook-f"></i></a>
-        <a href="#"><i className="fab fa-twitter"></i></a>
-        <a href="#"><i className="fab fa-instagram"></i></a>
-        <a href="#"><i className="fab fa-linkedin-in"></i></a>
-        <a href="#"><i className="fab fa-youtube"></i></a>
-      </div>
-    </div>
-    <div className="footer-bottom">
-      <p>© 2023 Company. All rights reserved.</p>
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-      <a href="#">Cookies Settings</a>
-    </div>
-  </footer>
+        <div className="footer-bottom">
+          <p>© 2023 Company. All rights reserved.</p>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookies Settings</a>
+        </div>
+      </footer>
     </>
-    
   );
-}
+};
 
 export default AdminDashboard;
