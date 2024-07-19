@@ -28,7 +28,7 @@ describe('workshopRequest Model Test', () => {
         type: 'workshop',
         maxParticipants: 20,
         "client": {
-            "_id": "668d5ba4a5f8eca9ff47283e",
+            "_id": "669785397e9a0985a34809ad",
             "username": "theClient",
             "firstName": "Lewis",
             "lastName": "Hamilton",
@@ -37,7 +37,7 @@ describe('workshopRequest Model Test', () => {
             "role": "client"
         },
         "trainer": {
-            "_id": "668d5ba4a5f8eca9ff47283e",
+            "_id": "6697855a7e9a0985a34809b0",
             "username": "theTrainer",
             "firstName": "Sebastian",
             "lastName": "Vettel",

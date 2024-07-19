@@ -51,35 +51,35 @@ router.get("/logout", adminController.adminLogout);
  *
  */
 router.get(
-  "/",
+  "/getworkshop",
   authenticateUser,
   authorizeRole("admin"),
   workshopController.getWorkshopRequests
 );
 
 router.get(
-  "/get/:id",
+  "/getworkshop/:id",
   authenticateUser,
   authorizeRole("admin"),
   workshopController.getWorkshopRequestById
 );
 
 router.post(
-  "/add",
+  "/addworkshop",
   authenticateUser,
   authorizeRole("admin"),
   workshopController.createWorkshopRequest
 );
 
 router.put(
-  "/update/:id",
+  "/updateworkshop/:id",
   authenticateUser,
   authorizeRole("admin"),
   workshopController.updateWorkshopRequest
 );
 
 router.delete(
-  "/delete/:id",
+  "/deleteworkshop/:id",
   authenticateUser,
   authorizeRole("admin"),
   workshopController.deleteWorkshopRequest
@@ -158,16 +158,3 @@ router.post(
 //router.get("/checkforSchedConflict", authenticateUser, authorizeRole("trainer"), workshopController.checkforSchedConflict);
 
 module.exports = router;
-
-
-/*
-{
-    _id: ObjectId('669785397e9a0985a34809ad'),
-    username: 'theClient',
-    firstName: 'Lewis',
-    lastName: 'Hamilton',
-    email: 'lewis@example.com',
-    password: '$2a$10$GhDnYRcn.GZSBDIDvpG29uhF1IPxLMmgEhQuMCLo6rU.1Pp2FIby2',
-    role: 'client',
-    __v: 0
-}*/

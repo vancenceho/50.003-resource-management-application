@@ -106,7 +106,7 @@ exports.getClientById = async (req, res) => {
     const id = req.query.id;
     const client = await Client.findById(id);
     if (!client) {
-      res.status(404).json({ message: "Client not found" });
+      return res.status(404).json({ message: "Client not found" });
     }
     res.status(200).json(client);
   } catch (error) {
@@ -124,7 +124,7 @@ exports.updateClient = async (req, res) => {
     const data = await Client.findByIdAndUpdate(id, req.body, { new: true }); // Add { new: true } to return the updated document
     if (!data) {
       console.log("TESTING...............11at.................");
-      res.status(404).json({ message: "Client not found" });
+      return res.status(404).json({ message: "Client not found" });
     }
     console.log("TESTING...............12at.................");
     res.status(200).json(data);
@@ -148,7 +148,7 @@ exports.deleteClient = async (req, res) => {
     console.log(data);  
     console.log("TESTING...............14................");
     if (!data) {
-      res.status(404).json({ message: "Client not found" });
+      return res.status(404).json({ message: "Client not found" });
     }
     res.status(200).json(data);
     console.log("Successfully deleting client details");

@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 describe("Testing Client Endpoints", () => {
   let randomClientId; 
   const adminToken = jwt.sign({ AdminId: "66978299528ea72d01e2d308", role: "admin" }, "root", { expiresIn: "1h" });
-  const clientToken = jwt.sign({ clientId: "669785397e9a0985a34809ad", role: "client" }, "root", { expiresIn: "1h" });
+  const clientToken = jwt.sign({ clientId: "669a327cff6299af0b47bffc", role: "client" }, "root", { expiresIn: "1h" });
 
   /* Connecting to the database before all test. */
   beforeAll(async () => {
@@ -29,17 +29,17 @@ describe("Testing Client Endpoints", () => {
     .post("/admin/addclient")
     .set("Authorization", `Bearer ${adminToken}`)
     .send({
-        "username": "client2",
-        "firstName": "jane",
-        "lastName": "doe",
-        "email": "jane@example.com",
+        "username": "client1",
+        "firstName": "david",
+        "lastName": "ling",
+        "email": "david@example.com",
         "password": "12345",
         "role": "client"
     });
 
     expect.stringContaining("json");
     expect(res.status).toBe(200);
-    expect(res.body.firstName).toBe("jane");
+    expect(res.body.firstName).toBe("david");
   });
 }); 
 
@@ -60,19 +60,20 @@ describe("Testing Client Endpoints", () => {
   });
 }); 
 
-/*
+
 // client permission
 describe("GET /admin/getclient/:id", () => {
-  test("testing login with client account", async () => {
+  test("should return a client", async () => {
     const res = await request(app)
     .get("/admin/getclient/:id")
-    .set("Authorization", `Bearer ${clientToken}`)
+    .set("Authorization", `Bearer ${adminToken}`)
     .query({
-      _id: "669785397e9a0985a34809ad", 
-    });
-
+      id: randomClientId});
+  
+    console.log('Clients :', res.body); // Print the workshops
     expect(res.status).toBe(200);
-    console.log(res.body);
+    expect(res.body).toHaveProperty('_id', randomClientId);
+    console.log('randomClientId:', randomClientId);
   });
 }); 
 
@@ -82,15 +83,15 @@ describe("PUT /admin/updateclient", () => {
     .put(`/admin/updateclient`)
     .set("Authorization", `Bearer ${adminToken}`)
     .query({
-      _id: "669785397e9a0985a34809ad"
+      id: randomClientId
     })
     .send({
-        "username": "client3",
-        "firstName": "david",
-        "lastName": "ling",
-        "email": "david@example.com",
-        "password": "12345",
-        "role": "client"
+        username: "client3",
+        firstName: "robin",
+        lastName: "hood",
+        email: "robin@example.com",
+        password: "12345",
+        role: "client"
       });
       console.log('updated Client:', res.body); // Print the workshops
       expect(res.statusCode).toBe(200);
@@ -102,15 +103,15 @@ describe("DELETE /admin/deleteclient", () => {
   it("should delete a client", async () => {
     const res = await request(app)
     .delete(`/admin/deleteclient`)
-    .set("Authorization", `Bearer ${adminToken}`);
+    .set("Authorization", `Bearer ${adminToken}`)
     .query({
-      _id: "669785397e9a0985a34809ad"
+      id: randomClientId
     });
-    console.log('deleted client:');
+    console.log('Deleted Client ID:', randomClientId);
     expect(res.statusCode).toBe(200);
   });
 });
-*/
+
     /* Closing database connection after all test. */
     afterAll(async () => {
       await cleanup();

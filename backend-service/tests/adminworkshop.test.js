@@ -38,7 +38,7 @@ const jwt = require("jsonwebtoken");
           type: "Technical",
           maxParticipants: 20,
           client: {
-            "_id": "668d5ba4a5f8eca9ff47283e",
+            "_id": "669785397e9a0985a34809ad",
             "username": "theClient",
             "firstName": "Lewis",
             "lastName": "Hamilton",
@@ -47,7 +47,7 @@ const jwt = require("jsonwebtoken");
             "role": "client"
           },
           trainer: {
-            "_id": "668d5ba4a5f8eca9ff47283e",
+            "_id": "6697855a7e9a0985a34809b0",
             "username": "theTrainer",
             "firstName": "Sebastian",
             "lastName": "Vettel",
@@ -58,7 +58,7 @@ const jwt = require("jsonwebtoken");
           }
       });
       expect(res.statusCode).toBe(201);
-      expect(res.body.name).toBe("Workshop 3");
+      expect(res.body.name).toBe("Advanced Machine Learning Workshop");
   });
   }); 
     
@@ -66,7 +66,9 @@ const jwt = require("jsonwebtoken");
     it("should return all workshops", async () => {
       const res = await request(app)
       .get("/admin/getworkshop")
-      .set("Authorization", `Bearer ${adminToken}`);
+      .set("Authorization", `Bearer ${adminToken}`)
+      .query({
+        id: randomWorkshopId });
       console.log('Workshops:', res.body); // Print the workshops
       expect(res.statusCode).toBe(200);
       expect(res.body.length).toBeGreaterThan(0);
@@ -77,8 +79,11 @@ const jwt = require("jsonwebtoken");
     it("should return a workshop", async () => {
       //const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
       const res = await request(app)
-      .get(`/admin/getworkshop/:id?id=${randomWorkshopId}`)
-      .set("Authorization", `Bearer ${adminToken}`);
+      .get(`/admin/getworkshop/:id`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .query({
+        id: randomWorkshopId });
+
       console.log('Workshop :', res.body); // Print the workshops
       expect(res.statusCode).toBe(200);
       // Add assertions here to validate the response
@@ -87,14 +92,16 @@ const jwt = require("jsonwebtoken");
     });
   });  //// works
   
-   describe("PUT /admin/updateworkshop", () => {
+   describe("PUT /admin/updateworkshop/:id", () => {
     it("should update a product", async () => {
       //const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
       const res = await request(app)
-      .put(`/admin/updateworkshop?id=${randomWorkshopId}`)
+      .put(`/admin/updateworkshop/:id`)
       .set("Authorization", `Bearer ${adminToken}`)
-      .send({
-            name: "Workshop Updated",
+      .query({
+        id: randomWorkshopId })
+         .send({
+            name: "Updated Advanced Machine Learning Workshop",
             description: "Updated Description",
             startDate: "23th July 2024",
             endDate: "26th July 2024",
@@ -127,23 +134,22 @@ const jwt = require("jsonwebtoken");
         });
         console.log('updated Workshop:', res.body); // Print the workshops
         expect(res.statusCode).toBe(200);
-        expect(res.body.name).toBe("Workshop Updated");
+        expect(res.body.name).toBe("Updated Advanced Machine Learning Workshop");
     });
   });  
   
-   /*describe("DELETE /admin/deleteworkshop", () => {
+   describe("DELETE /admin/deleteworkshop", () => {
     it("should delete a product", async () => {
       const res = await request(app)
-        .delete(`/admin/deleteworkshop?id=${randomWorkshopId}`)
+        .delete(`/admin/deleteworkshop/:id`)
         .set("Authorization", `Bearer ${adminToken}`)
         .query({
-          _id: "669785397e9a0985a34809ad", 
-        });
-        console.log('deleted Workshop:');
+          id: randomWorkshopId });
+        console.log('Deleted Workshop ID:', randomWorkshopId);
       expect(res.statusCode).toBe(200);
     });
   });
-*/
+
 
 
   
