@@ -154,6 +154,8 @@ paths:
                   $ref: "#/components/schemas/Admin"
         "500":
           description: "Error Fetching Admins: Internal Server Error"
+      security:
+        - admin_auth_token: []
   /admin/createAdmin:
     post:
       tags:
@@ -392,6 +394,180 @@ paths:
           description: Client not found
         "500":
           description: "Error Deleting Client: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/getworkshop:
+    get:
+      tags:
+        - admin
+      summary: Get all workshop requests
+      description: Get all workshop requests
+      operationId: getWorkshopRequests
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WorkshopRequest"
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "404":
+          description: Workshop not found
+        "500":
+          description: "Error Retrieving Workshops: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/getworkshop/{workshopId}:
+    get:
+      tags:
+        - admin
+      summary: Get a workshop request by ID
+      description: Get a workshop request by ID
+      operationId: getWorkshopRequestById
+      parameters:
+        - name: workshopId
+          in: path
+          description: ID of WorkshopRequest to return
+          required: true
+          schema:
+            type: string
+            description: MongoDB ObjectID as a hexadecimal string.
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkshopRequest"
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "404":
+          description: Workshop not found
+        "500":
+          description: "Error Retrieving Workshop: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/addworkshop:
+    post:
+      tags:
+        - admin
+      summary: Add a new workshop request
+      description: Add a new workshop request
+      operationId: createWorkshopRequest
+      requestBody:
+        description: Create a new workshop request
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkshopRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/WorkshopRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/WorkshopRequest"
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkshopRequest"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/WorkshopRequest"
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "404":
+          description: Workshop not found
+        "500":
+          description: "Error Creating Workshop: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/updateworkshop/{workshopId}:
+    put:
+      tags:
+        - admin
+      summary: Update a workshop request by ID
+      description: Update a workshop request by ID
+      operationId: updateWorkshopRequest
+      parameters:
+        - name: workshopId
+          in: path
+          description: ID of WorkshopRequest to update
+          required: true
+          schema:
+            type: string
+            description: MongoDB ObjectID as a hexadecimal string.
+      requestBody:
+        description: Update an existent workshop request
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkshopRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/WorkshopRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/WorkshopRequest"
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WorkshopRequest"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/WorkshopRequest"
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "404":
+          description: Workshop not found
+        "500":
+          description: "Error Updating Workshop: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/deleteworkshop/{workshopId}:
+    delete:
+      tags:
+        - admin
+      summary: Delete a workshop request by ID
+      description: Delete a workshop request by ID
+      operationId: deleteWorkshopRequest
+      parameters:
+        - name: workshopId
+          in: path
+          description: ID of WorkshopRequest to delete
+          required: true
+          schema:
+            type: string
+            description: MongoDB ObjectID as a hexadecimal string.
+      responses:
+        "200":
+          description: successful operation
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "404":
+          description: Workshop not found
+        "500":
+          description: "Error Deleting Workshop: Internal Server Error"
       security:
         - admin_auth_token: []
 

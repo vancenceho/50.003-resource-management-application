@@ -44,7 +44,7 @@ exports.getWorkshopRequests = async (req, res) => {
  */
 exports.getWorkshopRequestById = async (req, res) => {
   try {
-    const id = req.query.id;
+    const id = req.params.id;
     const workshop = await Workshop.findById(id);
     if (!workshop) {
       res.status(404).json({ message: "Workshop not found" });
@@ -87,6 +87,7 @@ exports.createWorkshopRequest = async (req, res) => {
       status: req.body.status,
       type: req.body.type,
       maxParticipants: req.body.maxParticipants,
+      client: req.body.client,
       trainerId: req.body.trainerId,
     });
     console.log("TESTING...............6at.................");
@@ -124,12 +125,18 @@ exports.createWorkshopRequest = async (req, res) => {
  */
 exports.updateWorkshopRequest = async (req, res) => {
   try {
-    const id = req.query.id;
-    const data = await Workshop.findByIdAndUpdate(id, req.body);
+    const id = req.params.id;
+    const { _id, ...updateData } = req.body;
+    const data = await Workshop.findByIdAndUpdate(id, updateData);
     if (!data) {
       res.status(404).json({ message: "Workshop not found" });
     }
-    res.status(200).json(data);
+    const response = {
+      code: 200,
+      message: "Workshop successfully updated",
+      workshop: updateData,
+    };
+    res.status(200).json(response);
   } catch (error) {
     console.error("Error updating workshop request: ", error);
     if (!res.headersSent) {
@@ -156,14 +163,17 @@ exports.updateWorkshopRequest = async (req, res) => {
  */
 exports.deleteWorkshopRequest = async (req, res) => {
   try {
-    const id = req.query.id;
+    const id = req.params.id;
     const data = await Workshop.findByIdAndDelete(id);
-    console.log(id);
-    console.log(data);
     if (!data) {
       res.status(404).json({ message: "Workshop not found" });
     }
-    res.status(200).json(data);
+    const response = {
+      code: 200,
+      message: "Workshop successfully deleted",
+      workshop: data,
+    };
+    res.status(200).json(response);
   } catch (error) {
     console.error("Error deleting workshop request: ", error);
     res.status(500).json({ message: "Internal Server Error" });

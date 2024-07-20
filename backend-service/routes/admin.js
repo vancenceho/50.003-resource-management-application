@@ -45,6 +45,57 @@ router.delete(
 );
 
 /**
+ * // Admin Client Request Routes
+ *
+ * @details
+ * Route 1: Route to get all client details
+ * Route 2: Route to get a specific client detail by id
+ * Route 3: Route to create a new client
+ * Route 4: Route to update a client details
+ * Route 5: Route to delete a client
+ *
+ * @returns
+ * Route 1: Returns a 200 status code with the client details data.
+ * Route 2: Returns a 200 status code with the client detail data.
+ * Route 3: Returns a 200 status code with the new client data.
+ * Route 4: Returns a 200 status code with the updated client data.
+ * Route 5: Returns a 200 status code with the deleted client data.
+ *
+ * @throws
+ * Route 1 - 5: Returns a 500 status code with an error message if there is an error.
+ */
+router.get(
+  "/getclient",
+  authenticateUser,
+  authorizeRole("admin"),
+  clientController.getAllUsers
+);
+router.get(
+  "/getclient/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  clientController.getClientById
+);
+router.post(
+  "/addclient",
+  authenticateUser,
+  authorizeRole("admin"),
+  clientController.createUser
+);
+router.put(
+  "/updateclient/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  clientController.updateClient
+);
+router.delete(
+  "/deleteclient/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  clientController.deleteClient
+);
+
+/**
  * // Admin Workshop Request Routes
  *
  * @details
@@ -98,57 +149,6 @@ router.delete(
   authenticateUser,
   authorizeRole("admin"),
   workshopController.deleteWorkshopRequest
-);
-
-/**
- * // Admin Client Request Routes
- *
- * @details
- * Route 1: Route to get all client details
- * Route 2: Route to get a specific client detail by id
- * Route 3: Route to create a new client
- * Route 4: Route to update a client details
- * Route 5: Route to delete a client
- *
- * @returns
- * Route 1: Returns a 200 status code with the client details data.
- * Route 2: Returns a 200 status code with the client detail data.
- * Route 3: Returns a 200 status code with the new client data.
- * Route 4: Returns a 200 status code with the updated client data.
- * Route 5: Returns a 200 status code with the deleted client data.
- *
- * @throws
- * Route 1 - 5: Returns a 500 status code with an error message if there is an error.
- */
-router.get(
-  "/getclient",
-  authenticateUser,
-  authorizeRole("admin"),
-  clientController.getAllUsers
-);
-router.get(
-  "/getclient/:id",
-  authenticateUser,
-  authorizeRole("admin"),
-  clientController.getClientById
-);
-router.post(
-  "/addclient",
-  authenticateUser,
-  authorizeRole("admin"),
-  clientController.createUser
-);
-router.put(
-  "/updateclient/:id",
-  authenticateUser,
-  authorizeRole("admin"),
-  clientController.updateClient
-);
-router.delete(
-  "/deleteclient/:id",
-  authenticateUser,
-  authorizeRole("admin"),
-  clientController.deleteClient
 );
 
 module.exports = router;
