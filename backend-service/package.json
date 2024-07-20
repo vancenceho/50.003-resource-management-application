@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "_start": "node routes/index.js",
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "test": "jest"
   },
   "dependencies": {
     "bcrypt": "^5.1.1",
