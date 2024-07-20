@@ -64,34 +64,31 @@ exports.getLeaveRequestByTrainerId = async (req, res) => {
  * // Create Leave Request
  *
  * @details
- * Step 1: This function first retrieves the trainer id, start date and end date from the request body.
- * Step 2: It then attempts to find the trainer with the given id in the database.
- * Step 3: If the trainer is not found, it returns a 404 status code with an error message.
- * Step 4: If the trainer is found, it creates a new leave request with the given details.
- * Step 5: It then saves the leave request to the database.
- * Step 6: If there is an error saving the leave request, it returns a 500 status code with an error message.
- * Step 7: If the leave request is saved successfully, it returns a 201 status code with the leave request data.
+ * Step 1: The function creates a new leave request with the details provided in the request body.
+ * Step 2: It then saves the leave request to the database.
+ * Step 3: If there is an error creating the leave request, it returns a 500 status code with an error message.
+ * Step 4: If the leave request is created successfully, it returns a 200 status code with the leave request data.
  *
- * @param {mongoose.Types.ObjectId} trainerId
  * @param {*} req
  * @param {*} res
  *
  * @returns
- * If the trainer is not found, returns a 404 status code with an error message.
- * If there is an error saving the leave request, returns a 500 status code with an error message.
- * If the leave request is saved successfully, returns a 201 status code with the leave request data.
+ * If there is an error creating the leave request, returns a 500 status code with an error message.
+ * If the leave request is created successfully, returns a 200 status code with the leave request data.
  */
 exports.createLeaveRequest = async (req, res) => {
   try {
-    const trainerId = new mongoose.Types.ObjectId(req.query.trainerId);
-    const startDate = moment(req.body.startDate, "DD-MM-YYYY").format("LL");
-    const endDate = moment(req.body.endDate, "DD-MM-YYYY").format("LL");
+    //const startDate = moment(req.body.startDate, "DD-MM-YYYY").format("LL");
+    //const endDate = moment(req.body.endDate, "DD-MM-YYYY").format("LL");
     const leaveRequest = new LeaveRequest({
       _id: new mongoose.Types.ObjectId(),
-      trainerId: trainerId,
-      startDate: startDate,
-      endDate: endDate,
-      duration: moment(endDate).diff(moment(startDate), "days"),
+      trainer: req.body.trainer,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      duration: req.body.duration,
+      status: req.body.status,
+      type: req.body.type,
+      reason: req.body.reason,
     });
     await leaveRequest.save();
     res.status(200).json(leaveRequest);
@@ -124,12 +121,18 @@ exports.createLeaveRequest = async (req, res) => {
  */
 exports.updateLeaveRequest = async (req, res) => {
   try {
-    const id = req.query._id;
-    const data = await LeaveRequest.findByIdAndUpdate(id, req.body);
+    const id = req.params.id;
+    const { _id, ...updateData } = req.body;
+    const data = await LeaveRequest.findByIdAndUpdate(id, updateData);
     if (!data) {
       res.status(404).json({ message: "Leave request not found" });
     }
-    res.status(200).json(data);
+    const response = {
+      code: 200,
+      message: "Leave request successfully updated",
+      leaveRequest: data,
+    };
+    res.status(200).json(response);
   } catch (error) {
     console.error("Error updating leave request: ", error);
     if (!res.headersSent) {
@@ -160,14 +163,21 @@ exports.updateLeaveRequest = async (req, res) => {
  */
 exports.deleteLeaveRequest = async (req, res) => {
   try {
-    const id = req.query._id;
-    const data = await LeaveRequest.findByIdAndDelete(id);
+    const id = req.params.id;
+    const data = await LeaveRequest.findByIdAndDelete(req.params.id, req.body);
     if (!data) {
       res.status(404).json({ message: "Leave request not found" });
     }
-    res.status(200).json(data);
+    const response = {
+      code: 200,
+      message: "Leave request successfully deleted",
+      leaveRequest: data,
+    };
+    res.status(200).json(response);
   } catch (error) {
     console.error("Error deleting leave request: ", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ message: "Error Deleting LeaveRequest: Internal Server Error" });
   }
 };

@@ -67,9 +67,14 @@ const workshopSchema = new Schema({
     required: true,
   },
   trainer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Trainer",
-    required: true,
+    type: Array,
+    properties: {
+      _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Trainer",
+        required: true,
+      },
+    },
   },
 });
 

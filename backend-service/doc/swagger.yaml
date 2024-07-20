@@ -1003,9 +1003,16 @@ components:
           type: integer
           example: 20
         client:
-          $ref: "#/components/schemas/Client"
+          type: string
+          example: 668d5ba4a5f8eca9ff47283e
+          description: MongoDB ObjectID as a hexadecimal string.
         trainer:
-          $ref: "#/components/schemas/Trainer"
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 668d5ba4a5f8eca9ff47283e
+              description: MongoDB ObjectID as a hexadecimal string.
       xml:
         name: workshop
     LeaveRequest:
@@ -1016,7 +1023,9 @@ components:
           example: 668d5ba4a5f8eca9ff47283e
           description: MongoDB ObjectID as a hexadecimal string.
         trainer:
-          $ref: "#/components/schemas/Trainer"
+          type: string
+          example: 668d5ba4a5f8eca9ff47283e
+          description: MongoDB ObjectID of trainer as a hexadecimal string.
         startDate:
           type: string
           example: 12th July 2024
