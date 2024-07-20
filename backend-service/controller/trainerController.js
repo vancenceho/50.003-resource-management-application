@@ -133,7 +133,8 @@ exports.getOwnDetails = async (req, res) => {
 
 exports.getTrainerById = async (req, res) => {
   try {
-    const trainer = await Trainer.findById(req.params.id);
+    const id = req.query.id;
+    const trainer = await Trainer.findById(id);
     if (!trainer) {
       return res.status(404).send({ message: "Trainer not found" });
     }
@@ -147,7 +148,7 @@ exports.getTrainerById = async (req, res) => {
 
 exports.updateTrainer = async (req, res) => {
   try {
-    const query = { _id: req.params.id };
+    const query = { _id: req.query.id };
     let updateData = req.body;
     delete updateData._id;
     const update = { $set: updateData };
@@ -166,7 +167,7 @@ exports.updateTrainer = async (req, res) => {
 
 exports.deleteTrainer = async (req, res) => {
   try {
-    const trainer = await Trainer.findByIdAndDelete(req.params.id);
+    const trainer = await Trainer.findByIdAndDelete(req.query.id);
     if (!trainer) {
       return res.status(404).send({ message: "Trainer not found" });
     }

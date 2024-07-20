@@ -44,7 +44,7 @@ const jwt = require("jsonwebtoken");
           timeStart: "10:00 AM",
           timeEnd: "1:00 PM",
           duration: 3,
-          status: "scheduled",
+          status: "Accepted",
           type: "Technical",
           maxParticipants: 20,
           client: {
@@ -135,7 +135,7 @@ const jwt = require("jsonwebtoken");
               "role": "client"
             },
             trainer: {
-              "_id": "6697855a7e9a0985a34809b0",
+              "_id": "669bc1f8d3a1fa47b2556457",
               "username": "theTrainer",
               "firstName": "Sebastian",
               "lastName": "Vettel",

@@ -32,8 +32,53 @@ const jwt = require("jsonwebtoken");
 
   });
 
-// CWT.1.0 - Client Views Workshop Status
-describe("CWT.1.0 - Client Views Workshop Status", () => {
+// CWT.1.0 - Client Submits a Workshop Request
+describe("CWT.1.0 - Client Submits a Workshop Request", () => {
+  it("should store a workshop", async () => {
+    const res = await request(app)
+    .post("/client/addworkshop")
+    .set("Authorization", `Bearer ${clientToken}`)
+    .send({
+      name: "Data Science Bootcamp",
+      description: "An intensive bootcamp covering data science fundamentals and advanced topics.",
+      startDate: "1st August 2024",
+      endDate: "5th August 2024",
+      location: "Tech Hub",
+      timeStart: "9:00 AM",
+      timeEnd: "5:00 PM",
+      duration: 5,
+      status: "Accepted",
+      type: "Technical",
+      maxParticipants: 20,
+      client: {
+        "_id": randomClientId,
+        "username": "theClient",
+        "firstName": "Lewis",
+        "lastName": "Hamilton",
+        "email": "lewis@example.com",
+        "password": "12345",
+        "role": "client"
+      },
+      trainer: {
+        "_id": "669bc1f8d3a1fa47b2556457",
+        "username": "theTrainer",
+        "firstName": "Sebastian",
+        "lastName": "Vettel",
+        "email": "sebastian@example.com",
+        "password": "12345",
+        "role": "trainer",
+        "status": "available"
+      }
+  });
+  expect(res.statusCode).toBe(201);
+  expect(res.body.name).toBe("Data Science Bootcamp");
+});
+}); 
+
+
+
+// CWT.2.0 - Client Views Workshop Status
+describe("CWT.2.0 - Client Views Workshop Status", () => {
     it("should return a workshop", async () => {
       const res = await request(app)
       .get(`/client/getworkshop/:id`)

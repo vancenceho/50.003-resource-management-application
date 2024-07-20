@@ -136,9 +136,28 @@ router.delete(
   authorizeRole('admin'), 
   clientController.deleteClient);
 
+
 /**
  * // Admin Trainer Request Routes
+ *
+ * @details
+ * Route 1: Route to get all cllient details
+ * Route 2: Route to get a specific client by id
+ * Route 3: Route to create a new client
+ * Route 4: Route to update a client details
+ * Route 5: Route to delete a client 
+ *
+ * @returns
+ * Route 1: Returns a 200 status code with the workshop requests data.
+ * Route 2: Returns a 200 status code with the workshop request data.
+ * Route 3: Returns a 200 status code with the new workshop request data.
+ * Route 4: Returns a 200 status code with the updated workshop request data.
+ * Route 5: Returns a 200 status code with the deleted workshop request data.
+ *
+ * Route 1 - 5: Returns a 500 status code with an error message if there is an error.
+ *
  */
+
 router.post(
   "/allocatetrainer", 
   authenticateUser, 
@@ -146,14 +165,37 @@ router.post(
   workshopController.allocateTrToWorkshop);
 // API link = http://localhost:3000/admin/allocatetrainer?workshopId={workshopId}&trainerId={trainerId}
 
+router.get(
+  "/gettrainer", 
+  authenticateUser, 
+  authorizeRole('admin'), 
+  trainerController.getAllTrainers);
 
+
+router.get(
+  "/gettrainer/:id", 
+  authenticateUser, 
+  authorizeRole('admin'), 
+  trainerController.getTrainerById);
 
 router.post(
   "/addtrainer", 
   authenticateUser, 
   authorizeRole('admin'), 
   trainerController.createTrainer);
-//to say if workshop req is confirmed -> then need notify trainer & client
+  
+router.put(
+  "/updatetrainer/:id", 
+  authenticateUser, 
+  authorizeRole('admin'), 
+  trainerController.updateTrainer);
+
+router.delete(
+  "/deletetrainer/:id", 
+  authenticateUser, 
+  authorizeRole('admin'), 
+  trainerController.deleteTrainer);
+
 
 //router.get("/checkforSchedConflict", authenticateUser, authorizeRole("trainer"), workshopController.checkforSchedConflict);
 

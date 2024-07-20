@@ -38,7 +38,7 @@ router.post("/createClient", clientController.createClient);
  *
  */
 router.post(
-  "/add",
+  "/addworkshop",
   authenticateUser,
   authorizeRole("client"),
   workshopController.createWorkshopRequest

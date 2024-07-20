@@ -30,15 +30,9 @@ const authenticateUser = async (req, res, next) => {
       else if (decoded.role === 'trainer') {
         user = await Trainer.findById(decoded.TrainerId);
     } 
-      /*if (decoded.role !== 'trainer') {
-        return res.status(403).send({ error: "Only Trainer can perform this action" });
-    }*/
       else if (decoded.role === 'client') {
         user = await Client.findById(decoded.clientId);
     }
-      /*if (decoded.role !== 'client') {
-        return res.status(403).send({ error: "Only Client can perform this action" });
-    }*/
 
       if (!user) {
         console.log(user)

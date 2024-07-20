@@ -215,7 +215,7 @@ exports.allocateTrToWorkshop = async (req, res) => {
         res.status(404).json({ message: `Trainer with ID ${trainerId} not found`});
         continue;
       }
-      if (!trainer.AvailabilityStatus) {
+      if (!trainer.status) {
         console.log(`Trainer with ID ${trainerId} is not available`); // Log if trainer not available
         res.status(400).json({ message: `Trainer with ID ${trainerId} is not available` });
         continue;
@@ -228,7 +228,7 @@ exports.allocateTrToWorkshop = async (req, res) => {
       console.log('No trainers were allocated. Check the conditions above.'); // Log if no trainers were added
     }
     // Allocate trainers to the workshop
-    workshop.trainerId = allocatedTrainers;
+    workshop.trainer = allocatedTrainers;
     console.log(allocatedTrainers)
     // Save the updated workshop
     await workshop.save();

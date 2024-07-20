@@ -3,12 +3,12 @@ const mongoose = require("mongoose");
 const { connectDB, cleanup } = require("../models/db.js");
 const jwt = require("jsonwebtoken");
 
-describe("Testing Client Endpoints", () => {
+describe("Testing Admin Client Endpoints", () => {
   let randomClientId; 
   let clientToken;
   const adminToken = jwt.sign({ AdminId: "66978299528ea72d01e2d308", role: "admin" }, "root", { expiresIn: "1h" });
 
-   /* Connecting to the database before all test. */
+  /* Connecting to the database before all test. */
   beforeAll(async () => {
     await connectDB();
     app = require("../app.js");
@@ -24,7 +24,7 @@ describe("Testing Client Endpoints", () => {
 
   });
 
-  //works
+ // ACT.1.0 - Admin Adds a New Client
   describe("POST /admin/addclient", () => {
   it("create client account", async () => {
     const res = await request(app)
@@ -46,7 +46,7 @@ describe("Testing Client Endpoints", () => {
 }); 
 
 
-// client permission -- works
+// ACT.2.0 - Client login with credential (username or email)
   describe("GET /client/login", () => {
   test("testing login with client account", async () => {
     const res = await request(app)
@@ -63,7 +63,7 @@ describe("Testing Client Endpoints", () => {
 }); 
 
 
-// client permission
+// ACT.3.0 - Admin Gets a Client by ID
 describe("GET /admin/getclient/:id", () => {
   test("should return a client", async () => {
     const res = await request(app)
@@ -102,6 +102,7 @@ describe("PUT /admin/updateclient", () => {
   });
 });  
 
+// ACT.5.0 - Admin Deletes a Client
 /*describe("DELETE /admin/deleteclient", () => {
   it("should delete a client", async () => {
     const res = await request(app)
