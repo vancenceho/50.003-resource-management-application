@@ -43,8 +43,16 @@ router.post(
   authorizeRole("client"),
   workshopController.createWorkshopRequest
 );
+
 router.get(
-  "/get:id",
+  "/getworkshop",
+  authenticateUser,
+  authorizeRole("client"),
+  workshopController.getWorkshopRequests
+);
+
+router.get(
+  "/getworkshop/:id",
   authenticateUser,
   authorizeRole("client"),
   workshopController.getWorkshopRequestById

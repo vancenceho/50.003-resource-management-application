@@ -237,7 +237,7 @@ exports.allocateTrToWorkshop = async (req, res) => {
     
     let updateStatus = {};
     if (workshop.trainerId) {
-      updateStatus = { status: 'scheduled' };
+      updateStatus = { status: 'accepted' };
     } else {
       updateStatus = { status: 'rejected' };
     }
@@ -325,7 +325,6 @@ exports.getAllocatedWorkshops = async (req, res) => {
   }
 };
 
-
 /*
 //admin permission
 exports.checkforSchedConflict = async (req, res) => {
@@ -380,3 +379,7 @@ exports.checkforSchedConflict = async (req, res) => {
     }
   }
 };*/
+
+
+//WorkshopManagement. getWorkshopsStatus
+//WorkshopManagement. markPreparationComplete

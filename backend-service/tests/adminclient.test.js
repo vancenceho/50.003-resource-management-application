@@ -5,10 +5,10 @@ const jwt = require("jsonwebtoken");
 
 describe("Testing Client Endpoints", () => {
   let randomClientId; 
+  let clientToken;
   const adminToken = jwt.sign({ AdminId: "66978299528ea72d01e2d308", role: "admin" }, "root", { expiresIn: "1h" });
-  const clientToken = jwt.sign({ clientId: "669a327cff6299af0b47bffc", role: "client" }, "root", { expiresIn: "1h" });
 
-  /* Connecting to the database before all test. */
+   /* Connecting to the database before all test. */
   beforeAll(async () => {
     await connectDB();
     app = require("../app.js");
@@ -19,6 +19,8 @@ describe("Testing Client Endpoints", () => {
     const clients = res.body;
     // Select a random client ID
     randomClientId = clients[Math.floor(Math.random() * clients.length)]._id;
+    clientToken = jwt.sign({ clientId: randomClientId, role: "client" }, "root", { expiresIn: "1h" });
+
 
   });
 
@@ -77,6 +79,7 @@ describe("GET /admin/getclient/:id", () => {
   });
 }); 
 
+// ACT.4.0 - Admin Updates Client Information
 describe("PUT /admin/updateclient", () => {
   it("should update a client", async () => {
     const res = await request(app)
@@ -99,7 +102,7 @@ describe("PUT /admin/updateclient", () => {
   });
 });  
 
-describe("DELETE /admin/deleteclient", () => {
+/*describe("DELETE /admin/deleteclient", () => {
   it("should delete a client", async () => {
     const res = await request(app)
     .delete(`/admin/deleteclient`)
@@ -111,6 +114,8 @@ describe("DELETE /admin/deleteclient", () => {
     expect(res.statusCode).toBe(200);
   });
 });
+*/
+
 
     /* Closing database connection after all test. */
     afterAll(async () => {

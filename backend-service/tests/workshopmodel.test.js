@@ -1,12 +1,21 @@
+const request = require("supertest");
 const mongoose = require('mongoose');
 const { connectDB, cleanup } = require('../models/db.js');
 const workshopRequest = require('../models/workshopRequest'); 
 const client = require('../models/client.js');
 
 describe('workshopRequest Model Test', () => {
+  let randomClientId;
   // Connect to the database before running any tests
   beforeAll(async () => {
     await connectDB();
+    app = require("../app.js");
+    // Fetch all clients
+    const clientsRes = await request(app)
+    .get("/client/getClients") // Adjust the endpoint as necessary
+    const clients = clientsRes.body;
+    // Select a random client ID
+    randomClientId = clients[Math.floor(Math.random() * clients.length)]._id;
   });
 
 
@@ -28,7 +37,7 @@ describe('workshopRequest Model Test', () => {
         type: 'workshop',
         maxParticipants: 20,
         "client": {
-            "_id": "669785397e9a0985a34809ad",
+            "_id": randomClientId,
             "username": "theClient",
             "firstName": "Lewis",
             "lastName": "Hamilton",
