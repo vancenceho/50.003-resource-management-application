@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const workshopController = require("../controller/workshopManagement");
+const clientController = require("../controller/clientController");
 const adminController = require("../controller/adminController");
+const trainerController = require("../controller/trainerController");
 
 // Middleware Controller
 const { authenticateUser, authorizeRole } = require("../middleware/auth");
@@ -22,6 +24,7 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth");
  * Route 4: Returns a 200 status code with a message that the admin has logged out.
  * Route 5: Returns a 200 status code with the deleted admin data.
  *
+ * @throws
  * Route 1 - 5: Returns a 500 status code with an error message if there is an error.
  *
  */
@@ -58,42 +61,94 @@ router.delete(
  * Route 4: Returns a 200 status code with the updated workshop request data.
  * Route 5: Returns a 200 status code with the deleted workshop request data.
  *
+ * @throws
  * Route 1 - 5: Returns a 500 status code with an error message if there is an error.
  *
  */
 router.get(
-  "/",
+  "/getworkshop",
   authenticateUser,
   authorizeRole("admin"),
   workshopController.getWorkshopRequests
 );
 
 router.get(
-  "/get/:id",
+  "/getworkshop/:id",
   authenticateUser,
   authorizeRole("admin"),
   workshopController.getWorkshopRequestById
 );
 
 router.post(
-  "/add",
+  "/addworkshop",
   authenticateUser,
   authorizeRole("admin"),
   workshopController.createWorkshopRequest
 );
 
 router.put(
-  "/update/:id",
+  "/updateworkshop/:id",
   authenticateUser,
   authorizeRole("admin"),
   workshopController.updateWorkshopRequest
 );
 
 router.delete(
-  "/delete/:id",
+  "/deleteworkshop/:id",
   authenticateUser,
   authorizeRole("admin"),
   workshopController.deleteWorkshopRequest
+);
+
+/**
+ * // Admin Client Request Routes
+ *
+ * @details
+ * Route 1: Route to get all client details
+ * Route 2: Route to get a specific client detail by id
+ * Route 3: Route to create a new client
+ * Route 4: Route to update a client details
+ * Route 5: Route to delete a client
+ *
+ * @returns
+ * Route 1: Returns a 200 status code with the client details data.
+ * Route 2: Returns a 200 status code with the client detail data.
+ * Route 3: Returns a 200 status code with the new client data.
+ * Route 4: Returns a 200 status code with the updated client data.
+ * Route 5: Returns a 200 status code with the deleted client data.
+ *
+ * @throws
+ * Route 1 - 5: Returns a 500 status code with an error message if there is an error.
+ */
+router.get(
+  "/getclient",
+  authenticateUser,
+  authorizeRole("admin"),
+  clientController.getAllUsers
+);
+router.get(
+  "/getclient/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  clientController.getClientById
+);
+router.post(
+  "/addclient",
+  authenticateUser,
+  authorizeRole("admin"),
+  clientController.createUser
+);
+router.put(
+  "/updateclient/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  clientController.updateClient
+);
+router.delete(
+  "/deleteclient/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  clientController.deleteClient
 );
 
 module.exports = router;

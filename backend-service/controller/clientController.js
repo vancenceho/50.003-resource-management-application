@@ -1,4 +1,4 @@
-const User = require("../models/client.js");
+const Client = require("../models/client.js");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 
@@ -35,7 +35,7 @@ exports.clientLogin = async (req, res) => {
       query = { username: credential };
     }
 
-    const user = await User.findOne(query);
+    const user = await Client.findOne(query);
     if (!user) {
       return res.status(401).json({ message: "User not found" });
     }
@@ -93,7 +93,7 @@ exports.clientLogout = async (req, res) => {
  */
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await Client.find();
     res.status(200).json(users);
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -135,13 +135,17 @@ exports.createUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
     // Check if a user with the same userName already exists
-    const existingUser = await User.findOne({ username: username });
+    const existingUser = await Client.findOne({
+      $or: [{ username: username }, { email: email }],
+    });
     if (existingUser) {
-      return res.status(409).json({ message: "Username already exists" });
+      return res
+        .status(409)
+        .json({ message: "Username or Email already exists" });
     }
 
     // Create a new user instance
-    const users = new User({
+    const users = new Client({
       _id: new mongoose.Types.ObjectId(),
       username: username,
       firstName: firstName,
@@ -165,6 +169,117 @@ exports.createUser = async (req, res) => {
       });
   } catch (error) {
     console.error("Error creating user:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+/**
+ * // Get Client user by ID
+ *
+ * @details
+ * Step 1: This function retrieves the id of the user from the request query.
+ * Step 2: It then attempts to find the user with the given id in the database.
+ * Step 3: If the user is not found, it returns a 404 status code with an error message.
+ * Step 4: If the user is found, it returns a 200 status code with the user data.
+ *
+ * @param {*} req
+ * @param {*} res
+ *
+ * @returns
+ * If the user is found, returns a 200 status code with the user data.
+ * If the user is not found, returns a 404 status code with an error message.
+ * If there is an error getting the user, returns a 500 status code with an error message.
+ */
+exports.getClientById = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const client = await Client.findById(id);
+    if (!client) {
+      res.status(404).json({ message: "Client not found" });
+    }
+    res.status(200).json(client);
+  } catch (error) {
+    console.error("Error getting client by id:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+/**
+ * // Update Client user
+ *
+ * @details
+ * Step 1: This function retrieves the id of the user from the request query.
+ * Step 2: It then attempts to find the user with the given id in the database.
+ * Step 3: If the user is not found, it returns a 404 status code with an error message.
+ * Step 4: If the user is found, it updates the user details with the new data.
+ * Step 5: It then saves the updated user to the database.
+ * Step 6: If there is an error saving the updated user, it returns a 500 status code with an error message.
+ * Step 7: If successful, it returns a 200 status code with the updated user data.
+ *
+ * @param {*} req
+ * @param {*} res
+ *
+ * @returns
+ * If the user is found, returns a 200 status code with the updated user data.
+ * If the user is not found, returns a 404 status code with an error message.
+ * If there is an error saving the updated user, returns a 500 status code with an error message.
+ */
+exports.updateClient = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { _id, password, ...updateData } = req.body; // exclude _id and password from update data
+    const data = await Client.findByIdAndUpdate(id, updateData);
+    if (!data) {
+      res.status(404).json({ message: "Client not found" });
+    }
+    const response = {
+      code: 200,
+      message: "Client successfully updated",
+      client: updateData,
+    };
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error updating client:", error);
+    if (!res.headersSent) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+};
+
+/**
+ * // Delete Client user
+ *
+ * @details
+ * Step 1: This function retrieves the id of the user from the request query.
+ * Step 2: It then attempts to find the user with the given id in the database.
+ * Step 3: If the user is not found, it returns a 404 status code with an error message.
+ * Step 4: If the user is found, it deletes the user from the database.
+ * Step 5: If there is an error deleting the user, it returns a 500 status code with an error message.
+ * Step 6: If successful, it returns a 200 status code with the deleted user data.
+ *
+ * @param {*} req
+ * @param {*} res
+ *
+ * @returns
+ * If successful, returns a 200 status code with the deleted user data.
+ * If the user is not found, returns a 404 status code with an error message.
+ * If there is an error deleting the user, returns a 500 status code with an error message.
+ */
+exports.deleteClient = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = await Client.findByIdAndDelete(id);
+    if (!data) {
+      res.status(404).json({ message: "Client not found" });
+    }
+    const response = {
+      code: 200,
+      message: "Client successfully deleted",
+      client: data,
+    };
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error deleting client:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

@@ -220,6 +220,181 @@ paths:
           description: Admin not found
         "500":
           description: "Error Deleting Admin: Internal Server Error"
+  /admin/getclient:
+    get:
+      tags:
+        - admin
+      summary: Get all client users
+      description: Get all client users
+      operationId: getAllUsers
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Client"
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Client"
+        "500":
+          description: "Error Fetching Clients: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/getclient/{clientId}:
+    get:
+      tags:
+        - admin
+      summary: Get a client by ID
+      description: Get a client by ID
+      operationId: getClientById
+      parameters:
+        - name: clientId
+          in: path
+          description: ID of Client to return
+          required: true
+          schema:
+            type: string
+            description: MongoDB ObjectID as a hexadecimal string.
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "404":
+          description: Client not found
+        "500":
+          description: "Error Retrieving Client: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/addclient:
+    post:
+      tags:
+        - admin
+      summary: Add a new client user
+      description: Add a new client user
+      operationId: createClient
+      requestBody:
+        description: Create a new client user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Client"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Client"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Client"
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "400":
+          description: All required fields not filled
+        "401":
+          description: Authentication failed
+        "403":
+          description: Access forbidden
+        "409":
+          description: Username or Email already exists
+        "500":
+          description: "Error Creating Client: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/updateclient/{clientId}:
+    put:
+      tags:
+        - admin
+      summary: Update a client by ID
+      description: Update a client by ID
+      operationId: updateClient
+      parameters:
+        - name: clientId
+          in: path
+          description: ID of Client to update
+          required: true
+          schema:
+            type: string
+            description: MongoDB ObjectID as a hexadecimal string.
+      requestBody:
+        description: Update an existent client user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Client"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Client"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Client"
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "404":
+          description: Client not found
+        "500":
+          description: "Error Updating Client: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/deleteclient/{clientId}:
+    delete:
+      tags:
+        - admin
+      summary: Delete a client by ID
+      description: Delete a client by ID
+      operationId: deleteClient
+      parameters:
+        - name: clientId
+          in: path
+          description: ID of Client to delete
+          required: true
+          schema:
+            type: string
+            description: MongoDB ObjectID as a hexadecimal string.
+      responses:
+        "200":
+          description: successful operation
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "404":
+          description: Client not found
+        "500":
+          description: "Error Deleting Client: Internal Server Error"
+      security:
+        - admin_auth_token: []
+
   /client/login:
     get:
       tags:
@@ -338,6 +513,7 @@ paths:
           description: Validation exception
         "500":
           description: "Error Creating Client: Internal Server Error"
+
   /trainer/login:
     get:
       tags:
@@ -555,6 +731,7 @@ paths:
           description: Trainer not found
         "500":
           description: "Error Deleting Trainer: Internal Server Error"
+
   /workshop/:
     get:
       tags:
