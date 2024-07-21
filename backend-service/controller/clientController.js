@@ -192,7 +192,7 @@ exports.createUser = async (req, res) => {
  */
 exports.getClientById = async (req, res) => {
   try {
-    const id = req.query.id;
+    const id = req.params.id;
     const client = await Client.findById(id);
     if (!client) {
       res.status(404).json({ message: "Client not found" });
