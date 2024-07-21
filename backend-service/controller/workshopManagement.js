@@ -94,7 +94,7 @@ exports.createWorkshopRequest = async (req, res) => {
     const data = await workshop.save();
     console.log("TESTING...............7at.................");
     console.log("Workshop request created: ", data);
-    res.status(201).json(data);
+    res.status(200).json(data);
   } catch (error) {
     console.log("Error creating workshop request: ", error);
     if (!res.headersSent) {
