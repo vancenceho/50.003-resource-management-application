@@ -5,9 +5,6 @@ moment.locale("en-sg");
 
 const Schema = mongoose.Schema;
 
-const startDate = moment().format("LL");
-const endDate = moment().format("LL");
-
 const workshopSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
   name: {
@@ -21,12 +18,12 @@ const workshopSchema = new Schema({
   startDate: {
     type: String,
     required: true,
-    default: startDate,
+    default: Date.now(),
   },
   endDate: {
     type: String,
     required: true,
-    default: endDate,
+    default: Date.now(),
   },
   location: {
     type: String,
@@ -35,17 +32,17 @@ const workshopSchema = new Schema({
   timeStart: {
     type: String,
     required: true,
-    default: moment().format("LT"),
+    default: Date.now(),
   },
   timeEnd: {
     type: String,
     required: true,
-    default: moment().format("LT"),
+    default: Date.now(),
   },
   duration: {
     type: Number,
     required: true,
-    default: moment(startDate).diff(moment(endDate), "days"),
+    default: 0,
   },
   status: {
     type: String,
