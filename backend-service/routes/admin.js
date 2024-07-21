@@ -58,7 +58,7 @@ router.get(
 );
 
 router.get(
-  "/getworkshop/:id",
+  "/getworkshop/:username",
   authenticateUser,
   authorizeRole("admin"),
   workshopController.getWorkshopRequestById
@@ -72,14 +72,14 @@ router.post(
 );
 
 router.put(
-  "/updateworkshop/:id",
+  "/updateworkshop/:username",
   authenticateUser,
   authorizeRole("admin"),
   workshopController.updateWorkshopRequest
 );
 
 router.delete(
-  "/deleteworkshop/:id",
+  "/deleteworkshop/:username",
   authenticateUser,
   authorizeRole("admin"),
   workshopController.deleteWorkshopRequest
@@ -113,10 +113,10 @@ router.get(
   clientController.getAllClients);
 
 router.get(
-  "/getclient/:id", 
+  "/getclient/:username", 
   authenticateUser, 
   authorizeRole('admin'), 
-  clientController.getClientById);
+  clientController.getClientByUsername);
 
 router.post(
   "/addclient", 
@@ -173,10 +173,10 @@ router.get(
 
 
 router.get(
-  "/gettrainer/:id", 
+  "/gettrainer/:username", 
   authenticateUser, 
   authorizeRole('admin'), 
-  trainerController.getTrainerById);
+  trainerController.getTrainerByUsername);
 
 router.post(
   "/addtrainer", 
@@ -185,13 +185,13 @@ router.post(
   trainerController.createTrainer);
   
 router.put(
-  "/updatetrainer/:id", 
+  "/updatetrainer/:username", 
   authenticateUser, 
   authorizeRole('admin'), 
   trainerController.updateTrainer);
 
 router.delete(
-  "/deletetrainer/:id", 
+  "/deletetrainer/:username", 
   authenticateUser, 
   authorizeRole('admin'), 
   trainerController.deleteTrainer);
