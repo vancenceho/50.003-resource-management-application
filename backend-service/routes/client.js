@@ -22,7 +22,7 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth.js"); //
  */
 router.get("/login", userController.clientLogin);
 router.get("/logout", userController.clientLogout);
-router.get("/getClients", userController.getAllUsers);
+router.get("/getClients", userController.getAllUsers); // This route should not be accessible to clients
 router.post("/createClient", userController.createUser);
 
 /**

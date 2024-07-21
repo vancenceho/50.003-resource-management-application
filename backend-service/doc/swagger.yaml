@@ -115,8 +115,6 @@ paths:
                 $ref: "#/components/schemas/ApiResponse"
         "401":
           description: username or password incorrect
-        "404":
-          description: Invalid username/password supplied
         "500":
           description: "Error Logging In: Internal Server Error"
   /admin/logout:
@@ -152,6 +150,10 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Admin"
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
         "500":
           description: "Error Fetching Admins: Internal Server Error"
       security:
@@ -214,14 +216,196 @@ paths:
       responses:
         "200":
           description: successful operation
-        "400":
-          description: Invalid input
         "401":
           description: No authorization token provided
         "404":
           description: Admin not found
         "500":
           description: "Error Deleting Admin: Internal Server Error"
+  /admin/gettrainer:
+    get:
+      tags:
+        - admin
+      summary: Get all trainer users
+      description: Get all trainer users
+      operationId: getAllTrainers
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Trainer"
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Trainer"
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "404":
+          description: Trainer not found
+        "500":
+          description: "Error Fetching Trainers: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/gettrainer/{trainerId}:
+    get:
+      tags:
+        - admin
+      summary: Get a trainer by ID
+      description: Get a trainer by ID
+      operationId: getTrainerById
+      parameters:
+        - name: trainerId
+          in: path
+          description: ID of Trainer to return
+          required: true
+          schema:
+            type: string
+            description: MongoDB ObjectID as a hexadecimal string.
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trainer"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Trainer"
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "404":
+          description: Trainer not found
+        "500":
+          description: "Error Retrieving Trainer: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/addtrainer:
+    post:
+      tags:
+        - admin
+      summary: Add a new trainer user
+      description: Add a new trainer user
+      operationId: createTrainer
+      requestBody:
+        description: Create a new trainer user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Trainer"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Trainer"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Trainer"
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trainer"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Trainer"
+        "400":
+          description: All fields are required
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "409":
+          description: Trainer Username already exists
+        "500":
+          description: "Error Creating Trainer: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/updatetrainer/{trainerId}:
+    put:
+      tags:
+        - admin
+      summary: Update a trainer by ID
+      description: Update a trainer by ID
+      operationId: updateTrainer
+      parameters:
+        - name: trainerId
+          in: path
+          description: ID of Trainer to update
+          required: true
+          schema:
+            type: string
+            description: MongoDB ObjectID as a hexadecimal string.
+      requestBody:
+        description: Update an existent trainer user
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Trainer"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Trainer"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/Trainer"
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trainer"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Trainer"
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "404":
+          description: Trainer not found
+        "500":
+          description: "Error Updating Trainer: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/deletetrainer/{trainerId}:
+    delete:
+      tags:
+        - admin
+      summary: Delete a trainer by ID
+      description: Delete a trainer by ID
+      operationId: deleteTrainer
+      parameters:
+        - name: trainerId
+          in: path
+          description: ID of Trainer to delete
+          required: true
+          schema:
+            type: string
+            description: MongoDB ObjectID as a hexadecimal string.
+      responses:
+        "200":
+          description: successful operation
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "404":
+          description: Trainer not found
+        "500":
+          description: "Error Deleting Trainer: Internal Server Error"
+      security:
+        - admin_auth_token: []
   /admin/getclient:
     get:
       tags:
@@ -243,6 +427,10 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Client"
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
         "500":
           description: "Error Fetching Clients: Internal Server Error"
       security:
@@ -272,6 +460,10 @@ paths:
             application/xml:
               schema:
                 $ref: "#/components/schemas/Client"
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
         "404":
           description: Client not found
         "500":
@@ -416,8 +608,6 @@ paths:
           description: No authorization token provided
         "403":
           description: Access forbidden
-        "404":
-          description: Workshop not found
         "500":
           description: "Error Retrieving Workshops: Internal Server Error"
       security:
@@ -488,8 +678,6 @@ paths:
           description: No authorization token provided
         "403":
           description: Access forbidden
-        "404":
-          description: Workshop not found
         "500":
           description: "Error Creating Workshop: Internal Server Error"
       security:
@@ -570,6 +758,176 @@ paths:
           description: "Error Deleting Workshop: Internal Server Error"
       security:
         - admin_auth_token: []
+  /admin/getleave:
+    get:
+      tags:
+        - admin
+      summary: Get all leave requests
+      description: Get all leave requests
+      operationId: getLeaveRequests
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/LeaveRequest"
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "500":
+          description: "Error Retrieving Leaves: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/getleave/{trainerId}:
+    get:
+      tags:
+        - admin
+      summary: Get a leave request by trainerId
+      description: Get a leave request by trainerId
+      operationId: getLeaveRequestByTrainerId
+      parameters:
+        - name: trainerId
+          in: path
+          description: ID of LeaveRequest to return
+          required: true
+          schema:
+            type: string
+            description: MongoDB ObjectID as a hexadecimal string.
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveRequest"
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "404":
+          description: Leave Request not found
+        "500":
+          description: "Error Retrieving Leave: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/addleave:
+    post:
+      tags:
+        - admin
+      summary: Add a new leave request
+      description: Add a new leave request
+      operationId: createLeaveRequest
+      requestBody:
+        description: Create a new leave request
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeaveRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/LeaveRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/LeaveRequest"
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveRequest"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/LeaveRequest"
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "500":
+          description: "Error Creating Leave: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/updateleave/{leaveId}:
+    put:
+      tags:
+        - admin
+      summary: Update a leave request by ID
+      description: Update a leave request by ID
+      operationId: updateLeaveRequest
+      parameters:
+        - name: leaveId
+          in: path
+          description: ID of LeaveRequest to update
+          required: true
+          schema:
+            type: string
+            description: MongoDB ObjectID as a hexadecimal string.
+      requestBody:
+        description: Update an existent leave request
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LeaveRequest"
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/LeaveRequest"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/LeaveRequest"
+        required: true
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveRequest"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/LeaveRequest"
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "404":
+          description: Leave Request not found
+        "500":
+          description: "Error Updating Leave: Internal Server Error"
+      security:
+        - admin_auth_token: []
+  /admin/deleteleave/{leaveId}:
+    delete:
+      tags:
+        - admin
+      summary: Delete a leave request by ID
+      description: Delete a leave request by ID
+      operationId: deleteLeaveRequest
+      parameters:
+        - name: leaveId
+          in: path
+          description: ID of LeaveRequest to delete
+          required: true
+          schema:
+            type: string
+            description: MongoDB ObjectID as a hexadecimal string.
+      responses:
+        "200":
+          description: successful operation
+        "401":
+          description: No authorization token provided
+        "403":
+          description: Access forbidden
+        "404":
+          description: Leave Request not found
+        "500":
+          description: "Error Deleting Leave: Internal Server Error"
+      security:
+        - admin_auth_token: []
 
   /client/login:
     get:
@@ -630,29 +988,6 @@ paths:
           description: successful operation
         "500":
           description: "Error Logging Out: Internal Server Error"
-  /client/getClients:
-    get:
-      tags:
-        - client
-      summary: Get all client users
-      description: Get all client users
-      operationId: getAllUsers
-      responses:
-        "200":
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Client"
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Client"
-        "500":
-          description: "Error Fetching Clients: Internal Server Error"
   /client/createClient:
     post:
       tags:
@@ -749,29 +1084,6 @@ paths:
           description: successful operation
         "500":
           description: "Error Logging Out: Internal Server Error"
-  /trainer/getTrainers:
-    get:
-      tags:
-        - trainer
-      summary: Get all trainer users
-      description: Get all trainer users
-      operationId: getAllTrainers
-      responses:
-        "200":
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Trainer"
-            application/xml:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Trainer"
-        "500":
-          description: "Error Fetching Trainers: Internal Server Error"
   /trainer/get/{trainerId}:
     get:
       tags:
@@ -801,42 +1113,6 @@ paths:
           description: Trainer not found
         "500":
           description: "Error Retrieving Trainer: Internal Server Error"
-  /trainer/createTrainer:
-    post:
-      tags:
-        - trainer
-      summary: Create a new trainer user
-      description: Create a new trainer user
-      operationId: createTrainer
-      requestBody:
-        description: Create a new trainer user
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Trainer"
-          application/xml:
-            schema:
-              $ref: "#/components/schemas/Trainer"
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: "#/components/schemas/Trainer"
-        required: true
-      responses:
-        "200":
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Trainer"
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/Trainer"
-        "400":
-          description: All fields are required
-        "409":
-          description: Trainer Username already exists
-        "500":
-          description: "Error Creating Trainer: Internal Server Error"
   /trainer/update/{trainerId}:
     put:
       tags:
@@ -883,30 +1159,6 @@ paths:
           description: Trainer not found
         "500":
           description: "Error Updating Trainer: Internal Server Error"
-  /trainer/delete/{trainerId}:
-    delete:
-      tags:
-        - trainer
-      summary: Delete a trainer by ID
-      description: Delete a trainer by ID
-      operationId: deleteTrainer
-      parameters:
-        - name: trainerId
-          in: path
-          description: ID of Trainer to delete
-          required: true
-          schema:
-            type: string
-            description: MongoDB ObjectID as a hexadecimal string.
-      responses:
-        "200":
-          description: successful operation
-        "400":
-          description: Invalid input
-        "404":
-          description: Trainer not found
-        "500":
-          description: "Error Deleting Trainer: Internal Server Error"
 
   /workshop/:
     get:

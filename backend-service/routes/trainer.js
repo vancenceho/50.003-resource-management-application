@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const leaveRequestController = require("../controller/leaveRequestController.js");
+const workshopController = require("../controller/workshopManagement.js");
 const trainerController = require("../controller/trainerController.js");
 
 // Middleware Controller
@@ -30,10 +31,10 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth");
  */
 router.post("/createTrainer", trainerController.createTrainer);
 router.get("/login", trainerController.trainerLogin);
-router.get("/getTrainers", trainerController.getAllTrainers);
+router.get("/getTrainers", trainerController.getAllTrainers); // This route should not be accessible to trainers
 router.get("/get/:id", trainerController.getTrainerById);
 router.put("/update/:id", trainerController.updateTrainer);
-router.delete("/delete/:id", trainerController.deleteTrainer);
+router.delete("/delete/:id", trainerController.deleteTrainer); // This route should not be accessible to trainers
 router.get("/logout", trainerController.trainerLogout);
 
 /**
