@@ -72,11 +72,19 @@ describe("Leave Request Model Test", () => {
       { _id: savedLeaveRequestId },
       { status: "approved" }
     );
+    const updatedLeaveRequest = await LeaveRequest.findOne({
+      _id: savedLeaveRequestId,
+    });
+    expect(updatedLeaveRequest.status).toBe("approved");
   });
 
   // Test Case 4: Deleting a leave request
   it("delete leave request by employeeId", async () => {
     await LeaveRequest.findOneAndDelete({ _id: savedLeaveRequestId });
+    const deletedLeaveRequest = await LeaveRequest.findOne({
+      _id: savedLeaveRequestId,
+    });
+    expect(deletedLeaveRequest).toBeNull();
   });
 
   afterAll(async () => {
