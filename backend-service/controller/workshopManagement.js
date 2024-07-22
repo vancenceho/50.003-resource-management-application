@@ -47,10 +47,15 @@ exports.getWorkshopRequests = async (req, res) => {
  */
 exports.getWorkshopRequestById = async (req, res) => {
   try {
+<<<<<<< HEAD
     const id = req.query.id;
     const workshop = await Workshop.findById(id)
     .populate("client")
     .populate("trainer");
+=======
+    const id = req.params.id;
+    const workshop = await Workshop.findById(id);
+>>>>>>> bd601441689d38464c7a793f65f54511b5e45877
     if (!workshop) {
       return res.status(404).json({ message: "Workshop not found" });
     }
@@ -94,14 +99,19 @@ exports.createWorkshopRequest = async (req, res) => {
       status: req.body.status,
       type: req.body.type,
       maxParticipants: req.body.maxParticipants,
+<<<<<<< HEAD
       client: req.body.client, 
       trainer: req.body.trainer,
+=======
+      client: req.body.client,
+      trainerId: req.body.trainerId,
+>>>>>>> bd601441689d38464c7a793f65f54511b5e45877
     });
     console.log("TESTING...............6at.................");
     const data = await workshop.save();
     console.log("TESTING...............7at.................");
     console.log("Workshop request created: ", data);
-    res.status(201).json(data);
+    res.status(200).json(data);
   } catch (error) {
     console.log("Error creating workshop request: ", error);
     if (!res.headersSent) {
@@ -111,6 +121,7 @@ exports.createWorkshopRequest = async (req, res) => {
 };
 
 /**
+<<<<<<< HEAD
  * // Delete Workshop Request
  *
  * @details
@@ -144,6 +155,8 @@ exports.deleteWorkshopRequest = async (req, res) => {
 };
 
 /**
+=======
+>>>>>>> bd601441689d38464c7a793f65f54511b5e45877
  * // Update Workshop Request
  *
  * @details
@@ -165,12 +178,23 @@ exports.deleteWorkshopRequest = async (req, res) => {
  */
 exports.updateWorkshopRequest = async (req, res) => {
   try {
+<<<<<<< HEAD
     const id = req.query.id;
     const data = await Workshop.findByIdAndUpdate(id, req.body, { new: true }); // Add { new: true } to return the updated document
+=======
+    const id = req.params.id;
+    const { _id, ...updateData } = req.body;
+    const data = await Workshop.findByIdAndUpdate(id, updateData);
+>>>>>>> bd601441689d38464c7a793f65f54511b5e45877
     if (!data) {
       res.status(404).json({ message: "Workshop not found" });
     }
-    res.status(200).json(data);
+    const response = {
+      code: 200,
+      message: "Workshop successfully updated",
+      workshop: updateData,
+    };
+    res.status(200).json(response);
   } catch (error) {
     console.error("Error updating workshop request: ", error);
     if (!res.headersSent) {
@@ -179,6 +203,7 @@ exports.updateWorkshopRequest = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 
 exports.allocateTrToWorkshop = async (req, res) => {
   try {
@@ -383,3 +408,39 @@ exports.checkforSchedConflict = async (req, res) => {
 
 //WorkshopManagement. getWorkshopsStatus
 //WorkshopManagement. markPreparationComplete
+=======
+/**
+ * // Delete Workshop Request
+ *
+ * @details
+ * Step 1: This function first retrieves the id of the workshop to be deleted from the request query.
+ * Step 2: It then attempts to find the workshop with the given id in the database.
+ * Step 3: If the workshop is not found, it returns a 404 status code with an error message.
+ * Step 4: If the workshop is found, it deletes the workshop from the database and returns a 200 status code with the deleted workshop data.
+ *
+ * @param {*} req
+ * @param {*} res
+ *
+ * @returns
+ * If successful, returns a 200 status code with the deleted workshop data.
+ * If the workshop is not found, returns a 404 status code with an error message.
+ */
+exports.deleteWorkshopRequest = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = await Workshop.findByIdAndDelete(id);
+    if (!data) {
+      res.status(404).json({ message: "Workshop not found" });
+    }
+    const response = {
+      code: 200,
+      message: "Workshop successfully deleted",
+      workshop: data,
+    };
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error deleting workshop request: ", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+>>>>>>> bd601441689d38464c7a793f65f54511b5e45877

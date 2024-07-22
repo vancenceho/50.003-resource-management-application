@@ -147,6 +147,10 @@ exports.getTrainerById = async (req, res) => {
       .send({ message: "Error Retreiving Trainer: Internal Server Error" });
   }
 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> bd601441689d38464c7a793f65f54511b5e45877
 // Controller function to let the signed in trainer access only their details
 exports.getOwnDetails = async (req, res) => {
   try {
@@ -268,7 +272,10 @@ exports.updateTrainer = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> bd601441689d38464c7a793f65f54511b5e45877
 /**
  * // Delete Trainer user
  *

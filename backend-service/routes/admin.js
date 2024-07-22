@@ -1,9 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const workshopController = require("../controller/workshopManagement");
+<<<<<<< HEAD
 const clientController = require("../controller/clientController.js"); // Import the client controller
 const adminController = require("../controller/adminController");
 const trainerController = require("../controller/trainerController");
+=======
+const leaveRequestController = require("../controller/leaveRequestController");
+const clientController = require("../controller/clientController");
+const adminController = require("../controller/adminController");
+const trainerController = require("../controller/trainerController");
+
+>>>>>>> bd601441689d38464c7a793f65f54511b5e45877
 // Middleware Controller
 const { authenticateUser, authorizeRole } = require("../middleware/auth");
 
@@ -21,14 +29,134 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth");
  * Route 2: Returns a 200 status code with a message that authentication was successful.
  * Route 3: Returns a 200 status code with all the admin data.
  * Route 4: Returns a 200 status code with a message that the admin has logged out.
+ * Route 5: Returns a 200 status code with the deleted admin data.
  *
- * Route 1 - 4: Returns a 500 status code with an error message if there is an error.
+ * @throws
+ * Route 1 - 5: Returns a 500 status code with an error message if there is an error.
  *
  */
-router.post("/createAdmin", adminController.createAdmin);
+router.post(
+  "/createAdmin",
+  authenticateUser,
+  authorizeRole("admin"),
+  adminController.createAdmin
+);
 router.get("/login", adminController.adminLogin);
-router.get("/getAdmins", adminController.getAllAdmin);
+router.get(
+  "/getAdmins",
+  authenticateUser,
+  authorizeRole("admin"),
+  adminController.getAllAdmin
+);
 router.get("/logout", adminController.adminLogout);
+router.delete(
+  "/delete/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  adminController.deleteAdmin
+);
+
+/**
+ * // Admin Trainer Request Routes
+ *
+ * @details
+ * Route 1: Route to get all trainer details
+ * Route 2: Route to get a specific trainer detail by id
+ * Route 3: Route to create a new trainer
+ * Route 4: Route to update a trainer details
+ * Route 5: Route to delete a trainer
+ *
+ * @returns
+ * Route 1: Returns a 200 status code with the trainer details data.
+ * Route 2: Returns a 200 status code with the trainer detail data.
+ * Route 3: Returns a 200 status code with the new trainer data.
+ * Route 4: Returns a 200 status code with the updated trainer data.
+ * Route 5: Returns a 200 status code with the deleted trainer data.
+ *
+ * @throws
+ * Route 1 - 5: Returns a 500 status code with an error message if there is an error.
+ */
+router.get(
+  "/gettrainer",
+  authenticateUser,
+  authorizeRole("admin"),
+  trainerController.getAllTrainers
+);
+router.get(
+  "/gettrainer/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  trainerController.getTrainerById
+);
+router.post(
+  "/addtrainer",
+  authenticateUser,
+  authorizeRole("admin"),
+  trainerController.createTrainer
+);
+router.put(
+  "/updatetrainer/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  trainerController.updateTrainer
+);
+router.delete(
+  "/deletetrainer/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  trainerController.deleteTrainer
+);
+
+/**
+ * // Admin Client Request Routes
+ *
+ * @details
+ * Route 1: Route to get all client details
+ * Route 2: Route to get a specific client detail by id
+ * Route 3: Route to create a new client
+ * Route 4: Route to update a client details
+ * Route 5: Route to delete a client
+ *
+ * @returns
+ * Route 1: Returns a 200 status code with the client details data.
+ * Route 2: Returns a 200 status code with the client detail data.
+ * Route 3: Returns a 200 status code with the new client data.
+ * Route 4: Returns a 200 status code with the updated client data.
+ * Route 5: Returns a 200 status code with the deleted client data.
+ *
+ * @throws
+ * Route 1 - 5: Returns a 500 status code with an error message if there is an error.
+ */
+router.get(
+  "/getclient",
+  authenticateUser,
+  authorizeRole("admin"),
+  clientController.getAllUsers
+);
+router.get(
+  "/getclient/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  clientController.getClientById
+);
+router.post(
+  "/addclient",
+  authenticateUser,
+  authorizeRole("admin"),
+  clientController.createUser
+);
+router.put(
+  "/updateclient/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  clientController.updateClient
+);
+router.delete(
+  "/deleteclient/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  clientController.deleteClient
+);
 
 /**
  * // Admin Workshop Request Routes
@@ -47,6 +175,7 @@ router.get("/logout", adminController.adminLogout);
  * Route 4: Returns a 200 status code with the updated workshop request data.
  * Route 5: Returns a 200 status code with the deleted workshop request data.
  *
+ * @throws
  * Route 1 - 5: Returns a 500 status code with an error message if there is an error.
  *
  */
@@ -85,6 +214,7 @@ router.delete(
   workshopController.deleteWorkshopRequest
 );
 
+<<<<<<< HEAD
 
 /**
  * // Admin Client Request Routes
@@ -199,4 +329,66 @@ router.delete(
 
 //router.get("/checkforSchedConflict", authenticateUser, authorizeRole("trainer"), workshopController.checkforSchedConflict);
 
+=======
+/**
+ * // Admin Leave Request Routes
+ *
+ * @details
+ * Route 1: Route to get all leave requests
+ * Route 2: Route to get a specific leave request by trainer id
+ * Route 3: Route to get leave requests by trainer username
+ * Route 4: Route to create a new leave request
+ * Route 5: Route to update a leave request
+ * Route 6: Route to delete a leave request
+ *
+ * @returns
+ * Route 1: Returns a 200 status code with the leave requests data.
+ * Route 2: Returns a 200 status code with all the leave requests data associated with the specific trainer id.
+ * Route 3: Returns a 200 status code with all leave requests data associated with the specific trainer.
+ * Route 4: Returns a 200 status code with the new leave request data.
+ * Route 5: Returns a 200 status code with the updated leave request data.
+ * Route 6: Returns a 200 status code with the deleted leave request data.
+ *
+ * @throws
+ * Route 1 - 5: Returns a 500 status code with an error message if there is an error.
+ */
+router.get(
+  "/getleave",
+  authenticateUser,
+  authorizeRole("admin"),
+  leaveRequestController.getLeaveRequests
+);
+
+/**
+ * @@todo Add route to get leave request by trainer username
+ */
+
+router.get(
+  "/getleave/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  leaveRequestController.getLeaveRequestByTrainerId
+);
+
+router.post(
+  "/addleave",
+  authenticateUser,
+  authorizeRole("admin"),
+  leaveRequestController.createLeaveRequest
+);
+
+router.put(
+  "/updateleave/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  leaveRequestController.updateLeaveRequest
+);
+
+router.delete(
+  "/deleteleave/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  leaveRequestController.deleteLeaveRequest
+);
+>>>>>>> bd601441689d38464c7a793f65f54511b5e45877
 module.exports = router;

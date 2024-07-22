@@ -61,6 +61,12 @@ exports.getLeaveRequestByTrainerId = async (req, res) => {
 };
 
 /**
+ * // Get Leave Request by Trainer Username
+ *
+ * @todo: Implement this function
+ */
+
+/**
  * // Create Leave Request
  *
  * @details
@@ -130,7 +136,7 @@ exports.updateLeaveRequest = async (req, res) => {
     const response = {
       code: 200,
       message: "Leave request successfully updated",
-      leaveRequest: data,
+      leaveRequest: updateData,
     };
     res.status(200).json(response);
   } catch (error) {
