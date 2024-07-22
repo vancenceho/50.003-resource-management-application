@@ -92,12 +92,18 @@ exports.clientLogout = async (req, res) => {
  * If there is an error retrieving the client users, returns a 500 status code with an error message.
  */
 exports.getAllUsers = async (req, res) => {
+  let response = {};
   try {
     const users = await Client.find();
     res.status(200).json(users);
   } catch (error) {
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error fetching users:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json(response);
   }
 };
 
@@ -124,12 +130,18 @@ exports.getAllUsers = async (req, res) => {
  * If a user with the same username already exists, returns a 409 status code with an error message.
  */
 exports.createUser = async (req, res) => {
+  let response = {};
   try {
     console.log(req.body);
     const { username, firstName, lastName, email, password, role } = req.body;
     // Validate that all required fields are provided
     if (!username || !firstName || !lastName || !email || !password || !role) {
-      return res.status(400).json({ message: "All fields are required" });
+      response = {
+        code: 400,
+        type: "validation error",
+        message: "All fields are required",
+      };
+      return res.status(400).json(response);
     }
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -139,9 +151,12 @@ exports.createUser = async (req, res) => {
       $or: [{ username: username }, { email: email }],
     });
     if (existingUser) {
-      return res
-        .status(409)
-        .json({ message: "Username or Email already exists" });
+      response = {
+        code: 409,
+        type: "validation error",
+        message: "username or email already exists",
+      };
+      return res.status(409).json(response);
     }
 
     // Create a new user instance
@@ -168,8 +183,13 @@ exports.createUser = async (req, res) => {
         });
       });
   } catch (error) {
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error creating user:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json(response);
   }
 };
 
@@ -191,16 +211,27 @@ exports.createUser = async (req, res) => {
  * If there is an error getting the user, returns a 500 status code with an error message.
  */
 exports.getClientById = async (req, res) => {
+  let response = {};
   try {
     const id = req.params.id;
     const client = await Client.findById(id);
     if (!client) {
-      res.status(404).json({ message: "Client not found" });
+      response = {
+        code: 404,
+        type: "validation error",
+        message: "Client not found",
+      };
+      res.status(404).json(response);
     }
     res.status(200).json(client);
   } catch (error) {
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error getting client by id:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json(response);
   }
 };
 
@@ -225,14 +256,20 @@ exports.getClientById = async (req, res) => {
  * If there is an error saving the updated user, returns a 500 status code with an error message.
  */
 exports.updateClient = async (req, res) => {
+  let response = {};
   try {
     const id = req.params.id;
     const { _id, password, ...updateData } = req.body; // exclude _id and password from update data
     const data = await Client.findByIdAndUpdate(id, updateData);
     if (!data) {
-      res.status(404).json({ message: "Client not found" });
+      response = {
+        code: 404,
+        type: "validation error",
+        message: "Client not found",
+      };
+      res.status(404).json(response);
     }
-    const response = {
+    response = {
       code: 200,
       message: "Client successfully updated",
       client: updateData,
@@ -241,7 +278,12 @@ exports.updateClient = async (req, res) => {
   } catch (error) {
     console.error("Error updating client:", error);
     if (!res.headersSent) {
-      res.status(500).json({ message: "Internal Server Error" });
+      response = {
+        code: 500,
+        type: "server error",
+        message: "Internal Server Error",
+      };
+      res.status(500).json(response);
     }
   }
 };
@@ -266,21 +308,32 @@ exports.updateClient = async (req, res) => {
  * If there is an error deleting the user, returns a 500 status code with an error message.
  */
 exports.deleteClient = async (req, res) => {
+  let response = {};
   try {
     const id = req.params.id;
     const data = await Client.findByIdAndDelete(id);
     if (!data) {
-      res.status(404).json({ message: "Client not found" });
+      response = {
+        code: 404,
+        type: "validation error",
+        message: "Client not found",
+      };
+      res.status(404).json(response);
     }
-    const response = {
+    response = {
       code: 200,
       message: "Client successfully deleted",
       client: data,
     };
     res.status(200).json(response);
   } catch (error) {
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error deleting client:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json(response);
   }
 };
 

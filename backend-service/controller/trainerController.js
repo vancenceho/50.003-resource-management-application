@@ -108,12 +108,18 @@ exports.trainerLogout = async (req, res) => {
  *
  */
 exports.getAllTrainers = async (req, res) => {
+  let response = {};
   try {
     const trainers = await Trainer.find();
     res.status(200).json(trainers);
   } catch (error) {
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error fetching trainers:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json(response);
   }
 };
 
@@ -135,16 +141,25 @@ exports.getAllTrainers = async (req, res) => {
  * If there is an error retrieving the trainer, returns a 500 status code with an error message.
  */
 exports.getTrainerById = async (req, res) => {
+  let response = {};
   try {
     const trainer = await Trainer.findById(req.params.id);
     if (!trainer) {
-      return res.status(404).send({ message: "Trainer not found" });
+      response = {
+        code: 404,
+        type: "validation error",
+        message: "Trainer not found",
+      };
+      return res.status(404).send(response);
     }
     res.status(200).json(trainer);
   } catch (error) {
-    res
-      .status(500)
-      .send({ message: "Error Retreiving Trainer: Internal Server Error" });
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
+    res.status(500).send(response);
   }
 };
 
@@ -182,12 +197,18 @@ exports.getOwnDetails = async (req, res) => {
  * If a trainer with the same username already exists, returns a 409 status code with an error message.
  */
 exports.createTrainer = async (req, res) => {
+  let response = {};
   try {
     console.log(req.body);
     const { username, firstName, lastName, email, password } = req.body;
     // Validate that all required fields are provided
     if (!username || !firstName || !lastName || !email || !password) {
-      return res.status(400).json({ message: "All fields are required" });
+      response = {
+        code: 400,
+        type: "validation error",
+        message: "All fields are required",
+      };
+      return res.status(400).json(response);
     }
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -195,9 +216,12 @@ exports.createTrainer = async (req, res) => {
     // Check if a trainer with the same userName already exists
     const existingTrainer = await Trainer.findOne({ username: username });
     if (existingTrainer) {
-      return res
-        .status(409)
-        .json({ message: "Trainer Username already exists" });
+      response = {
+        code: 409,
+        type: "validation error",
+        message: "Trainer username already exists",
+      };
+      return res.status(409).json(response);
     }
 
     // Create a new user instance
@@ -225,8 +249,13 @@ exports.createTrainer = async (req, res) => {
         });
       });
   } catch (error) {
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error creating user:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json(response);
   }
 };
 
@@ -251,6 +280,7 @@ exports.createTrainer = async (req, res) => {
  * If there is an error updating the trainer, returns a 500 status code with an error message.
  */
 exports.updateTrainer = async (req, res) => {
+  let response = {};
   try {
     const query = { _id: req.params.id };
     let updateData = req.body;
@@ -259,13 +289,27 @@ exports.updateTrainer = async (req, res) => {
     const options = { new: true, upsert: false };
     const trainer = await Trainer.findOneAndUpdate(query, update, options);
     if (!trainer) {
-      return res.status(404).send({ message: "Trainer not found" });
+      response = {
+        code: 404,
+        type: "validation error",
+        message: "Trainer not found",
+      };
+      return res.status(404).send(response);
     }
-    res.status(200).json(trainer);
+    response = {
+      code: 200,
+      type: "success",
+      message: "Trainer updated successfully",
+      data: trainer,
+    };
+    res.status(200).json(response);
   } catch (error) {
-    res.status(500).send({
-      message: "Error Updating Trainer: Internal Server Error" + error,
-    });
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
+    res.status(500).send(response);
   }
 };
 
@@ -287,16 +331,31 @@ exports.updateTrainer = async (req, res) => {
  * If there is an error deleting the trainer, returns a 500 status code with an error message.
  */
 exports.deleteTrainer = async (req, res) => {
+  let response = {};
   try {
     const trainer = await Trainer.findByIdAndDelete(req.params.id);
     if (!trainer) {
-      return res.status(404).send({ message: "Trainer not found" });
+      response = {
+        code: 404,
+        type: "validation error",
+        message: "Trainer not found",
+      };
+      return res.status(404).send(response);
     }
-    res.status(200).json(trainer);
+    response = {
+      code: 200,
+      type: "success",
+      message: "Trainer deleted successfully",
+      data: trainer,
+    };
+    res.status(200).json(response);
   } catch (error) {
-    res
-      .status(500)
-      .send({ message: "Error Deleting Trainer: Internal Server Error" });
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
+    res.status(500).send(response);
   }
 };
 

@@ -94,7 +94,7 @@ paths:
             type: string
       responses:
         "200":
-          description: "authentication: successful operation"
+          description: "successful operation"
           headers:
             X-Rate-Limit:
               description: calls per hour allowed by the user
@@ -109,10 +109,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ApiResponse"
+                $ref: "#/components/schemas/successfulResponse"
             application/xml:
               schema:
-                $ref: "#/components/schemas/ApiResponse"
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: username or password incorrect
         "500":
@@ -127,8 +127,22 @@ paths:
       responses:
         "200":
           description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
         "500":
           description: "Error Logging Out: Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /admin/getAdmins:
     get:
       tags:
@@ -191,11 +205,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/Admin"
         "400":
-          description: Invalid input
+          description: All fields are required
         "401":
           description: No authorization token provided
-        "422":
-          description: Validation exception
+        "403":
+          description: Access forbidden
+        "409":
+          description: Admin username already exists
+        "500":
+          description: "Error Creating Admin: Internal Server Error"
   /admin/delete/{adminId}:
     delete:
       tags:
@@ -216,6 +234,13 @@ paths:
       responses:
         "200":
           description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "404":
@@ -247,8 +272,6 @@ paths:
           description: No authorization token provided
         "403":
           description: Access forbidden
-        "404":
-          description: Trainer not found
         "500":
           description: "Error Fetching Trainers: Internal Server Error"
       security:
@@ -325,7 +348,7 @@ paths:
         "403":
           description: Access forbidden
         "409":
-          description: Trainer Username already exists
+          description: Trainer username already exists
         "500":
           description: "Error Creating Trainer: Internal Server Error"
       security:
@@ -364,10 +387,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Trainer"
+                $ref: "#/components/schemas/successfulResponse"
             application/xml:
               schema:
-                $ref: "#/components/schemas/Trainer"
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -396,6 +419,13 @@ paths:
       responses:
         "200":
           description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -507,7 +537,7 @@ paths:
         "403":
           description: Access forbidden
         "409":
-          description: Username or Email already exists
+          description: Username or email already exists
         "500":
           description: "Error Creating Client: Internal Server Error"
       security:
@@ -546,10 +576,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Client"
+                $ref: "#/components/schemas/successfulResponse"
             application/xml:
               schema:
-                $ref: "#/components/schemas/Client"
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -578,6 +608,13 @@ paths:
       responses:
         "200":
           description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -716,10 +753,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WorkshopRequest"
+                $ref: "#/components/schemas/successfulResponse"
             application/xml:
               schema:
-                $ref: "#/components/schemas/WorkshopRequest"
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -748,6 +785,13 @@ paths:
       responses:
         "200":
           description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -802,6 +846,9 @@ paths:
           description: successful operation
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveRequest"
+            application/xml:
               schema:
                 $ref: "#/components/schemas/LeaveRequest"
         "401":
@@ -886,10 +933,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LeaveRequest"
+                $ref: "#/components/schemas/successfulResponse"
             application/xml:
               schema:
-                $ref: "#/components/schemas/LeaveRequest"
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -918,6 +965,13 @@ paths:
       responses:
         "200":
           description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -1690,6 +1744,21 @@ components:
           type: string
         message:
           type: string
+      xml:
+        name: "##default"
+    successfulResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        type:
+          type: string
+          example: success
+        message:
+          type: string
+          example: "successful operation"
       xml:
         name: "##default"
   securitySchemes:
