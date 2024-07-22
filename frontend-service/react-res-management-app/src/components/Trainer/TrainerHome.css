@@ -1,0 +1,187 @@
+
+  /* Style the app header */
+  .App-header {
+    background-color: #ffffff;
+    padding: 20px;
+  }
+  
+  /* Style the navigation bar */
+  .navbar {
+    display: flex;
+    justify-content: center;
+    background-color: #fff;
+    padding: 10px 0;
+  }
+  
+  /* Style the navigation list */
+  .navbar-list {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Style the navigation list items */
+  .navbar-list li {
+    display: inline;
+  }
+  
+  /* Style the navigation links */
+  .navbar-list li a {
+    text-decoration: none;
+    color: #0672CB;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+  
+  /* Style the navigation links on hover */
+  .navbar-list li a:hover {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    color: #000;
+  }
+  
+  .home-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .nav {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .nav a {
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+  }
+  
+  .user-actions {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .main-content h1 {
+    font-size: 32px;
+    color: #007bff;
+  }
+  
+  .cards-container {
+    margin-top: 50px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .card {
+    width: 45%;
+    min-width: 250px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .card img {
+    width: 100%;
+    height: 250px;
+  }
+  
+  .card h2 {
+    font-size: 18px;
+    font-weight: 400;
+    margin: 19px 19px;
+    color: #000000;
+  }
+  
+  .card a {
+    display: block;
+    font-size: 24px;
+    font-weight: 900;
+    margin: 10px 15px;
+    color: #0672cb;
+    text-decoration: none;
+  }
+   /* Footer Styles */
+.footer {
+    background-color: #007bff;
+    color: white;
+    padding: 20px 0;
+    font-size: 12px; /* Adjust font size to be smaller */
+    width: 100%;
+    left: 0px;
+}
+  
+  .footer-content {
+    display: flex;
+    flex-direction: column; /* Arrange logo and details in a column */
+    align-items: flex-start; /* Align items to the left */
+    padding: 5px; /* Add padding to the left and right */
+  }
+  
+  .footer-logo img {
+    max-width: 100px; /* Adjust as needed */
+    margin-bottom: 20px; /* Space between logo and details */
+  }
+  
+  .footer-details p {
+    margin: 5px 5px;
+    text-align: left;
+  }
+  
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between; /* Distribute items evenly */
+    align-items: center; /* Align items vertically */
+    padding: 10px 20px; /* Add padding to the left and right */
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-bottom a {
+    color: white;
+    text-decoration: none;
+    margin-right: 20px; /* Adjust the spacing between links */
+}
+
+.footer-bottom p {
+    margin: 0; /* Remove default margins */
+    color: white;
+    font-size: 12px; /* Adjust font size to be smaller */
+}

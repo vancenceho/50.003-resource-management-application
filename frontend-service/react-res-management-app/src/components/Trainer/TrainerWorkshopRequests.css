@@ -1,0 +1,180 @@
+/* Style the app header */
+.App-header {
+  background-color: #ffffff;
+  padding: 20px;
+}
+
+/* Style the navigation bar */
+.navbar {
+  display: flex;
+  justify-content: center;
+  background-color: #fff;
+  padding: 10px 0;
+}
+
+/* Style the navigation list */
+.navbar-list {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+}
+
+/* Style the navigation list items */
+.navbar-list li {
+  display: inline;
+}
+
+/* Style the navigation links */
+.navbar-list li a {
+  text-decoration: none;
+  color: #0672CB;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+/* Style the navigation links on hover */
+.navbar-list li a:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+
+/* Set the font family for the admin workshop requests page */
+.admin-workshop-requests {
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  /* Style the main navigation list in the header to display as flex with no list style */
+  .header .main-nav ul {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Add margin to the right of each list item in the main navigation */
+  .header .main-nav ul li {
+    margin-right: 20px;
+  }
+  
+  /* Push the icons to the right of the navigation bar */
+  .header .main-nav .icons {
+    margin-left: auto;
+  }
+  
+  /* Add margin to the left of each icon in the navigation bar */
+  .header .main-nav .icons i {
+    margin-left: 10px;
+  }
+  
+  /* Add padding to the content area */
+  .content {
+    padding: 20px;
+  }
+  
+  /* Style the heading text to be bold and with the specified color */
+  .content h1 {
+    font-weight: bold;
+    color: #0672CB;
+    font-size: 50px;
+    margin-top:0px;
+  }
+  
+  /* Add margin to the bottom of the tabs section */
+  .tabs {
+    margin-bottom: 40px;
+    margin-top:40px;
+  }
+  
+  /* Style the tabs with margin, padding, background color, border-radius, and text color */
+  .tabs .tab {
+    margin-right: 10px;
+    padding: 10px 20px;
+    text-decoration: none;
+    background-color: #ddd;
+    border-radius: 5px;
+    color: #0672CB;
+  }
+  
+  .tabs .tab.active {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  /* Add margin to the bottom of the filters section */
+  .filters {
+    margin-bottom: 30px;
+  }
+  
+  /* Style the buttons and select elements in the filters section */
+  .filters button,
+  .filters select {
+    margin-right: 10px;
+    color: #0672CB;
+  }
+  
+  /* Style the table to take full width and collapse borders */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  /* Add border, padding, and text alignment to table headers and cells */
+  table th,
+  table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+  
+  /* Add background color to table headers */
+  table th {
+    background-color: #f2f2f2;
+  }
+  
+/* Footer Styles */
+.footer {
+    background-color: #007bff;
+    color: white;
+    padding: 20px 0;
+    font-size: 12px; /* Adjust font size to be smaller */
+}
+  
+  .footer-content {
+    display: flex;
+    flex-direction: column; /* Arrange logo and details in a column */
+    align-items: flex-start; /* Align items to the left */
+    padding: 5px; /* Add padding to the left and right */
+  }
+  
+  .footer-logo img {
+    max-width: 100px; /* Adjust as needed */
+    margin-bottom: 20px; /* Space between logo and details */
+  }
+  
+  .footer-details p {
+    margin: 5px 5px;
+    text-align: left;
+  }
+  
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between; /* Distribute items evenly */
+    align-items: center; /* Align items vertically */
+    padding: 10px 20px; /* Add padding to the left and right */
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-bottom a {
+    color: white;
+    text-decoration: none;
+    margin-right: 20px; /* Adjust the spacing between links */
+}
+
+.footer-bottom p {
+    margin: 0; /* Remove default margins */
+    color: white;
+    font-size: 12px; /* Adjust font size to be smaller */
+}
