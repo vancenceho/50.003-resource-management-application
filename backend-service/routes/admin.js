@@ -35,14 +35,14 @@ router.post(
   authorizeRole("admin"),
   adminController.createAdmin
 );
-router.get("/login", adminController.adminLogin);
+router.post("/login", adminController.adminLogin);
 router.get(
   "/getAdmins",
   authenticateUser,
   authorizeRole("admin"),
   adminController.getAllAdmin
 );
-router.get("/logout", adminController.adminLogout);
+router.post("/logout", adminController.adminLogout);
 router.delete(
   "/delete/:id",
   authenticateUser,

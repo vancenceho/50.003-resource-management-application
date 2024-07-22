@@ -30,12 +30,12 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth");
  *
  */
 router.post("/createTrainer", trainerController.createTrainer);
-router.get("/login", trainerController.trainerLogin);
+router.post("/login", trainerController.trainerLogin);
 router.get("/getTrainers", trainerController.getAllTrainers); // This route should not be accessible to trainers
 router.get("/get/:id", trainerController.getTrainerById);
 router.put("/update/:id", trainerController.updateTrainer);
 router.delete("/delete/:id", trainerController.deleteTrainer); // This route should not be accessible to trainers
-router.get("/logout", trainerController.trainerLogout);
+router.post("/logout", trainerController.trainerLogout);
 
 /**
  * // Trainer Leave Request Routes
