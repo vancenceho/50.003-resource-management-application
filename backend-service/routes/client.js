@@ -20,7 +20,7 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth.js"); //
  * Route 4: Returns a 200 status code with the new client data.
  *
  */
-router.get("/login", clientController.clientLogin);
+router.post("/login", clientController.clientLogin);
 router.get("/logout", clientController.clientLogout);
 router.get("/getClients", clientController.getAllClients);
 router.post("/createClient", clientController.createClient);

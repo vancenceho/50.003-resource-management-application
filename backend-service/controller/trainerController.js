@@ -134,9 +134,9 @@ exports.getAllTrainers = async (req, res) => {
  * If the trainer is not found, returns a 404 status code with an error message.
  * If there is an error retrieving the trainer, returns a 500 status code with an error message.
  */
-exports.getTrainerByUsername = async (req, res) => {
+exports.getTrainerById = async (req, res) => {
   try {
-    const trainer = await Trainer.findOne({ username: req.params.username });
+    const trainer = await Trainer.findById(req.params.id);
     if (!trainer) {
       return res.status(404).send({ message: "Trainer not found" });
     }
@@ -147,7 +147,6 @@ exports.getTrainerByUsername = async (req, res) => {
       .send({ message: "Error Retreiving Trainer: Internal Server Error" });
   }
 };
-
 // Controller function to let the signed in trainer access only their details
 exports.getOwnDetails = async (req, res) => {
   try {
@@ -252,9 +251,9 @@ exports.createTrainer = async (req, res) => {
  */
 exports.updateTrainer = async (req, res) => {
   try {
-    const query = { username: req.params.username };
+    const query = { _id: req.params.id };
     let updateData = req.body;
-    delete updateData.username; // Assuming you don't want to allow changing the username in this operation
+    delete updateData._id;
     const update = { $set: updateData };
     const options = { new: true, upsert: false };
     const trainer = await Trainer.findOneAndUpdate(query, update, options);
@@ -268,6 +267,7 @@ exports.updateTrainer = async (req, res) => {
     });
   }
 };
+
 
 /**
  * // Delete Trainer user
@@ -288,7 +288,7 @@ exports.updateTrainer = async (req, res) => {
  */
 exports.deleteTrainer = async (req, res) => {
   try {
-    const trainer = await Trainer.findOneAndDelete({ username: req.params.username });
+    const trainer = await Trainer.findByIdAndDelete(req.params.id);
     if (!trainer) {
       return res.status(404).send({ message: "Trainer not found" });
     }

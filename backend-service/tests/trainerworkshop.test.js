@@ -1,39 +1,28 @@
 
 // TWT.2.0 - marks their workshop as complete
 // WorkshopManagement. updateWorkshopStatustoComplete
-
-
 const request = require("supertest");
 const mongoose = require("mongoose");
-const { connectDB, cleanup } = require("../models/db.js");
+const { connectDB, clearDB, cleanup } = require("../models/db.js");
+const setDatabase = require("./setDatabase");
 const jwt = require("jsonwebtoken");
 
 
  describe("Testing Trainer to Workshop Endpoints", () => {
-    let randomWorkshopId; 
-    let randomTrainerId; 
     let trainerToken;
-     
+    let client1Id, trainer1Id, workshopId;
+
   /* Connecting to the database before all test. */
   beforeAll(async () => {
+    // Insert initial data
     await connectDB();
+    const ids = await setDatabase();
     app = require("../app.js");
-
-    // Fetch all trainers
-    const trainerRes = await request(app)
-    .get("/trainer/getTrainers")
-    const trainers = trainerRes.body;
-    // Select a random trainer ID
-    randomTrainerId = trainers[Math.floor(Math.random() * trainers.length)]._id;
-    trainerToken = jwt.sign({ TrainerId: randomTrainerId, role: "trainer" }, "root", { expiresIn: "1h" });
-
-    // Fetch all workshops
-    const workshopsRes = await request(app)
-    .get("/workshop/")
-    const workshops = workshopsRes.body;
-    // Select a random workshop ID
-    randomWorkshopId = workshops[Math.floor(Math.random() * workshops.length)]._id;
-
+    trainerToken = jwt.sign({ TrainerId: ids.trainerId.toString(), role: "trainer" }, "root", { expiresIn: "1h" });
+    client1Id = ids.clientId.toString();
+    console.log('client1Id:', client1Id);
+    trainer1Id = ids.trainerId.toString();
+    workshopId = ids.workshopId.toString(); 
   });
 
 
@@ -46,12 +35,12 @@ describe(" TWT.1.0 - Trainer Views His/Her Assigned Workshops ", () => {
     .set("Authorization", `Bearer ${trainerToken}`)
     .query({ 
         //workshopId: randomWorkshopId, 
-        trainerId: randomTrainerId
+        trainerId: trainer1Id
     });
     console.log('Workshops Allocated to Trainer :', res.body); // Print the workshops      
     expect(res.statusCode).toBe(200);
     //expect(res.body.length).toBeGreaterThan(0); 
-    console.log('randomTrainerId:', randomTrainerId);
+    console.log('randomTrainerId:', trainer1Id);
 
 });
 }); 
@@ -59,6 +48,7 @@ describe(" TWT.1.0 - Trainer Views His/Her Assigned Workshops ", () => {
 
    /* Closing database connection after all test. */
     afterAll(async () => {
+      await clearDB();
         cleanup();
       });
   

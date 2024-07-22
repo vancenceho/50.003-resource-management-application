@@ -31,6 +31,7 @@ const authenticateUser = async (req, res, next) => {
         user = await Trainer.findById(decoded.TrainerId);
     } 
       else if (decoded.role === 'client') {
+        console.log(decoded.clientId);
         user = await Client.findById(decoded.clientId);
     }
 

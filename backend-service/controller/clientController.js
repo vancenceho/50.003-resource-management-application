@@ -37,7 +37,7 @@ exports.clientLogin = async (req, res) => {
 
     const user = await Client.findOne(query);
     if (!user) {
-      return res.status(401).json({ message: "User not found" });
+      return res.status(401).json({ message: "Client not found" });
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password);
@@ -47,7 +47,7 @@ exports.clientLogin = async (req, res) => {
 
     res.status(200).json(user);
   } catch (error) {
-    console.error("Error logging in user:", error);
+    console.error("Error logging in client:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -91,7 +91,7 @@ exports.clientLogout = async (req, res) => {
  * If successful, returns a 200 status code with the client users data.
  * If there is an error retrieving the client users, returns a 500 status code with an error message.
  */
-exports.getAllUsers = async (req, res) => {
+exports.getAllClients = async (req, res) => {
   try {
     const users = await Client.find();
     res.status(200).json(users);
@@ -123,7 +123,7 @@ exports.getAllUsers = async (req, res) => {
  * If required fields are not provided, returns a 400 status code with an error message.
  * If a user with the same username already exists, returns a 409 status code with an error message.
  */
-exports.createUser = async (req, res) => {
+exports.createClient = async (req, res) => {
   try {
     console.log(req.body);
     const { username, firstName, lastName, email, password, role } = req.body;
@@ -190,16 +190,16 @@ exports.createUser = async (req, res) => {
  * If the user is not found, returns a 404 status code with an error message.
  * If there is an error getting the user, returns a 500 status code with an error message.
  */
-exports.getClientByUsername = async (req, res) => {
+exports.getClientById = async (req, res) => {
   try {
-    const username = req.query.username;
-    const client = await Client.findOne({ username: username });
+    const id = req.params.id;
+    const client = await Client.findById(id);
     if (!client) {
       res.status(404).json({ message: "Client not found" });
     }
     res.status(200).json(client);
   } catch (error) {
-    console.error("Error getting client by username:", error);
+    console.error("Error getting client by id:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -226,9 +226,9 @@ exports.getClientByUsername = async (req, res) => {
  */
 exports.updateClient = async (req, res) => {
   try {
-    const username = req.params.username;
+    const id = req.params.id;
     const { _id, password, ...updateData } = req.body; // exclude _id and password from update data
-    const data = await Client.findByIdAndUpdate({ username: username }, updateData, { new: true });
+    const data = await Client.findByIdAndUpdate(id, updateData);
     if (!data) {
       res.status(404).json({ message: "Client not found" });
     }
@@ -267,8 +267,8 @@ exports.updateClient = async (req, res) => {
  */
 exports.deleteClient = async (req, res) => {
   try {
-    const username = req.params.username;
-    const data = await Client.findOneAndDelete({ username: username });
+    const id = req.params.id;
+    const data = await Client.findByIdAndDelete(id);
     if (!data) {
       res.status(404).json({ message: "Client not found" });
     }

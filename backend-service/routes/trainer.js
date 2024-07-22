@@ -30,11 +30,11 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth");
  *
  */
 router.post("/createTrainer", trainerController.createTrainer);
-router.get("/login", trainerController.trainerLogin);
+router.post("/login", trainerController.trainerLogin);
 router.get("/getTrainers", trainerController.getAllTrainers);
-router.get("/get/:username", trainerController.getTrainerByUsername);
-router.put("/update/:username", trainerController.updateTrainer);
-router.delete("/delete/:username", trainerController.deleteTrainer);
+router.get("/get/:id", trainerController.getTrainerById);
+router.put("/update/:id", trainerController.updateTrainer);
+router.delete("/delete/:id", trainerController.deleteTrainer);
 router.get("/logout", trainerController.trainerLogout);
 
 /**

@@ -1,37 +1,25 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
-const { connectDB, cleanup } = require("../models/db.js");
+const { connectDB, clearDB, cleanup } = require("../models/db.js");
+const setDatabase = require("./setDatabase");
 const jwt = require("jsonwebtoken");
 
-
-
-
-
-
  describe("Testing Admin to Workshop Endpoints", () => {
-    let randomWorkshopId, randomClientId;  
-    const adminToken = jwt.sign({ AdminId: "66978299528ea72d01e2d308", role: "admin" }, "root", { expiresIn: "1h" });
+    let adminToken;
+    let client1Id, trainer1Id, workshopId;
 
   /* Connecting to the database before all test. */
    beforeAll(async () => {
-      await connectDB();
-      app = require("../app.js");
 
-      // Fetch all clients
-      const clientsRes = await request(app)
-      .get("/client/getClients") // Adjust the endpoint as necessary
-      const clients = clientsRes.body;
-      // Select a random client ID
-      randomClientId = clients[Math.floor(Math.random() * clients.length)]._id;
-     
-      // Fetch all workshops
-      const res = await request(app)
-      .get("/admin/getworkshop")
-      .set("Authorization", `Bearer ${adminToken}`);
-      const workshops = res.body;
-      // Select a random workshop ID
-      randomWorkshopId = workshops[Math.floor(Math.random() * workshops.length)]._id;
-    });
+    // Insert initial data
+    await connectDB();
+    const ids = await setDatabase();
+    app = require("../app.js");
+    adminToken = jwt.sign({ AdminId: ids.adminId.toString(), role: "admin" }, "root", { expiresIn: "1h" });
+    client1Id = ids.clientId.toString();
+    trainer1Id = ids.trainerId.toString();
+    workshopId = ids.workshopId.toString(); 
+  });
  
 
      describe("AWT.1.0 - Admin create Workshop Request", () => {
@@ -52,20 +40,20 @@ const jwt = require("jsonwebtoken");
           type: "Technical",
           maxParticipants: 20,
           client: {
-            "_id": randomClientId,
-            "username": "theClient",
-            "firstName": "Lewis",
-            "lastName": "Hamilton",
-            "email": "lewis@example.com",
+            "_id": client1Id,
+            "username": "client1",
+            "firstName": "David",
+            "lastName": "Ling",
+            "email": "david@example.com",
             "password": "12345",
             "role": "client"
           },
           trainer: {
-            "_id": "6697855a7e9a0985a34809b0",
-            "username": "theTrainer",
-            "firstName": "Sebastian",
-            "lastName": "Vettel",
-            "email": "sebastian@example.com",
+            "_id": trainer1Id,
+            "username": "trainer1",
+            "firstName": "John",
+            "lastName": "Doe",
+            "email": "john@example.com",
             "password": "12345",
             "role": "trainer",
             "status": "available"
@@ -83,7 +71,7 @@ const jwt = require("jsonwebtoken");
       .get("/admin/getworkshop")
       .set("Authorization", `Bearer ${adminToken}`)
       .query({
-        id: randomWorkshopId });
+        id: workshopId });
       console.log('Workshops:', res.body); // Print the workshops
       expect(res.statusCode).toBe(200);
       expect(res.body.length).toBeGreaterThan(0);
@@ -93,18 +81,16 @@ const jwt = require("jsonwebtoken");
 
    describe("AWT.3.0 - get Workshop Request by id", () => {
     it("should return a workshop", async () => {
-      //const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
       const res = await request(app)
       .get(`/admin/getworkshop/:id`)
       .set("Authorization", `Bearer ${adminToken}`)
       .query({
-        id: randomWorkshopId });
+        id: workshopId });
 
-      console.log('Workshop :', res.body); // Print the workshops
+      console.log('Workshop retrieved:', res.body); // Print the workshops
       expect(res.statusCode).toBe(200);
-      // Add assertions here to validate the response
-      expect(res.body).toHaveProperty('_id', randomWorkshopId);
-      console.log('randomWorkshopId:', randomWorkshopId);
+      expect(res.body).toHaveProperty('_id', "66978299528ea72d01e2d311");
+      console.log('WorkshopId:', "66978299528ea72d01e2d311");
     });
   });  
 
@@ -116,7 +102,7 @@ const jwt = require("jsonwebtoken");
       .put(`/admin/updateworkshop/:id`)
       .set("Authorization", `Bearer ${adminToken}`)
       .query({
-        id: randomWorkshopId })
+        id: workshopId  })
          .send({
             name: "Updated Advanced Machine Learning Workshop",
             description: "Updated Description",
@@ -130,7 +116,7 @@ const jwt = require("jsonwebtoken");
             type: "Non-Technical",
             maxParticipants: 25,
             client: {
-              "_id": randomClientId,
+              "_id": client1Id,
               "username": "theClient",
               "firstName": "Lewis",
               "lastName": "Hamilton",
@@ -139,7 +125,7 @@ const jwt = require("jsonwebtoken");
               "role": "client"
             },
             trainer: {
-              "_id": "669bc1f8d3a1fa47b2556457",
+              "_id": trainer1Id,
               "username": "theTrainer",
               "firstName": "Sebastian",
               "lastName": "Vettel",
@@ -162,8 +148,8 @@ const jwt = require("jsonwebtoken");
         .delete(`/admin/deleteworkshop/:id`)
         .set("Authorization", `Bearer ${adminToken}`)
         .query({
-          id: randomWorkshopId });
-        console.log('Deleted Workshop ID:', randomWorkshopId);
+          id: workshopId });
+        console.log('Deleted Workshop ID:', "66978299528ea72d01e2d311");
       expect(res.statusCode).toBe(200);
     });
   });
@@ -171,25 +157,25 @@ const jwt = require("jsonwebtoken");
     //AWT.6.0 - Admin Allocates Trainers to a Workshop, Admin Accepts/Reject Workshop Request
     //testing WorkshopManagement. allocateTrToWorkshop function
 
- /*   describe("AWT.6.0 - Admin Allocates Trainers to a Workshop, Admin Accepts/Reject Workshop Request", () => {
+    /*describe("AWT.6.0 - Admin Allocates Trainers to a Workshop, Admin Accepts/Reject Workshop Request", () => {
       it("should allocate trainers to a workshop", async () => {
         const res = await request(app)
         .post(`/admin/allocatetrainer`)
         .set("Authorization", `Bearer ${adminToken}`)
         .query({
-          id: randomWorkshopId,  
+        id: "66978299528ea72d01e2d311"
           trainer : trainerIds
         });
         console.log('Accepted Workshop ID:', randomWorkshopId);
         expect(res.statusCode).toBe(200);
       });
-    });
-  */
-
+    }); */
+ 
   
   
     /* Closing database connection after all test. */
      afterAll(async () => {
+      await clearDB();
       cleanup();
     });
 

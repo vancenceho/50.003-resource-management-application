@@ -1,45 +1,48 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
-const { connectDB, cleanup } = require("../models/db.js");
+const { connectDB, clearDB, cleanup } = require("../models/db.js");
+const setDatabase = require("./setDatabase");
 const jwt = require("jsonwebtoken");
 
 describe("Testing Admin Trainer Endpoints", () => {
-    let randomTrainerId; 
-    let trainerToken;
-    const adminToken = jwt.sign({ AdminId: "66978299528ea72d01e2d308", role: "admin" }, "root", { expiresIn: "1h" });
+  let adminToken, trainerToken;
+  let client1Id, trainer1Id, workshopId;
 
-    /* Connecting to the database before all test. */
-    beforeAll(async () => {
-        await connectDB();
-        app = require("../app.js");
-        // Fetch all trainers
-        const res = await request(app)
-        .get("/trainer/getTrainers")
-        const trainers = res.body;
-        // Select a random trainer ID
-        randomTrainerId = trainers[Math.floor(Math.random() * trainers.length)]._id;
-        trainerToken = jwt.sign({ TrainerId: randomTrainerId, role: "trainer" }, "root", { expiresIn: "1h" });
-    });
+  /* Connecting to the database before all tests. */
+  beforeAll(async () => {
+    await connectDB();
+    const ids = await setDatabase();
+    app = require("../app.js");
+    adminToken = jwt.sign({ AdminId: ids.adminId.toString(), role: "admin" }, "root", { expiresIn: "1h" });
+    client1Id = ids.clientId.toString();
+    trainer1Id = ids.trainerId.toString();
+    workshopId = ids.workshopId.toString(); 
+    trainerToken = jwt.sign({ TrainerId: trainer1Id, role: "trainer" },  "root", { expiresIn: "1h" });
+  });
 
-    
+  /*beforeEach(async () => {
+    await setDatabase();
+    adminToken = jwt.sign({ AdminId: "66978299528ea72d01e2d308", role: "admin" }, "root", { expiresIn: "1h" });
+    //trainerToken = jwt.sign({ TrainerId: "66978299528ea72d01e2d310", role: "trainer" }, "root", { expiresIn: "1h" });
+  });*/
+
  describe("ATT.1.0 - Admin Adds a New Trainer", () => {
     it("create trainer account", async () => {
       const res = await request(app)
-      .post("/admin/addtrainer")
+      .post(`/admin/addtrainer`)
       .set("Authorization", `Bearer ${adminToken}`)
       .send({
-          username: "trainer1",
-          firstName: "john",
-          lastName: "die",
-          email: "johndoe@example.com",
-          password: "12345",
-          role: "trainer",
-          status: "available"
+        username: "trainer2",
+        firstName: "Jane",
+        lastName: "Doe",
+        email: "jane@example.com",
+        password: "12345",
+        role: "trainer",
+        status: "available"
       });
   
-      expect.stringContaining("json");
       expect(res.status).toBe(200);
-      expect(res.body.firstName).toBe("john");
+      expect(res.body.firstName).toBe("Jane");
     });
   }); 
   
@@ -47,10 +50,10 @@ describe("Testing Admin Trainer Endpoints", () => {
     describe("ATT.2.0 - Trainer login with credential (username or email)", () => {
     test("testing login with client account", async () => {
       const res = await request(app)
-      .get("/trainer/login")
+      .post(`/trainer/login`)
       .set("Authorization", `Bearer ${trainerToken}`)
       .query({
-        credential: "theTrainer", // or "sebastian@example.com" to test email login
+        credential: "trainer1", // or "john@example.com" to test email login
           password: "12345"
       });
   
@@ -60,19 +63,17 @@ describe("Testing Admin Trainer Endpoints", () => {
   }); 
   
   
-  // ACT.3.0 - Admin Gets a Trainer by ID
+  // ACT.3.0 - Admin Gets a Trainer by id
   describe("ATT.3.0 - Admin Gets a Trainer by ID", () => {
     test("should return a trainer", async () => {
       const res = await request(app)
-      .get("/admin/gettrainer/:id")
+      .get(`/admin/gettrainer/${trainer1Id}`)
       .set("Authorization", `Bearer ${adminToken}`)
-      .query({
-        id: randomTrainerId});
-    
-      console.log('Trainer :', res.body); // Print the workshops
+
+      console.log('Trainer :', res.body); // Print the trainer
       expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty('_id', randomTrainerId);
-      console.log('randomTrainerId:', randomTrainerId);
+      expect(res.body.username).toBe("trainer1");
+      console.log('username:', 'trainer1');
     });
   }); 
   
@@ -81,46 +82,42 @@ describe("Testing Admin Trainer Endpoints", () => {
   describe("ATT.4.0 - Admin Updates Trainer Information", () => {
     it("should update a trainer", async () => {
       const res = await request(app)
-      .put(`/admin/updatetrainer/:id`)
+      .put(`/admin/updatetrainer/${trainer1Id}`)
       .set("Authorization", `Bearer ${adminToken}`)
-      .query({
-        id: randomTrainerId
-      })
       .send({
-        username: "updatedtrainer1",
-        firstName: "john",
-        lastName: "die",
-        //email: "johndoe@example.com",
+        username: "trainer3",
+        firstName: "Mark",
+        lastName: "Smith",
+        email: "mark@example.com",
         password: "12345",
         role: "trainer",
-        status: "unavailable"
+        status: "available"
 
         });
         console.log('updated Trainer:', res.body); // Print the updated trainer
         expect(res.statusCode).toBe(200);
-        expect(res.body.username).toBe("updatedtrainer1");
+        expect(res.body.username).toBe("trainer3");
     });
   });  
   
   // ATT.5.0 - Admin Deletes a Trainer
-  /*describe("ATT.5.0 - Admin Deletes a Trainer", () => {
+  describe("ATT.5.0 - Admin Deletes a Trainer", () => {
     it("should delete a trainer", async () => {
       const res = await request(app)
-      .delete(`/admin/deletetrainer/:id`)
+      .delete(`/admin/deletetrainer/${trainer1Id}`)
       .set("Authorization", `Bearer ${adminToken}`)
-      .query({
-        id: randomTrainerId
-      });
-      console.log('Deleted Trainer ID:', randomTrainerId);
+      console.log('Deleted Trainer ID:', 'trainer3');
       expect(res.statusCode).toBe(200);
     });
   });
-  */
   
   
-      /* Closing database connection after all test. */
-      afterAll(async () => {
-        await cleanup();
-      });
   
+
+    /* Closing database connection after all test. */
+    afterAll(async () => {
+      await clearDB();
+      await cleanup();
     });
+
+  });

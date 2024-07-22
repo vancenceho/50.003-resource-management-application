@@ -1,5 +1,8 @@
-// const MongoClient = require("mongodb").MongoClient;
 const mongoose = require("mongoose");
+const Admin = require("./admin");
+const Client = require("./client");
+const Trainer = require("./trainer");
+const Workshop = require("./workshopRequest");
 
 const connection_str = "mongodb://root:example@localhost:27017/";
 
@@ -20,8 +23,20 @@ const connectDB = async () => {
   }
 };
 
+
+// Clear all collections
+const clearDB = async () => {
+  const collections = mongoose.connection.collections;
+  for (const key in collections) {
+    const collection = collections[key];
+    await collection.deleteMany({});
+  }
+};
+
 async function cleanup() {
   await mongoose.disconnect();
 }
 
-module.exports = { connectDB, cleanup };
+
+
+module.exports = { connectDB, clearDB, cleanup };

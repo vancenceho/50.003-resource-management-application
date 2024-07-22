@@ -2,21 +2,14 @@ const request = require("supertest");
 const mongoose = require('mongoose');
 const { connectDB, cleanup } = require('../models/db.js');
 const workshopRequest = require('../models/workshopRequest'); 
-const client = require('../models/client.js');
 
 describe('workshopRequest Model Test', () => {
-  let randomClientId;
+
   // Connect to the database before running any tests
   beforeAll(async () => {
     await connectDB();
     app = require("../app.js");
-    // Fetch all clients
-    const clientsRes = await request(app)
-    .get("/client/getClients") // Adjust the endpoint as necessary
-    const clients = clientsRes.body;
-    // Select a random client ID
-    randomClientId = clients[Math.floor(Math.random() * clients.length)]._id;
-  });
+});
 
 
   // Test case for creating a new workshop Request
@@ -36,24 +29,24 @@ describe('workshopRequest Model Test', () => {
         status: 'pending',
         type: 'workshop',
         maxParticipants: 20,
-        "client": {
-            "_id": randomClientId,
-            "username": "theClient",
-            "firstName": "Lewis",
-            "lastName": "Hamilton",
-            "email": "lewis@example.com",
-            "password": "12345",
-            "role": "client"
+        client: {
+          "_id": "66978299528ea72d01e2d309",
+          "username": "client1",
+          "firstName": "David",
+          "lastName": "Ling",
+          "email": "david@example.com",
+          "password": "12345",
+          "role": "client"
         },
-        "trainer": {
-            "_id": "6697855a7e9a0985a34809b0",
-            "username": "theTrainer",
-            "firstName": "Sebastian",
-            "lastName": "Vettel",
-            "email": "sebastian@example.com",
-            "password": "12345",
-            "role": "trainer",
-            "status": "available"
+        trainer: {
+          "_id": "66978299528ea72d01e2d310",
+          "username": "trainer1",
+          "firstName": "John",
+          "lastName": "Doe",
+          "email": "john@example.com",
+          "password": "12345",
+          "role": "trainer",
+          "status": "available"
         }
     };
     const validWR = new workshopRequest(workshopRequestData);
@@ -96,17 +89,18 @@ describe('workshopRequest Model Test', () => {
     expect(updatedWR.duration).toBe(6);
   });
 
- /*
+
   // Test case for deleting a WR
   it('delete WR', async () => {
     await workshopRequest.findOneAndDelete({  name: 'testWorkshop' });
     const deletedWR = await workshopRequest.findOne({ name: 'testWorkshop' });
     expect(deletedWR).toBeNull();
   });
-*/
+
 
   // Clean up the database and close the connection after all tests have run
   afterAll(async () => {
+    await workshopRequest.deleteMany();
     await cleanup();
   });
 

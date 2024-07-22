@@ -1,59 +1,63 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
-const { connectDB, cleanup } = require("../models/db.js");
+const { connectDB, clearDB, cleanup } = require("../models/db.js");
+const setDatabase = require("./setDatabase");
 const jwt = require("jsonwebtoken");
 
 describe("Testing Admin Client Endpoints", () => {
-  let randomClientId; 
+  let adminToken;
   let clientToken;
-  const adminToken = jwt.sign({ AdminId: "66978299528ea72d01e2d308", role: "admin" }, "root", { expiresIn: "1h" });
-
-  /* Connecting to the database before all test. */
+  let client1Id, trainer1Id, workshopId;
+  
+  /* Connecting to the database before all tests. */
   beforeAll(async () => {
     await connectDB();
+    const ids = await setDatabase();
     app = require("../app.js");
-    // Fetch all clients
-    const res = await request(app)
-    .get("/admin/getclient")
-    .set("Authorization", `Bearer ${adminToken}`);
-    const clients = res.body;
-    // Select a random client ID
-    randomClientId = clients[Math.floor(Math.random() * clients.length)]._id;
-    clientToken = jwt.sign({ clientId: randomClientId, role: "client" }, "root", { expiresIn: "1h" });
-
+    client1Id = ids.clientId.toString();
+    trainer1Id = ids.trainerId.toString();
+    workshopId = ids.workshopId.toString(); 
+    adminToken = jwt.sign({ AdminId: ids.adminId.toString() , role: "admin" }, "root", { expiresIn: "1h" });
+    clientToken = jwt.sign({ clientId: client1Id, role: "client" }, "root", { expiresIn: "1h" });
 
   });
 
+  /*beforeEach(async () => {
+    await setDatabase();
+    adminToken = jwt.sign({ AdminId: "66978299528ea72d01e2d308", role: "admin" }, "root", { expiresIn: "1h" });
+    //clientToken = jwt.sign({ clientId: "66978299528ea72d01e2d309", role: "client" }, "root", { expiresIn: "1h" });
+  });*/
+
  // ACT.1.0 - Admin Adds a New Client
-  describe("POST /admin/addclient", () => {
+  describe("ACT.1.0 - Admin Adds a New Client", () => {
   it("create client account", async () => {
     const res = await request(app)
-    .post("/admin/addclient")
+    .post(`/admin/addclient`)
     .set("Authorization", `Bearer ${adminToken}`)
     .send({
-        "username": "client1",
-        "firstName": "david",
-        "lastName": "ling",
-        "email": "david@example.com",
-        "password": "12345",
-        "role": "client"
+      username: "client3",
+      firstName: "Robin",
+      lastName: "Hood",
+      email: "robin@example.com",
+      password: "12345",
+      role: "client"
     });
 
     expect.stringContaining("json");
     expect(res.status).toBe(200);
-    expect(res.body.firstName).toBe("david");
+    expect(res.body.firstName).toBe("Robin");
   });
 }); 
 
 
 // ACT.2.0 - Client login with credential (username or email)
-  describe("GET /client/login", () => {
+describe(" ACT.2.0 - Client login with credential (username or email)", () => {
   test("testing login with client account", async () => {
     const res = await request(app)
-    .get("/client/login")
+    .post(`/client/login`)
     .set("Authorization", `Bearer ${clientToken}`)
     .query({
-      credential: "theClient", // or "lewis@example.com" to test email login
+      credential: "client1", // or "david@example.com" to test email login
         password: "12345"
     });
 
@@ -64,62 +68,56 @@ describe("Testing Admin Client Endpoints", () => {
 
 
 // ACT.3.0 - Admin Gets a Client by ID
-describe("GET /admin/getclient/:id", () => {
+describe("ACT.3.0 - Admin Gets a Client by ID", () => {
   test("should return a client", async () => {
     const res = await request(app)
-    .get("/admin/getclient/:id")
+    .get(`/admin/getclient/${client1Id}`)
     .set("Authorization", `Bearer ${adminToken}`)
-    .query({
-      id: randomClientId});
-  
+
     console.log('Clients :', res.body); // Print the workshops
     expect(res.status).toBe(200);
-    expect(res.body).toHaveProperty('_id', randomClientId);
-    console.log('randomClientId:', randomClientId);
+    expect(res.body).toHaveProperty('_id', client1Id);
+    console.log('clientId:', client1Id);
   });
+
 }); 
 
 // ACT.4.0 - Admin Updates Client Information
-describe("PUT /admin/updateclient", () => {
+describe("ACT.4.0 - Admin Updates Client Information", () => {
   it("should update a client", async () => {
     const res = await request(app)
-    .put(`/admin/updateclient`)
+    .put(`/admin/updateclient/${client1Id}`)
     .set("Authorization", `Bearer ${adminToken}`)
-    .query({
-      id: randomClientId
-    })
     .send({
-        username: "client3",
-        firstName: "robin",
-        lastName: "hood",
-        email: "robin@example.com",
+        username: "client2",
+        firstName: "John",
+        lastName: "Doe",
+        email: "john@example.com",
         password: "12345",
         role: "client"
       });
       console.log('updated Client:', res.body); // Print the workshops
       expect(res.statusCode).toBe(200);
-      expect(res.body.username).toBe("client3");
+      expect(res.body.username).toBe("client2");
   });
 });  
 
 // ACT.5.0 - Admin Deletes a Client
-/*describe("DELETE /admin/deleteclient", () => {
+describe("ACT.5.0 - Admin Deletes a Client", () => {
   it("should delete a client", async () => {
     const res = await request(app)
-    .delete(`/admin/deleteclient`)
+    .delete(`/admin/deleteclient/${client1Id}`)
     .set("Authorization", `Bearer ${adminToken}`)
-    .query({
-      id: randomClientId
-    });
-    console.log('Deleted Client ID:', randomClientId);
+    console.log('Deleted Client ID:', client1Id); 
     expect(res.statusCode).toBe(200);
   });
 });
-*/
+
 
 
     /* Closing database connection after all test. */
     afterAll(async () => {
+      await clearDB();
       await cleanup();
     });
 

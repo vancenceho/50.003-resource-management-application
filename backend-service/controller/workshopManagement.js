@@ -52,7 +52,7 @@ exports.getWorkshopRequestById = async (req, res) => {
     .populate("client")
     .populate("trainer");
     if (!workshop) {
-      res.status(404).json({ message: "Workshop not found" });
+      return res.status(404).json({ message: "Workshop not found" });
     }
     res.status(200).json(workshop);
   } catch (error) {

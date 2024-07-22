@@ -52,6 +52,7 @@ describe('Client Model Test', () => {
 
   // Clean up the database and close the connection after all tests have run
   afterAll(async () => {
+    await Client.deleteMany();
     await cleanup();
   });
 
