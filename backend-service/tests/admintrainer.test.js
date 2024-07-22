@@ -48,17 +48,18 @@ describe("Testing Admin Trainer Endpoints", () => {
   
   
     describe("ATT.2.0 - Trainer login with credential (username or email)", () => {
-    test("testing login with client account", async () => {
+    test("testing login with trainer account", async () => {
       const res = await request(app)
       .post(`/trainer/login`)
-      .set("Authorization", `Bearer ${trainerToken}`)
-      .query({
+      //.set("Authorization", `Bearer ${trainerToken}`)
+      .send({
         credential: "trainer1", // or "john@example.com" to test email login
           password: "12345"
       });
-  
-      expect(res.status).toBe(200);
-      console.log(res.body);
+      console.log(res.body); // Log response body for debugging
+      expect(res.statusCode).toBe(200);
+      expect(res.body.message).toBe("Authentication successful");
+      expect(res.body).toHaveProperty('token');
     });
   }); 
   

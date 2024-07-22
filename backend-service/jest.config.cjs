@@ -1,6 +1,8 @@
+const path = require('path');
+
 const config = {
     transform: {
-      "^.+\\.[tj]sx?$": ["babel-jest", { configFile: "./babel.config.json" }],
+      "^.+\\.[tj]sx?$": ["babel-jest", { configFile: path.resolve(__dirname, "./babel.config.json") }],
     },
     transformIgnorePatterns: ["/node_modules/(?!(supertest)/)", "\\.svg$"],
     testEnvironment: "node",
@@ -10,6 +12,6 @@ const config = {
       "\\.(css|less|scss|sass)$": "identity-obj-proxy",
       "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)$": "jest-transform-stub"
     },
-  };
-  
-  module.exports = config;
+};
+
+module.exports = config;

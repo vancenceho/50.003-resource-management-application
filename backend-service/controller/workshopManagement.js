@@ -1,4 +1,5 @@
 const Workshop = require("../models/workshopRequest");
+const Trainer = require("../models/trainer");
 const mongoose = require("mongoose");
 
 /**
@@ -47,15 +48,8 @@ exports.getWorkshopRequests = async (req, res) => {
  */
 exports.getWorkshopRequestById = async (req, res) => {
   try {
-<<<<<<< HEAD
-    const id = req.query.id;
-    const workshop = await Workshop.findById(id)
-    .populate("client")
-    .populate("trainer");
-=======
     const id = req.params.id;
     const workshop = await Workshop.findById(id);
->>>>>>> bd601441689d38464c7a793f65f54511b5e45877
     if (!workshop) {
       return res.status(404).json({ message: "Workshop not found" });
     }
@@ -99,13 +93,8 @@ exports.createWorkshopRequest = async (req, res) => {
       status: req.body.status,
       type: req.body.type,
       maxParticipants: req.body.maxParticipants,
-<<<<<<< HEAD
-      client: req.body.client, 
-      trainer: req.body.trainer,
-=======
       client: req.body.client,
       trainerId: req.body.trainerId,
->>>>>>> bd601441689d38464c7a793f65f54511b5e45877
     });
     console.log("TESTING...............6at.................");
     const data = await workshop.save();
@@ -121,42 +110,6 @@ exports.createWorkshopRequest = async (req, res) => {
 };
 
 /**
-<<<<<<< HEAD
- * // Delete Workshop Request
- *
- * @details
- * Step 1: This function first retrieves the id of the workshop to be deleted from the request query.
- * Step 2: It then attempts to find the workshop with the given id in the database.
- * Step 3: If the workshop is not found, it returns a 404 status code with an error message.
- * Step 4: If the workshop is found, it deletes the workshop from the database and returns a 200 status code with the deleted workshop data.
- *
- * @param {*} req
- * @param {*} res
- *
- * @returns
- * If successful, returns a 200 status code with the deleted workshop data.
- * If the workshop is not found, returns a 404 status code with an error message.
- */
-exports.deleteWorkshopRequest = async (req, res) => {
-  try {
-    const id = req.query.id;
-    const data = await Workshop.findByIdAndDelete(id);
-    console.log(id);
-    console.log(data);
-    if (!data) {
-      res.status(404).json({ message: "Workshop not found" });
-    }
-    res.status(200).json(data);
-    console.log("Successfully deleting workshop request");
-  } catch (error) {
-    console.error("Error deleting workshop request: ", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-/**
-=======
->>>>>>> bd601441689d38464c7a793f65f54511b5e45877
  * // Update Workshop Request
  *
  * @details
@@ -178,14 +131,9 @@ exports.deleteWorkshopRequest = async (req, res) => {
  */
 exports.updateWorkshopRequest = async (req, res) => {
   try {
-<<<<<<< HEAD
-    const id = req.query.id;
-    const data = await Workshop.findByIdAndUpdate(id, req.body, { new: true }); // Add { new: true } to return the updated document
-=======
     const id = req.params.id;
     const { _id, ...updateData } = req.body;
     const data = await Workshop.findByIdAndUpdate(id, updateData);
->>>>>>> bd601441689d38464c7a793f65f54511b5e45877
     if (!data) {
       res.status(404).json({ message: "Workshop not found" });
     }
@@ -203,8 +151,44 @@ exports.updateWorkshopRequest = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
+/**
+ * // Delete Workshop Request
+ *
+ * @details
+ * Step 1: This function first retrieves the id of the workshop to be deleted from the request query.
+ * Step 2: It then attempts to find the workshop with the given id in the database.
+ * Step 3: If the workshop is not found, it returns a 404 status code with an error message.
+ * Step 4: If the workshop is found, it deletes the workshop from the database and returns a 200 status code with the deleted workshop data.
+ *
+ * @param {*} req
+ * @param {*} res
+ *
+ * @returns
+ * If successful, returns a 200 status code with the deleted workshop data.
+ * If the workshop is not found, returns a 404 status code with an error message.
+ */
+exports.deleteWorkshopRequest = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = await Workshop.findByIdAndDelete(id);
+    if (!data) {
+      res.status(404).json({ message: "Workshop not found" });
+    }
+    const response = {
+      code: 200,
+      message: "Workshop successfully deleted",
+      workshop: data,
+    };
+    res.status(200).json(response);
+  } catch (error) {
+    console.error("Error deleting workshop request: ", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
 
+
+// Admin allocate Trainer to Workshop and once allocated, workshop status is updated from 'pending' to 'accepted'
+// if no trainer is allocated, workshop status is updated from 'pending' to 'rejected'
 exports.allocateTrToWorkshop = async (req, res) => {
   try {
     const { workshopId, trainerIds } = req.query;
@@ -261,7 +245,7 @@ exports.allocateTrToWorkshop = async (req, res) => {
 
     
     let updateStatus = {};
-    if (workshop.trainerId) {
+    if (workshop.trainer) {
       updateStatus = { status: 'accepted' };
     } else {
       updateStatus = { status: 'rejected' };
@@ -404,43 +388,3 @@ exports.checkforSchedConflict = async (req, res) => {
     }
   }
 };*/
-
-
-//WorkshopManagement. getWorkshopsStatus
-//WorkshopManagement. markPreparationComplete
-=======
-/**
- * // Delete Workshop Request
- *
- * @details
- * Step 1: This function first retrieves the id of the workshop to be deleted from the request query.
- * Step 2: It then attempts to find the workshop with the given id in the database.
- * Step 3: If the workshop is not found, it returns a 404 status code with an error message.
- * Step 4: If the workshop is found, it deletes the workshop from the database and returns a 200 status code with the deleted workshop data.
- *
- * @param {*} req
- * @param {*} res
- *
- * @returns
- * If successful, returns a 200 status code with the deleted workshop data.
- * If the workshop is not found, returns a 404 status code with an error message.
- */
-exports.deleteWorkshopRequest = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const data = await Workshop.findByIdAndDelete(id);
-    if (!data) {
-      res.status(404).json({ message: "Workshop not found" });
-    }
-    const response = {
-      code: 200,
-      message: "Workshop successfully deleted",
-      workshop: data,
-    };
-    res.status(200).json(response);
-  } catch (error) {
-    console.error("Error deleting workshop request: ", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
->>>>>>> bd601441689d38464c7a793f65f54511b5e45877

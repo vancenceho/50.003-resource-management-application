@@ -59,7 +59,7 @@ const jwt = require("jsonwebtoken");
             "status": "available"
           }
       });
-      expect(res.statusCode).toBe(201);
+      expect(res.statusCode).toBe(200);
       expect(res.body.name).toBe("Advanced Machine Learning Workshop");
   });
   }); 
@@ -68,10 +68,8 @@ const jwt = require("jsonwebtoken");
   describe("AWT.2.0 - Admin get Workshop Request", () => {
     it("should return all workshops", async () => {
       const res = await request(app)
-      .get("/admin/getworkshop")
-      .set("Authorization", `Bearer ${adminToken}`)
-      .query({
-        id: workshopId });
+      .get(`/admin/getworkshop`)
+      .set("Authorization", `Bearer ${adminToken}`);
       console.log('Workshops:', res.body); // Print the workshops
       expect(res.statusCode).toBe(200);
       expect(res.body.length).toBeGreaterThan(0);
@@ -82,10 +80,8 @@ const jwt = require("jsonwebtoken");
    describe("AWT.3.0 - get Workshop Request by id", () => {
     it("should return a workshop", async () => {
       const res = await request(app)
-      .get(`/admin/getworkshop/:id`)
-      .set("Authorization", `Bearer ${adminToken}`)
-      .query({
-        id: workshopId });
+      .get(`/admin/getworkshop/${workshopId}`)
+      .set("Authorization", `Bearer ${adminToken}`);
 
       console.log('Workshop retrieved:', res.body); // Print the workshops
       expect(res.statusCode).toBe(200);
@@ -99,58 +95,55 @@ const jwt = require("jsonwebtoken");
     it("should update a product", async () => {
       //const workshopId = '6695be7711e0918a004bfb93'; // This can be dynamically set
       const res = await request(app)
-      .put(`/admin/updateworkshop/:id`)
+      .put(`/admin/updateworkshop/${workshopId}`)
       .set("Authorization", `Bearer ${adminToken}`)
-      .query({
-        id: workshopId  })
-         .send({
-            name: "Updated Advanced Machine Learning Workshop",
-            description: "Updated Description",
-            startDate: "23th July 2024",
-            endDate: "26th July 2024",
-            location: "Updated Location",
-            timeStart: "10:00 AM",
-            timeEnd: "1:00 PM",
-            duration: 3,
-            status: "Scheduled",
-            type: "Non-Technical",
-            maxParticipants: 25,
-            client: {
-              "_id": client1Id,
-              "username": "theClient",
-              "firstName": "Lewis",
-              "lastName": "Hamilton",
-              "email": "lewis@example.com",
-              "password": "12345",
-              "role": "client"
-            },
-            trainer: {
-              "_id": trainer1Id,
-              "username": "theTrainer",
-              "firstName": "Sebastian",
-              "lastName": "Vettel",
-              "email": "sebastian@example.com",
-              "password": "12345",
-              "role": "trainer",
-              "status": "available"
-            }
-        });
+      .send({
+        name: "Updated Advanced Machine Learning Workshop",
+        description: "Updated Description",
+        startDate: "23rd July 2024",
+        endDate: "26th July 2024",
+        location: "Updated Location",
+        timeStart: "10:00 AM",
+        timeEnd: "1:00 PM",
+        duration: 3,
+        status: "Scheduled",
+        type: "Non-Technical",
+        maxParticipants: 25,
+        client: {
+          "_id": client1Id,
+          "username": "theClient",
+          "firstName": "Lewis",
+          "lastName": "Hamilton",
+          "email": "lewis@example.com",
+          "password": "12345",
+          "role": "client"
+        },
+        trainer: {
+          "_id": trainer1Id,
+          "username": "theTrainer",
+          "firstName": "Sebastian",
+          "lastName": "Vettel",
+          "email": "sebastian@example.com",
+          "password": "12345",
+          "role": "trainer",
+          "status": "available"
+        }
+    });
         console.log('updated Workshop:', res.body); // Print the workshops
-        expect(res.statusCode).toBe(200);
-        expect(res.body.name).toBe("Updated Advanced Machine Learning Workshop");
+        expect(res.body.code).toBe(200);
+        expect(res.body.message).toBe("Workshop successfully updated");
+        expect(res.body.workshop.name).toBe("Updated Advanced Machine Learning Workshop");
     });
   });  
   
 
    describe("AWT.5.0 - Admin Deletes Workshop Request", () => {
-    it("should delete a product", async () => {
+    it("should delete a workshop", async () => {
       const res = await request(app)
-        .delete(`/admin/deleteworkshop/:id`)
-        .set("Authorization", `Bearer ${adminToken}`)
-        .query({
-          id: workshopId });
-        console.log('Deleted Workshop ID:', "66978299528ea72d01e2d311");
-      expect(res.statusCode).toBe(200);
+        .delete(`/admin/deleteworkshop/${workshopId}`)
+        .set("Authorization", `Bearer ${adminToken}`);
+
+      expect(res.body.code).toBe(200);
     });
   });
 

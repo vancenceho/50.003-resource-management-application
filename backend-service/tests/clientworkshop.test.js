@@ -61,7 +61,7 @@ describe("CWT.1.0 - Client Submits a Workshop Request", () => {
         "status": "available"
       }
   });
-  expect(res.statusCode).toBe(201);
+  expect(res.statusCode).toBe(200);
   expect(res.body.name).toBe("Data Science Bootcamp");
 });
 }); 
@@ -72,10 +72,8 @@ describe("CWT.1.0 - Client Submits a Workshop Request", () => {
 describe("CWT.2.0 - Client Views Workshop Status", () => {
     it("should return a workshop", async () => {
       const res = await request(app)
-      .get(`/client/getworkshop/:id`)
-      .set("Authorization", `Bearer ${clientToken}`)
-      .query({
-        id: workshopId });
+      .get(`/client/getworkshop/${workshopId}`)
+      .set("Authorization", `Bearer ${clientToken}`);
 
       console.log('Client viewing Workshop :', res.body); // Print the workshops
       expect(res.statusCode).toBe(200);

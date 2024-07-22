@@ -1,6 +1,8 @@
 const Client = require("../models/client.js");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+const secretKey = "root";
 
 /**
  * // Client Login
@@ -24,9 +26,17 @@ const mongoose = require("mongoose");
  */
 exports.clientLogin = async (req, res) => {
   console.log("TESTING...............1at.................");
+  console.log("Request body:", req.body);
   try {
-    const credential = req.query.credential;
-    const password = req.query.password;
+    const credential = req.body.credential;
+    const password = req.body.password;
+    console.log("Credential:", credential);
+    console.log("Password:", password); 
+    
+    // Check if credential and password are provided
+    if (!credential || !password) {
+      return res.status(400).json({ message: "Credential and password are required" });
+    }
 
     let query = {};
     if (credential.includes("@")) {
@@ -37,26 +47,35 @@ exports.clientLogin = async (req, res) => {
 
     const user = await Client.findOne(query);
     if (!user) {
-<<<<<<< HEAD
       return res.status(401).json({ message: "Client not found" });
-=======
-      return res.status(401).json({ message: "User not found" });
->>>>>>> bd601441689d38464c7a793f65f54511b5e45877
     }
-
+    console.log("User:", user);
+    console.log("User password:", user.password);
     const passwordMatch = await bcrypt.compare(password, user.password);
+    console.log("Password match:", passwordMatch);
     if (!passwordMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
     }
+    const token = jwt.sign(
+      {
+        role: user.role,
+        clientId: user._id,
+      },
+      secretKey,
+      {
+        expiresIn: "1h",
+      }
+    );
+    //res.status(200).json(user);
+    return res
+    .status(200)
+    .json({ message: "Authentication successful", token: token });
 
-    res.status(200).json(user);
   } catch (error) {
-<<<<<<< HEAD
     console.error("Error logging in client:", error);
-=======
-    console.error("Error logging in user:", error);
->>>>>>> bd601441689d38464c7a793f65f54511b5e45877
+    if (!res.headersSent) {
     res.status(500).json({ message: "Internal Server Error" });
+    }
   }
 };
 
@@ -99,11 +118,7 @@ exports.clientLogout = async (req, res) => {
  * If successful, returns a 200 status code with the client users data.
  * If there is an error retrieving the client users, returns a 500 status code with an error message.
  */
-<<<<<<< HEAD
 exports.getAllClients = async (req, res) => {
-=======
-exports.getAllUsers = async (req, res) => {
->>>>>>> bd601441689d38464c7a793f65f54511b5e45877
   try {
     const users = await Client.find();
     res.status(200).json(users);
@@ -135,11 +150,7 @@ exports.getAllUsers = async (req, res) => {
  * If required fields are not provided, returns a 400 status code with an error message.
  * If a user with the same username already exists, returns a 409 status code with an error message.
  */
-<<<<<<< HEAD
 exports.createClient = async (req, res) => {
-=======
-exports.createUser = async (req, res) => {
->>>>>>> bd601441689d38464c7a793f65f54511b5e45877
   try {
     console.log(req.body);
     const { username, firstName, lastName, email, password, role } = req.body;
@@ -259,7 +270,6 @@ exports.updateClient = async (req, res) => {
     if (!res.headersSent) {
       res.status(500).json({ message: "Internal Server Error" });
     }
-<<<<<<< HEAD
   }
 };
 
@@ -302,47 +312,3 @@ exports.deleteClient = async (req, res) => {
 };
 
 // Additional controller functions can be added here for other CRUD operations
-=======
-  }
-};
-
-/**
- * // Delete Client user
- *
- * @details
- * Step 1: This function retrieves the id of the user from the request query.
- * Step 2: It then attempts to find the user with the given id in the database.
- * Step 3: If the user is not found, it returns a 404 status code with an error message.
- * Step 4: If the user is found, it deletes the user from the database.
- * Step 5: If there is an error deleting the user, it returns a 500 status code with an error message.
- * Step 6: If successful, it returns a 200 status code with the deleted user data.
- *
- * @param {*} req
- * @param {*} res
- *
- * @returns
- * If successful, returns a 200 status code with the deleted user data.
- * If the user is not found, returns a 404 status code with an error message.
- * If there is an error deleting the user, returns a 500 status code with an error message.
- */
-exports.deleteClient = async (req, res) => {
-  try {
-    const id = req.params.id;
-    const data = await Client.findByIdAndDelete(id);
-    if (!data) {
-      res.status(404).json({ message: "Client not found" });
-    }
-    const response = {
-      code: 200,
-      message: "Client successfully deleted",
-      client: data,
-    };
-    res.status(200).json(response);
-  } catch (error) {
-    console.error("Error deleting client:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-// Additional controller functions can be added here for other CRUD operations
->>>>>>> bd601441689d38464c7a793f65f54511b5e45877

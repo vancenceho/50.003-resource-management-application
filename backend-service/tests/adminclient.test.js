@@ -52,30 +52,30 @@ describe("Testing Admin Client Endpoints", () => {
 
 // ACT.2.0 - Client login with credential (username or email)
 describe(" ACT.2.0 - Client login with credential (username or email)", () => {
-  test("testing login with client account", async () => {
+  it("testing login with client account", async () => {
     const res = await request(app)
     .post(`/client/login`)
-    .set("Authorization", `Bearer ${clientToken}`)
-    .query({
+    .send({
       credential: "client1", // or "david@example.com" to test email login
         password: "12345"
     });
-
-    expect(res.status).toBe(200);
-    console.log(res.body);
+    console.log(res.body); // Log response body for debugging
+    expect(res.statusCode).toBe(200);
+    expect(res.body.message).toBe("Authentication successful");
+    expect(res.body).toHaveProperty('token');
   });
 }); 
 
 
 // ACT.3.0 - Admin Gets a Client by ID
 describe("ACT.3.0 - Admin Gets a Client by ID", () => {
-  test("should return a client", async () => {
+  it("should return a client", async () => {
     const res = await request(app)
     .get(`/admin/getclient/${client1Id}`)
     .set("Authorization", `Bearer ${adminToken}`)
 
     console.log('Clients :', res.body); // Print the workshops
-    expect(res.status).toBe(200);
+    expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty('_id', client1Id);
     console.log('clientId:', client1Id);
   });
@@ -98,7 +98,8 @@ describe("ACT.4.0 - Admin Updates Client Information", () => {
       });
       console.log('updated Client:', res.body); // Print the workshops
       expect(res.statusCode).toBe(200);
-      expect(res.body.username).toBe("client2");
+      expect(res.body.message).toBe("Client successfully updated");
+      expect(res.body.client.username).toBe("client2");
   });
 });  
 

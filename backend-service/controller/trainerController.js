@@ -26,9 +26,14 @@ const secretKey = "root";
  * If there is an error logging in the trainer, returns a 500 status code with an error message.
  */
 exports.trainerLogin = async (req, res) => {
+  console.log("Request body:", req.body);
   try {
-    const credential = req.query.credential;
-    const password = req.query.password;
+    const credential = req.body.credential;
+    const password = req.body.password;
+    // Check if credential and password are provided
+    if (!credential || !password) {
+      return res.status(400).json({ message: "Credential and password are required" });
+    }
 
     let query = {};
     if (credential.includes("@")) {
@@ -49,7 +54,7 @@ exports.trainerLogin = async (req, res) => {
     const token = jwt.sign(
       {
         role: trainer.role,
-        userId: trainer._id,
+        TrainerId: trainer._id,
       },
       secretKey,
       {
@@ -147,10 +152,6 @@ exports.getTrainerById = async (req, res) => {
       .send({ message: "Error Retreiving Trainer: Internal Server Error" });
   }
 };
-<<<<<<< HEAD
-=======
-
->>>>>>> bd601441689d38464c7a793f65f54511b5e45877
 // Controller function to let the signed in trainer access only their details
 exports.getOwnDetails = async (req, res) => {
   try {
@@ -272,10 +273,6 @@ exports.updateTrainer = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
-
-=======
->>>>>>> bd601441689d38464c7a793f65f54511b5e45877
 /**
  * // Delete Trainer user
  *

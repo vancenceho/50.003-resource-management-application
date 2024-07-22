@@ -41,6 +41,7 @@ describe(" TWT.1.0 - Trainer Views His/Her Assigned Workshops ", () => {
     expect(res.statusCode).toBe(200);
     //expect(res.body.length).toBeGreaterThan(0); 
     console.log('randomTrainerId:', trainer1Id);
+    console.log(error);
 
 });
 }); 

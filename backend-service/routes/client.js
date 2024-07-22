@@ -20,17 +20,10 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth.js"); //
  * Route 4: Returns a 200 status code with the new client data.
  *
  */
-<<<<<<< HEAD
 router.post("/login", clientController.clientLogin);
 router.get("/logout", clientController.clientLogout);
 router.get("/getClients", clientController.getAllClients);
 router.post("/createClient", clientController.createClient);
-=======
-router.get("/login", userController.clientLogin);
-router.get("/logout", userController.clientLogout);
-router.get("/getClients", userController.getAllUsers); // This route should not be accessible to clients
-router.post("/createClient", userController.createUser);
->>>>>>> bd601441689d38464c7a793f65f54511b5e45877
 
 /**
  * // Workshop Request Routes
