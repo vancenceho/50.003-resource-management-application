@@ -63,9 +63,8 @@ describe('AdminWorkshopRequests', () => {
       </BrowserRouter>
     );
 
-    // Update the date here to match the new test data
     const datePicker = screen.getByPlaceholderText(/Select Date/i);
-    fireEvent.change(datePicker, { target: { value: '2024-07-17' } }); // Adjusted date for filtering
+    fireEvent.change(datePicker, { target: { value: '2024-07-11' } });
 
     const workshop1 = screen.getByText(/Workshop 1/i);
     expect(workshop1).toBeInTheDocument();
