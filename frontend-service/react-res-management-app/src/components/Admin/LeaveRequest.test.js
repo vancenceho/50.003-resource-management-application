@@ -12,3 +12,4 @@ test('renders LeaveRequests component without crashing', () => {
   
   // If the component renders without crashing, the test will pass
 });
+
