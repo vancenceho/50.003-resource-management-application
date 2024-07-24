@@ -10,6 +10,7 @@ const adminId = new mongoose.Types.ObjectId("66978299528ea72d01e2d308");
 const clientId = new mongoose.Types.ObjectId("66978299528ea72d01e2d309");
 const trainerId = new mongoose.Types.ObjectId("66978299528ea72d01e2d310");
 const workshopId = new mongoose.Types.ObjectId("66978299528ea72d01e2d311");
+const workshopId2 = new mongoose.Types.ObjectId("66978299528ea72d01e2d313");
 
 // Function to hash passwords
 const hashPassword = async (password) => {
@@ -90,7 +91,35 @@ const setDatabase = async () => {
     }
   });
 
-  return { adminId, clientId, trainerId, workshopId };
+  
+  await Workshop.create({
+    _id: workshopId2,
+    name: "Introduction to React",
+    description: "Learn the basics of React, including components, state, and props",
+    startDate: "November 5, 2023",
+    endDate: "November 7, 2023",
+    location: "Online",
+    timeStart: "10:00 AM",
+    timeEnd: "4:00 PM",
+    duration: 2,
+    status: "pending",
+    type: "Technical",
+    maxParticipants: 25,
+    client: {
+      "_id": clientId,
+      "username": "client1",
+      "firstName": "David",
+      "lastName": "Ling",
+      "email": "david@example.com",
+      "password": hashedClientPassword,
+      "role": "client"
+    },
+    trainer: 
+      []
+  });
+
+
+  return { adminId, clientId, trainerId, workshopId, workshopId2 };
 };
 
 module.exports = setDatabase;

@@ -10,7 +10,6 @@ const jwt = require("jsonwebtoken");
 
   /* Connecting to the database before all test. */
    beforeAll(async () => {
-
     // Insert initial data
     await connectDB();
     const ids = await setDatabase();
