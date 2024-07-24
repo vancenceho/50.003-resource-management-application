@@ -31,7 +31,7 @@ const jwt = require("jsonwebtoken");
 describe(" TWT.1.0 - Trainer Views His/Her Assigned Workshops ", () => {
   it("should show allocated workshop", async () => {
     const res = await request(app)
-    .get("/trainer/getAllocatedWorkshops")
+    .get(`/trainer/getAllocatedWorkshops`)
     .set("Authorization", `Bearer ${trainerToken}`)
     .query({ 
         //workshopId: randomWorkshopId, 
@@ -40,8 +40,7 @@ describe(" TWT.1.0 - Trainer Views His/Her Assigned Workshops ", () => {
     console.log('Workshops Allocated to Trainer :', res.body); // Print the workshops      
     expect(res.statusCode).toBe(200);
     //expect(res.body.length).toBeGreaterThan(0); 
-    console.log('randomTrainerId:', trainer1Id);
-    console.log(error);
+    console.log('TrainerId:', trainer1Id);
 
 });
 }); 

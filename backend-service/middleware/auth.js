@@ -22,34 +22,35 @@ const authenticateUser = async (req, res, next) => {
 
     console.log(decoded.role);
     console.log(decoded);
-    if (decoded.role !== "admin") {
-      return res
-        .status(403)
-        .send({ error: "Only admins can perform this action" });
-    }
-    if (decoded.role === "admin") {
+    if (decoded.role === 'admin') {
       user = await Admin.findById(decoded.AdminId);
-    } else if (decoded.role === "client") {
-      user = await Client.findById(decoded.clientId);
-    }
-      else if (decoded.role === 'trainer') {
+  } 
+    else if (decoded.role === 'trainer') {
       user = await Trainer.findById(decoded.TrainerId);
-    } //else if (decoded.role === 'client') {
-    //user = await Client.findById(decoded.id);
-    //}
-    //console.log(decoded.id);
+  } 
+    /*if (decoded.role !== 'trainer') {
+      return res.status(403).send({ error: "Only Trainer can perform this action" });
+  }*/
+    else if (decoded.role === 'client') {
+      user = await Client.findById(decoded.clientId);
+  }
+    /*if (decoded.role !== 'client') {
+      return res.status(403).send({ error: "Only Client can perform this action" });
+  }*/
+
     if (!user) {
-      console.log(user);
-      return res.status(404).send({ error: "Admin user not found" });
+      console.log(user)
+      return res.status(404).send({ error: "No users found" });
     }
-    console.log("TESTING...............6.................");
+    console.log("TESTING...............AU3.................");  
     req.user = user;
     req.user.role = decoded.role;
-    console.log("TESTING...............4.................");
+    console.log("TESTING...............AU4.................");  
     next();
-    console.log("TESTING...............5.................");
+    console.log("TESTING...............AU5.................");  
   } catch (error) {
-    res.status(401).send({ error: "Authentication failed" });
+    console.error("Authentication error:", error);
+    res.status(401).send({ error:  "Authentication failed"});
   }
 };
 
