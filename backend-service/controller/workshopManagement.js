@@ -575,68 +575,45 @@ exports.getDealSizeTrend = async (req, res) => {
  */
 exports.aggregateWorkshopsByStatus = async (req, res) => {
   try {
+    const statuses = ["Accepted", "Rejected", "Pending", "Completed"];
+    
     const pipeline = [
       {
-        $facet: {
-          counts: [
-            {
-              $match: {
-                status: { $in: ["Accepted", "Rejected", "Pending", "Completed"] }
-              }
-            },
-            {
-              $group: {
-                _id: "$status",
-                count: { $sum: 1 }
-              }
-            }
-          ],
-          allStatuses: [
-            {
-              $project: {
-                status: ["Accepted", "Rejected", "Pending", "Completed"]
-              }
-            },
-            { $unwind: "$status" }
-          ]
+        $match: {
+          status: { $in: statuses }
+        }
+      },
+      {
+        $group: {
+          _id: "$status",
+          count: { $sum: 1 }
         }
       },
       {
         $project: {
-          counts: 1,
-          allStatuses: 1
+          _id: 0,
+          status: "$_id",
+          count: 1
         }
       },
       {
-        $unwind: "$allStatuses"
-      },
-      {
-        $lookup: {
-          from: "counts",
-          localField: "allStatuses.status", // Ensure this matches the field in counts
-          foreignField: "_id",
-          as: "countData"
-        }
-      },
-      {
-        $unwind: {
-          path: "$countData",
-          preserveNullAndEmptyArrays: true
-        }
-      },
-      {
-        $project: {
-          _id: "$allStatuses.status", // Use correct field
-          count: { $ifNull: ["$countData.count", 0] }
-        }
-      },
-      {
-        $sort: { count: -1 } // Sort in descending order
+        $sort: { status: 1 } // Sort by status if needed
       }
     ];
 
+    // Perform the aggregation
     const aggregatedData = await Workshop.aggregate(pipeline);
-    res.status(200).json(aggregatedData);
+
+    // Ensure all statuses are included, even if their count is zero
+    const result = statuses.map(status => {
+      const entry = aggregatedData.find(item => item.status === status);
+      return {
+        status,
+        count: entry ? entry.count : 0
+      };
+    });
+
+    res.status(200).json(result);
   } catch (error) {
     console.error("Error aggregating workshops: ", error);
     res.status(500).json({ message: "Internal Server Error" });

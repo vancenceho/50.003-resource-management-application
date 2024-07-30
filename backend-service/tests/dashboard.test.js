@@ -94,9 +94,10 @@ describe('Dashboard Management', () => {
       console.log('DT.3.0 Response Body:', res.body); // Add logging
       expect(res.status).toBe(200);
       expect(res.body).toEqual([
-        { _id: 'Accepted', count: 0 },
-        { _id: 'Pending', count: 3 },
-        { _id: 'Rejected', count: 0 },
+        { status: 'Accepted', count: 0 },
+        { status: 'Rejected', count: 0 },
+        { status: 'Pending', count: 3 },
+        { status: 'Completed', count: 0 }
       ]);
     });
   });
