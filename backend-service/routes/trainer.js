@@ -38,6 +38,35 @@ router.delete("/delete/:id", trainerController.deleteTrainer); // This route sho
 router.get("/logout", trainerController.trainerLogout);
 
 /**
+ * // Trainer Workshop Request Routes
+ *
+ * @details
+ * Route 1: Route to get workshop requests allocated to them
+ *
+ * @returns
+ * Route 1: Returns a 200 status code with the workshop requests data.
+ *
+ * @throws
+ * Route 1: Returns a 500 status code with an error message if there is an error.
+ *
+ */
+router.get(
+  "/getallocworkshop/:id",
+  authenticateUser,
+  authorizeRole("trainer"),
+  workshopController.getAllocatedWorkshops
+);
+
+router.post(
+  "/markworkshopcomplete/:id",
+  authenticateUser,
+  authorizeRole("trainer"),
+  workshopController.updateWorkshopStatustoComplete
+);
+
+
+
+/**
  * // Trainer Leave Request Routes
  *
  * @details
@@ -82,10 +111,5 @@ router.delete(
 );
 
 
-router.get(
-  "/getAllocatedWorkshops", 
-  authenticateUser, 
-  authorizeRole("trainer"), 
-  workshopController.getAllocatedWorkshops);
 
 module.exports = router;

@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 
  describe("Testing Admin to Workshop Endpoints", () => {
     let adminToken;
-    let client1Id, trainer1Id, workshopId;
+    let client1Id, trainer1Id, workshopId, workshopId2, workshopId3;
 
   /* Connecting to the database before all test. */
    beforeAll(async () => {
@@ -18,6 +18,8 @@ const jwt = require("jsonwebtoken");
     client1Id = ids.clientId.toString();
     trainer1Id = ids.trainerId.toString();
     workshopId = ids.workshopId.toString(); 
+    workshopId2 = ids.workshopId2.toString(); 
+    workshopId3 = ids.workshopId3.toString();
   });
  
 
@@ -146,24 +148,21 @@ const jwt = require("jsonwebtoken");
     });
   });
 
-    //AWT.6.0 - Admin Allocates Trainers to a Workshop, Admin Accepts/Reject Workshop Request
-    //testing WorkshopManagement. allocateTrToWorkshop function
 
-    /*describe("AWT.6.0 - Admin Allocates Trainers to a Workshop, Admin Accepts/Reject Workshop Request", () => {
-      it("should allocate trainers to a workshop", async () => {
-        const res = await request(app)
-        .post(`/admin/allocatetrainer`)
-        .set("Authorization", `Bearer ${adminToken}`)
-        .query({
-        id: "66978299528ea72d01e2d311"
-          trainer : trainerIds
-        });
-        console.log('Accepted Workshop ID:', randomWorkshopId);
-        expect(res.statusCode).toBe(200);
+  describe("AWT.6.0 - Admin to calculate the number of workshops allocated for each trainer", () => {
+    it ("should return the number of past and present workshops allocated for each trainer", async () => {
+      const res = await request(app)
+      .get(`/dashboard/workshopscount`)
+      .set("Authorization", `Bearer ${adminToken}`)
+      .query({ 
+        startDate: "10th October 2023",
+        endDate: "7th November 2023"
       });
-    }); */
- 
-  
+      console.log('Workshops Count:', res.body); // Print the workshops
+      expect(res.statusCode).toBe(200);
+      expect(res.body.length).toBeGreaterThan(0);
+    });
+  });
   
     /* Closing database connection after all test. */
      afterAll(async () => {
