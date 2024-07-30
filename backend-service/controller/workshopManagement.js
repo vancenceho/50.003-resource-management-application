@@ -451,10 +451,15 @@ exports.getWorkshopsCountForTrainers = async (req, res) => {
 
     // Log the workshops retrieved from the database
     console.log("Filtered Workshops found:", filteredWorkshops);
-    
+        
+    // Fetch all trainers
+    const trainers = await Trainer.find();
     // Create a map to count workshops for each trainer
     const trainerWorkshopCount = {};
-
+    trainers.forEach(trainer => {
+      trainerWorkshopCount[trainer._id] = 0;
+    });
+    
     filteredWorkshops.forEach(workshop => {
       workshop.trainer.forEach(trainerId => {
         if (!trainerWorkshopCount[trainerId]) {

@@ -41,7 +41,7 @@ describe('Dashboard Management', () => {
       expect(res.status).toBe(200);
       expect(res.body.data).toEqual({
         '66978299528ea72d01e2d310': 1,
-        //'66978299528ea72d01e2d312': 0,
+        '66978299528ea72d01e2d312': 0,
       });
     });
 
