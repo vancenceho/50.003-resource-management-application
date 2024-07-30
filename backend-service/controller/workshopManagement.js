@@ -561,7 +561,7 @@ exports.getDealSizeTrend = async (req, res) => {
 };
 
 /**
- * // Aggregate Workshops by Status
+ * // Aggregate Workshops by Status                                                  
  *
  * @details
  * This function aggregates workshops by their status and counts the number of workshops for each status.
@@ -577,18 +577,61 @@ exports.aggregateWorkshopsByStatus = async (req, res) => {
   try {
     const pipeline = [
       {
-        $match: {
-          status: { $in: ["Accepted", "Rejected", "Pending", "Completed"] }
+        $facet: {
+          counts: [
+            {
+              $match: {
+                status: { $in: ["Accepted", "Rejected", "Pending", "Completed"] }
+              }
+            },
+            {
+              $group: {
+                _id: "$status",
+                count: { $sum: 1 }
+              }
+            }
+          ],
+          allStatuses: [
+            {
+              $project: {
+                status: ["Accepted", "Rejected", "Pending", "Completed"]
+              }
+            },
+            { $unwind: "$status" }
+          ]
         }
       },
       {
-        $group: {
-          _id: "$status",
-          count: { $sum: 1 }
+        $project: {
+          counts: 1,
+          allStatuses: 1
         }
       },
       {
-        $sort: { count: -1 } // sort in descending order
+        $unwind: "$allStatuses"
+      },
+      {
+        $lookup: {
+          from: "counts",
+          localField: "allStatuses.status", // Ensure this matches the field in counts
+          foreignField: "_id",
+          as: "countData"
+        }
+      },
+      {
+        $unwind: {
+          path: "$countData",
+          preserveNullAndEmptyArrays: true
+        }
+      },
+      {
+        $project: {
+          _id: "$allStatuses.status", // Use correct field
+          count: { $ifNull: ["$countData.count", 0] }
+        }
+      },
+      {
+        $sort: { count: -1 } // Sort in descending order
       }
     ];
 
