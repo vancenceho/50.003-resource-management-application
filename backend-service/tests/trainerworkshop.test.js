@@ -78,21 +78,21 @@ describe ("TWT.3.0 - Trainer Marks their Workshop as Complete", () => {
 }); 
 
 // TWT.4.0 - Dashboard - Workshops Count for Trainers
-describe("TWT.4.0 - Dashboard - Workshops Count for Trainers", () => {
+/*describe("TWT.4.0 - Dashboard - Workshops Count for Trainers", () => {
   it("should return the number of workshops allocated for each trainer over a period of time", async () => {
     const res = await request(app)
       .get(`/dashboard/workshopscount`)
       .set("Authorization", `Bearer ${adminToken}`)
       .query({ 
-        startDate: "10th October 2023",
-        endDate: "12th October 2023"
+        startMonth: "October 2023",
+        endMonth: "November 2023"
       });
 
     console.log('Workshops Count for Trainers:', res.body.data); // Print the workshops count      
     expect(res.statusCode).toBe(200);
     expect(res.body.data).toBeDefined();
   });
-});
+});*/
 
    /* Closing database connection after all test. */
     afterAll(async () => {

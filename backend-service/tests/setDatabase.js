@@ -101,7 +101,8 @@ const setDatabase = async () => {
       "password": hashedTrainerPassword,
       "role": "trainer",
       "status": "available"
-    }
+    },
+    dealSize: 1000
   });
 
   
@@ -128,7 +129,8 @@ const setDatabase = async () => {
       "role": "client"
     },
     trainer: 
-      []
+      [],
+    dealSize: 1500
   });
 
   await Workshop.create({
@@ -141,7 +143,7 @@ const setDatabase = async () => {
     timeStart: "9:30 AM",
     timeEnd: "3:30 PM",
     duration: 2,
-    status: "Scheduled",
+    status: "Pending",
     type: "Soft Skills",
     maxParticipants: 20,
     client: {
@@ -154,7 +156,8 @@ const setDatabase = async () => {
       "role": "client"
     },
     trainer: 
-      []
+      [],
+    dealSize: 2000
   });
 
 
