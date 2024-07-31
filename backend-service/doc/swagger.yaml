@@ -72,63 +72,6 @@ tags:
   - name: leaveRequest
     description: Access operations to leave requests
 paths:
-  /admin/login:
-    get:
-      tags:
-        - admin
-      summary: Logs admin into the system
-      description: Logs admin into the system
-      operationId: adminLogin
-      parameters:
-        - name: credential
-          in: query
-          description: The username / email for login
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: The password for login in clear text
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: "authentication: successful operation"
-          headers:
-            X-Rate-Limit:
-              description: calls per hour allowed by the user
-              schema:
-                type: integer
-                format: int32
-            X-Expires-After:
-              description: date in UTC when token expires
-              schema:
-                type: string
-                format: date-time
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-        "401":
-          description: username or password incorrect
-        "500":
-          description: "Error Logging In: Internal Server Error"
-  /admin/logout:
-    get:
-      tags:
-        - admin
-      summary: Logs out current logged in admin session
-      description: Logs out current logged in admin session
-      operationId: adminLogout
-      responses:
-        "200":
-          description: successful operation
-        "500":
-          description: "Error Logging Out: Internal Server Error"
   /admin/getAdmins:
     get:
       tags:
@@ -158,6 +101,81 @@ paths:
           description: "Error Fetching Admins: Internal Server Error"
       security:
         - admin_auth_token: []
+  /admin/login:
+    post:
+      tags:
+        - admin
+      summary: Logs admin into the system
+      description: Logs admin into the system
+      operationId: adminLogin
+      parameters:
+        - name: credential
+          in: query
+          description: The username / email for login
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "successful operation"
+          headers:
+            X-Expires-After:
+              description: token expires after 1 hour
+              schema:
+                type: string
+                format: date-time
+            content-length:
+              description: length of the response
+              schema:
+                type: integer
+            content-type:
+              description: type of the response
+              schema:
+                type: object
+                format: UTF-8
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
+        "401":
+          description: username or password incorrect
+        "500":
+          description: "Error Logging In: Internal Server Error"
+  /admin/logout:
+    post:
+      tags:
+        - admin
+      summary: Logs out current logged in admin session
+      description: Logs out current logged in admin session
+      operationId: adminLogout
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
+        "500":
+          description: "Error Logging Out: Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
   /admin/createAdmin:
     post:
       tags:
@@ -191,11 +209,15 @@ paths:
               schema:
                 $ref: "#/components/schemas/Admin"
         "400":
-          description: Invalid input
+          description: All fields are required
         "401":
           description: No authorization token provided
-        "422":
-          description: Validation exception
+        "403":
+          description: Access forbidden
+        "409":
+          description: Admin username already exists
+        "500":
+          description: "Error Creating Admin: Internal Server Error"
   /admin/delete/{adminId}:
     delete:
       tags:
@@ -216,6 +238,13 @@ paths:
       responses:
         "200":
           description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "404":
@@ -247,8 +276,6 @@ paths:
           description: No authorization token provided
         "403":
           description: Access forbidden
-        "404":
-          description: Trainer not found
         "500":
           description: "Error Fetching Trainers: Internal Server Error"
       security:
@@ -325,7 +352,7 @@ paths:
         "403":
           description: Access forbidden
         "409":
-          description: Trainer Username already exists
+          description: Trainer username already exists
         "500":
           description: "Error Creating Trainer: Internal Server Error"
       security:
@@ -364,10 +391,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Trainer"
+                $ref: "#/components/schemas/successfulResponse"
             application/xml:
               schema:
-                $ref: "#/components/schemas/Trainer"
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -396,6 +423,13 @@ paths:
       responses:
         "200":
           description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -507,7 +541,7 @@ paths:
         "403":
           description: Access forbidden
         "409":
-          description: Username or Email already exists
+          description: Username or email already exists
         "500":
           description: "Error Creating Client: Internal Server Error"
       security:
@@ -546,10 +580,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Client"
+                $ref: "#/components/schemas/successfulResponse"
             application/xml:
               schema:
-                $ref: "#/components/schemas/Client"
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -578,6 +612,13 @@ paths:
       responses:
         "200":
           description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -716,10 +757,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/WorkshopRequest"
+                $ref: "#/components/schemas/successfulResponse"
             application/xml:
               schema:
-                $ref: "#/components/schemas/WorkshopRequest"
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -748,6 +789,13 @@ paths:
       responses:
         "200":
           description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -802,6 +850,9 @@ paths:
           description: successful operation
           content:
             application/json:
+              schema:
+                $ref: "#/components/schemas/LeaveRequest"
+            application/xml:
               schema:
                 $ref: "#/components/schemas/LeaveRequest"
         "401":
@@ -886,10 +937,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LeaveRequest"
+                $ref: "#/components/schemas/successfulResponse"
             application/xml:
               schema:
-                $ref: "#/components/schemas/LeaveRequest"
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -918,6 +969,13 @@ paths:
       responses:
         "200":
           description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/successfulResponse"
         "401":
           description: No authorization token provided
         "403":
@@ -930,7 +988,7 @@ paths:
         - admin_auth_token: []
 
   /client/login:
-    get:
+    post:
       tags:
         - client
       summary: Logs client into the system
@@ -953,16 +1011,20 @@ paths:
         "200":
           description: "authentication: successful operation"
           headers:
-            X-Rate-Limit:
-              description: calls per hour allowed by the user
-              schema:
-                type: integer
-                format: int32
             X-Expires-After:
-              description: date in UTC when token expires
+              description: token expires after 1 hour
               schema:
                 type: string
                 format: date-time
+            content-length:
+              description: length of the response
+              schema:
+                type: integer
+            content-type:
+              description: type of the response
+              schema:
+                type: object
+                format: UTF-8
           content:
             application/json:
               schema:
@@ -977,7 +1039,7 @@ paths:
         "500":
           description: "Error Logging In: Internal Server Error"
   /client/logout:
-    get:
+    post:
       tags:
         - client
       summary: Logs out current logged in client session
@@ -1025,65 +1087,6 @@ paths:
         "500":
           description: "Error Creating Client: Internal Server Error"
 
-  /trainer/login:
-    get:
-      tags:
-        - trainer
-      summary: Logs trainer into the system
-      description: Logs trainer into the system
-      operationId: trainerLogin
-      parameters:
-        - name: credential
-          in: query
-          description: The username / email for login
-          required: true
-          schema:
-            type: string
-        - name: password
-          in: query
-          description: The password for login in clear text
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: "authentication: successful operation"
-          headers:
-            X-Rate-Limit:
-              description: calls per hour allowed by the user
-              schema:
-                type: integer
-                format: int32
-            X-Expires-After:
-              description: date in UTC when token expires
-              schema:
-                type: string
-                format: date-time
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-            application/xml:
-              schema:
-                $ref: "#/components/schemas/ApiResponse"
-        "401":
-          description: username or password incorrect
-        "404":
-          description: Invalid username/password supplied
-        "500":
-          description: "Error Logging In: Internal Server Error"
-  /trainer/logout:
-    get:
-      tags:
-        - trainer
-      summary: Logs out current logged in trainer session
-      description: Logs out current logged in trainer session
-      operationId: trainerLogout
-      responses:
-        "200":
-          description: successful operation
-        "500":
-          description: "Error Logging Out: Internal Server Error"
   /trainer/get/{trainerId}:
     get:
       tags:
@@ -1113,6 +1116,69 @@ paths:
           description: Trainer not found
         "500":
           description: "Error Retrieving Trainer: Internal Server Error"
+  /trainer/login:
+    post:
+      tags:
+        - trainer
+      summary: Logs trainer into the system
+      description: Logs trainer into the system
+      operationId: trainerLogin
+      parameters:
+        - name: credential
+          in: query
+          description: The username / email for login
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login in clear text
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: "authentication: successful operation"
+          headers:
+            X-Expires-After:
+              description: token expires after 1 hour
+              schema:
+                type: string
+                format: date-time
+            content-length:
+              description: length of the response
+              schema:
+                type: integer
+            content-type:
+              description: type of the response
+              schema:
+                type: object
+                format: UTF-8
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "401":
+          description: username or password incorrect
+        "404":
+          description: Invalid username/password supplied
+        "500":
+          description: "Error Logging In: Internal Server Error"
+  /trainer/logout:
+    post:
+      tags:
+        - trainer
+      summary: Logs out current logged in trainer session
+      description: Logs out current logged in trainer session
+      operationId: trainerLogout
+      responses:
+        "200":
+          description: successful operation
+        "500":
+          description: "Error Logging Out: Internal Server Error"
   /trainer/update/{trainerId}:
     put:
       tags:
@@ -1690,6 +1756,21 @@ components:
           type: string
         message:
           type: string
+      xml:
+        name: "##default"
+    successfulResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 200
+        type:
+          type: string
+          example: success
+        message:
+          type: string
+          example: "successful operation"
       xml:
         name: "##default"
   securitySchemes:

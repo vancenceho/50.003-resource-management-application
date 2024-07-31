@@ -22,8 +22,13 @@ exports.getLeaveRequests = async (req, res) => {
     const leaveRequests = await LeaveRequest.find();
     res.status(200).json(leaveRequests);
   } catch (error) {
+    const response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error getting leave requests: ", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json(response);
   }
 };
 
@@ -47,16 +52,27 @@ exports.getLeaveRequests = async (req, res) => {
  *
  */
 exports.getLeaveRequestByTrainerId = async (req, res) => {
+  let response = {};
   try {
     const trainerId = req.query.trainerId;
     const leaveRequest = await LeaveRequest.findOne({ trainerId: trainerId });
     if (!leaveRequest) {
-      res.status(404).json({ message: "Leave request not found" });
+      response = {
+        code: 404,
+        type: "validation error",
+        message: "Leave request not found",
+      };
+      res.status(404).json(response);
     }
     res.status(200).json(leaveRequest);
   } catch (error) {
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error getting leave request by trainer id: ", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json(response);
   }
 };
 
@@ -99,8 +115,13 @@ exports.createLeaveRequest = async (req, res) => {
     await leaveRequest.save();
     res.status(200).json(leaveRequest);
   } catch (error) {
+    const response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error creating leave request: ", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json(response);
   }
 };
 
@@ -126,23 +147,34 @@ exports.createLeaveRequest = async (req, res) => {
  * If the leave request is updated successfully, returns a 200 status code with the updated leave request data.
  */
 exports.updateLeaveRequest = async (req, res) => {
+  let response = {};
   try {
     const id = req.params.id;
     const { _id, ...updateData } = req.body;
     const data = await LeaveRequest.findByIdAndUpdate(id, updateData);
     if (!data) {
-      res.status(404).json({ message: "Leave request not found" });
+      response = {
+        code: 404,
+        type: "validation error",
+        message: "Leave request not found",
+      };
+      res.status(404).json(response);
     }
-    const response = {
+    response = {
       code: 200,
       message: "Leave request successfully updated",
       leaveRequest: updateData,
     };
     res.status(200).json(response);
   } catch (error) {
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error updating leave request: ", error);
     if (!res.headersSent) {
-      res.status(500).json({ message: "Internal Server Error" });
+      res.status(500).json(response);
     }
   }
 };
@@ -168,22 +200,31 @@ exports.updateLeaveRequest = async (req, res) => {
  * If the leave request is deleted successfully, returns a 200 status code with the deleted leave request data.
  */
 exports.deleteLeaveRequest = async (req, res) => {
+  let response = {};
   try {
     const id = req.params.id;
     const data = await LeaveRequest.findByIdAndDelete(req.params.id, req.body);
     if (!data) {
-      res.status(404).json({ message: "Leave request not found" });
+      response = {
+        code: 404,
+        type: "validation error",
+        message: "Leave request not found",
+      };
+      res.status(404).json(response);
     }
-    const response = {
+    response = {
       code: 200,
       message: "Leave request successfully deleted",
       leaveRequest: data,
     };
     res.status(200).json(response);
   } catch (error) {
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error deleting leave request: ", error);
-    res
-      .status(500)
-      .json({ message: "Error Deleting LeaveRequest: Internal Server Error" });
+    res.status(500).json(response);
   }
 };

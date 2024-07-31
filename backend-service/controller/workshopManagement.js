@@ -27,8 +27,13 @@ exports.getWorkshopRequests = async (req, res) => {
     res.status(200).json(workshops);
     console.log(workshops);
   } catch (error) {
+    const response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error getting workshops: ", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json(response);
   }
 };
 
@@ -49,16 +54,27 @@ exports.getWorkshopRequests = async (req, res) => {
  * If the workshop is not found, returns a 404 status code with an error message.
  */
 exports.getWorkshopRequestById = async (req, res) => {
+  let response = {};
   try {
     const id = req.params.id;
     const workshop = await Workshop.findById(id);
     if (!workshop) {
-      return res.status(404).json({ message: "Workshop not found" });
+      response = {
+        code: 404,
+        type: "validation error",
+        message: "Workshop not found",
+      };
+      res.status(404).json(response);
     }
     res.status(200).json(workshop);
   } catch (error) {
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error getting workshop by id: ", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json(response);
   }
 };
 
@@ -104,9 +120,14 @@ exports.createWorkshopRequest = async (req, res) => {
     console.log("Workshop request created: ", data);
     res.status(200).json(data);
   } catch (error) {
+    const response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.log("Error creating workshop request: ", error);
     if (!res.headersSent) {
-      res.status(500).json({ message: "Internal Server Error" });
+      res.status(500).json(response);
     }
   }
 };
@@ -132,12 +153,18 @@ exports.createWorkshopRequest = async (req, res) => {
  * If there is an error updating the workshop, returns a 500 status code with an error message.
  */
 exports.updateWorkshopRequest = async (req, res) => {
+  let response = {};
   try {
     const id = req.params.id;
     const { _id, ...updateData } = req.body;
     const data = await Workshop.findByIdAndUpdate(id, updateData);
     if (!data) {
-      res.status(404).json({ message: "Workshop not found" });
+      response = {
+        code: 404,
+        type: "validation error",
+        message: "Workshop not found",
+      };
+      res.status(404).json(response);
     }
     const response = {
       code: 200,
@@ -146,9 +173,14 @@ exports.updateWorkshopRequest = async (req, res) => {
     };
     res.status(200).json(response);
   } catch (error) {
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error updating workshop request: ", error);
     if (!res.headersSent) {
-      res.status(500).json({ message: "Internal Server Error" });
+      res.status(500).json(response);
     }
   }
 };
@@ -170,21 +202,27 @@ exports.updateWorkshopRequest = async (req, res) => {
  * If the workshop is not found, returns a 404 status code with an error message.
  */
 exports.deleteWorkshopRequest = async (req, res) => {
+  let response = {};
   try {
     const id = req.params.id;
     const data = await Workshop.findByIdAndDelete(id);
     if (!data) {
       res.status(404).json({ message: "Workshop not found" });
     }
-    const response = {
+    response = {
       code: 200,
       message: "Workshop successfully deleted",
       workshop: data,
     };
     res.status(200).json(response);
   } catch (error) {
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error deleting workshop request: ", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json(response);
   }
 };
 

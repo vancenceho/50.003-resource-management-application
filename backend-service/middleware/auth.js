@@ -9,7 +9,12 @@ const secretKey = "root";
 const authenticateUser = async (req, res, next) => {
   console.log("TESTING...............AU0.................");
   if (!req.headers.authorization) {
-    return res.status(401).send({ error: "No authorization token provided" });
+    response = {
+      code: 401,
+      type: "authentication error",
+      message: "No authorization token provided",
+    };
+    return res.status(401).send(response);
   }
   const token = req.headers.authorization.replace("Bearer ", "");
   console.log("TESTING...............AU1.................");
@@ -40,7 +45,12 @@ const authenticateUser = async (req, res, next) => {
 
     if (!user) {
       console.log(user)
-      return res.status(404).send({ error: "No users found" });
+      response = {
+        code: 404,
+        type: "validation error",
+        message: "Admin user not found",
+      };
+      return res.status(404).send(response);
     }
     console.log("TESTING...............AU3.................");  
     req.user = user;
@@ -49,18 +59,28 @@ const authenticateUser = async (req, res, next) => {
     next();
     console.log("TESTING...............AU5.................");  
   } catch (error) {
-    console.error("Authentication error:", error);
-    res.status(401).send({ error:  "Authentication failed"});
+    response = {
+      code: 401,
+      type: "authentication error",
+      message: "Authentication failed",
+    };
+    res.status(401).send(response);
   }
 };
 
 const authorizeRole = (role) => {
+  let response = {};
   return (req, res, next) => {
       console.log(`Expected role: ${role}, User roles: ${req.user.role}`); // Add logging
       if (req.user.role.includes(role)) {
           next();
       } else {
-          return res.status(403).json({error: "Not authorized for this action"});
+        response = {
+          code: 403,
+          type: "authorization error",
+          message: "Not authorized for this action",
+        };
+        return res.status(403).send(response);
       }
   };
 }

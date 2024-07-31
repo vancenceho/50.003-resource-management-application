@@ -35,7 +35,7 @@ router.get("/getTrainers", trainerController.getAllTrainers); // This route shou
 router.get("/get/:id", trainerController.getTrainerById);
 router.put("/update/:id", trainerController.updateTrainer);
 router.delete("/delete/:id", trainerController.deleteTrainer); // This route should not be accessible to trainers
-router.get("/logout", trainerController.trainerLogout);
+router.post("/logout", trainerController.trainerLogout);
 
 /**
  * // Trainer Workshop Request Routes

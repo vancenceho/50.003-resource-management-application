@@ -26,6 +26,7 @@ const secretKey = "root";
  */
 exports.adminLogin = async (req, res) => {
   console.log("TESTING...............1at.................");
+  let response = {};
   try {
     const credential = req.body.credential;
     const password = req.body.password;
@@ -44,11 +45,21 @@ exports.adminLogin = async (req, res) => {
 
     const admin = await Admin.findOne(query);
     if (!admin) {
-      return res.status(401).json({ message: "Admin not found failed" });
+      response = {
+        code: 401,
+        type: "validation error",
+        message: "Admin not found",
+      };
+      return res.status(401).json(response);
     }
     const result = await bcrypt.compare(password, admin.password);
     if (!result) {
-      return res.status(401).json({ message: "Authentication failed" });
+      response = {
+        code: 401,
+        type: "authentication error",
+        message: "Authentication failed",
+      };
+      return res.status(401).json(response);
     }
     console.log("TESTING...............2at.................");
     const token = jwt.sign(
@@ -62,14 +73,23 @@ exports.adminLogin = async (req, res) => {
       }
     );
     console.log("TESTING...............3at.................");
-    return res
-      .status(200)
-      .json({ message: "Authentication successful", token: token });
+    response = {
+      code: 200,
+      type: "success",
+      message: "Authentication successful",
+      token: token,
+    };
+    return res.status(200).json(response);
   } catch (error) {
     console.log("Error logging in admin: ", error);
     if (!res.headersSent) {
-      res.status(500).json({ message: "Internal Server Error" });
+      response = {
+        code: 500,
+        type: "server error",
+        message: "Internal Server Error",
+      };
     }
+    res.status(500).json(response);
   }
 };
 
@@ -88,13 +108,25 @@ exports.adminLogin = async (req, res) => {
  * If there is an error logging out the admin, returns a 500 status code with an error message.
  */
 exports.adminLogout = async (req, res) => {
+  let response = {};
   try {
     console.log("TESTING...............3at.................");
     // TODO: Implement logout functionality
-    res.status(200).json({ message: "Admin logged out successfully" });
+
+    response = {
+      code: 200,
+      type: "success",
+      message: "Admin logged out successfully",
+    };
+    res.status(200).json(response);
   } catch (error) {
     console.error("Error logging out admin: ", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
+    res.status(500).json(response);
   }
 };
 
@@ -114,12 +146,18 @@ exports.adminLogout = async (req, res) => {
  * If there is an error fetching the admins, returns a 500 status code with an error message.
  */
 exports.getAllAdmin = async (req, res) => {
+  let response = {};
   try {
     const admins = await Admin.find();
     res.status(200).json(admins);
   } catch (error) {
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error fetching users:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json(response);
   }
 };
 
@@ -145,12 +183,18 @@ exports.getAllAdmin = async (req, res) => {
  * If an admin with the same username already exists, returns a 409 status code with an error message.
  */
 exports.createAdmin = async (req, res) => {
+  let response = {};
   try {
     console.log(req.body);
     const { username, firstName, lastName, email, password, role } = req.body;
     // Validate that all required fields are provided
     if (!username || !firstName || !email || !password || !role) {
-      return res.status(400).json({ message: "Fields required not filled" });
+      response = {
+        code: 400,
+        type: "validation error",
+        message: "Required fields not filled",
+      };
+      return res.status(400).json(response);
     }
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -158,7 +202,12 @@ exports.createAdmin = async (req, res) => {
     // Check if a user with the same userName already exists
     const existingAdmin = await Admin.findOne({ username: username });
     if (existingAdmin) {
-      return res.status(409).json({ message: "Admin already exist" });
+      response = {
+        code: 409,
+        type: "validation error",
+        message: "Admin already exist",
+      };
+      return res.status(409).json(response);
     }
 
     // Create a new user instance
@@ -185,8 +234,13 @@ exports.createAdmin = async (req, res) => {
         });
       });
   } catch (error) {
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     console.error("Error creating user:", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json(response);
   }
 };
 
@@ -232,12 +286,18 @@ exports.createAdmin = async (req, res) => {
  * If there is an error deleting the admin, returns a 500 status code with an error message.
  */
 exports.deleteAdmin = async (req, res) => {
+  let response = {};
   try {
     const admin = await Admin.findByIdAndDelete(req.params.id);
     if (!admin) {
+      response = {
+        code: 404,
+        type: "validation error",
+        message: "Admin not found",
+      };
       res.status(404).json({ message: "Admin not found" });
     }
-    const response = {
+    response = {
       code: 200,
       message: "Admin successfully deleted",
       admin: admin,
@@ -245,9 +305,12 @@ exports.deleteAdmin = async (req, res) => {
     res.status(200).json(response);
   } catch (error) {
     console.error("Error deleting admin: ", error);
-    res
-      .status(500)
-      .json({ message: "Error Deleting Admin: Internal Server Error" });
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
+    res.status(500).json(response);
   }
 };
 
