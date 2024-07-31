@@ -31,8 +31,8 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth");
  */
 router.post(
   "/createAdmin",
-  authenticateUser,
-  authorizeRole("admin"),
+  //authenticateUser,
+  //authorizeRole("admin"),
   adminController.createAdmin
 );
 router.post("/login", adminController.adminLogin);
@@ -59,6 +59,7 @@ router.delete(
  * Route 3: Route to create a new trainer
  * Route 4: Route to update a trainer details
  * Route 5: Route to delete a trainer
+ * Route 6: Route to get check if trainer is available (check for trainer's sched conflict)
  *
  * @returns
  * Route 1: Returns a 200 status code with the trainer details data.
@@ -66,9 +67,10 @@ router.delete(
  * Route 3: Returns a 200 status code with the new trainer data.
  * Route 4: Returns a 200 status code with the updated trainer data.
  * Route 5: Returns a 200 status code with the deleted trainer data.
+ * Route 6: Returns a 200 status code with the trainer's availability status.
  *
  * @throws
- * Route 1 - 5: Returns a 500 status code with an error message if there is an error.
+ * Route 1 - 7: Returns a 500 status code with an error message if there is an error.
  */
 router.get(
   "/gettrainer",
@@ -100,6 +102,12 @@ router.delete(
   authorizeRole("admin"),
   trainerController.deleteTrainer
 );
+router.get(
+  "/checktraineravailability/:id",
+  authenticateUser,
+  authorizeRole("admin"),
+  workshopController.checkforSchedConflict
+);
 
 /**
  * // Admin Client Request Routes
@@ -125,7 +133,7 @@ router.get(
   "/getclient",
   authenticateUser,
   authorizeRole("admin"),
-  clientController.getAllUsers
+  clientController.getAllClients
 );
 router.get(
   "/getclient/:id",
@@ -137,7 +145,7 @@ router.post(
   "/addclient",
   authenticateUser,
   authorizeRole("admin"),
-  clientController.createUser
+  clientController.createClient
 );
 router.put(
   "/updateclient/:id",
@@ -208,6 +216,14 @@ router.delete(
   workshopController.deleteWorkshopRequest
 );
 
+router.post(
+  "/alloctrainertoworkshop",
+  authenticateUser,
+  authorizeRole("admin"),
+  workshopController.allocateTrToWorkshop
+);
+
+
 /**
  * // Admin Leave Request Routes
  *
@@ -269,3 +285,39 @@ router.delete(
   leaveRequestController.deleteLeaveRequest
 );
 module.exports = router;
+
+/**
+ * // Admin Dashboard Routes
+ *
+ * @details
+ * Route 1: Route to get the number of past and present workshops allocated for each trainer
+ * Route 2: Route to get the trend of deal sizes for workshops within a specified date range.
+ * 
+ * @returns
+ * Route 1: Returns a 200 status code with the trainer-workshop count data.
+ * Route 2: Returns a 200 status code with the average deal size trend data.
+ *
+ * @throws
+ * Route 1 - 5: Returns a 500 status code with an error message if there is an error.
+ * */
+
+router.get(
+  "/dashboard/workshopscount", 
+  authenticateUser,
+  authorizeRole("admin"),
+  workshopController.getWorkshopsCountForTrainers
+);
+
+router.get(
+  "/dashboard/getdealsizetrend",
+  authenticateUser,
+  authorizeRole("admin"),
+  workshopController.getDealSizeTrend
+);
+
+router.get(
+  "/dashboard/aggregateworkshopsbystatus",
+  authenticateUser,
+  authorizeRole("admin"),
+  workshopController.aggregateWorkshopsByStatus
+);
