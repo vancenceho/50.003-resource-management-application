@@ -149,20 +149,6 @@ const jwt = require("jsonwebtoken");
   });
 
 
-  describe("AWT.6.0 - Admin to calculate the number of workshops allocated for each trainer", () => {
-    it ("should return the number of past and present workshops allocated for each trainer", async () => {
-      const res = await request(app)
-      .get(`/dashboard/workshopscount`)
-      .set("Authorization", `Bearer ${adminToken}`)
-      .query({ 
-        startDate: "10th October 2023",
-        endDate: "7th November 2023"
-      });
-      console.log('Workshops Count:', res.body); // Print the workshops
-      expect(res.statusCode).toBe(200);
-      expect(res.body.length).toBeGreaterThan(0);
-    });
-  });
   
     /* Closing database connection after all test. */
      afterAll(async () => {

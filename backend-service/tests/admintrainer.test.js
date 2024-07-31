@@ -32,7 +32,7 @@ describe("Testing Admin Trainer Endpoints", () => {
       .post(`/admin/addtrainer`)
       .set("Authorization", `Bearer ${adminToken}`)
       .send({
-        username: "trainer2",
+        username: "trainer3",
         firstName: "Jane",
         lastName: "Doe",
         email: "jane@example.com",
@@ -86,7 +86,7 @@ describe("Testing Admin Trainer Endpoints", () => {
       .put(`/admin/updatetrainer/${trainer1Id}`)
       .set("Authorization", `Bearer ${adminToken}`)
       .send({
-        username: "trainer3",
+        username: "trainer4",
         firstName: "Mark",
         lastName: "Smith",
         email: "mark@example.com",
@@ -97,7 +97,7 @@ describe("Testing Admin Trainer Endpoints", () => {
         });
         console.log('updated Trainer:', res.body); // Print the updated trainer
         expect(res.statusCode).toBe(200);
-        expect(res.body.username).toBe("trainer3");
+        expect(res.body.username).toBe("trainer4");
     });
   });  
   
