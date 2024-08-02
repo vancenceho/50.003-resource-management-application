@@ -63,16 +63,13 @@ const workshopSchema = new Schema({
     ref: "Client",
     required: true,
   },
-  trainer: {
-    type: Array,
-    properties: {
-      _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Trainer",
-        required: true,
-      },
-    },
-  },
+  trainer: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Trainer",
+    required: true,
+  }],
+  dealSize: Number, //total amount of money involved in the deal
+
 });
 
 module.exports = mongoose.model("Workshop", workshopSchema);

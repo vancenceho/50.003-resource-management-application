@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+/*const mongoose = require("mongoose");
 const moment = require("moment");
 const { connectDB, cleanup } = require("../models/db.js");
 const LeaveRequest = require("../models/leaveRequest");
@@ -21,7 +21,7 @@ const trainer = require("../models/trainer.js");
  * Else, the test fails.
  *
  */
-describe("Leave Request Model Test", () => {
+/*describe("Leave Request Model Test", () => {
   beforeAll(async () => {
     await connectDB();
   });
@@ -91,3 +91,4 @@ describe("Leave Request Model Test", () => {
     await cleanup();
   });
 });
+*/

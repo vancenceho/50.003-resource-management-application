@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const leaveRequestController = require("../controller/leaveRequestController.js");
-const workshopController = require("../controller/workshopManagement.js");
 const trainerController = require("../controller/trainerController.js");
+const workshopController = require("../controller/workshopManagement.js"); // Import the workshop controller
 
 // Middleware Controller
 const { authenticateUser, authorizeRole } = require("../middleware/auth");
@@ -36,6 +36,35 @@ router.get("/get/:id", trainerController.getTrainerById);
 router.put("/update/:id", trainerController.updateTrainer);
 router.delete("/delete/:id", trainerController.deleteTrainer); // This route should not be accessible to trainers
 router.post("/logout", trainerController.trainerLogout);
+
+/**
+ * // Trainer Workshop Request Routes
+ *
+ * @details
+ * Route 1: Route to get workshop requests allocated to them
+ *
+ * @returns
+ * Route 1: Returns a 200 status code with the workshop requests data.
+ *
+ * @throws
+ * Route 1: Returns a 500 status code with an error message if there is an error.
+ *
+ */
+router.get(
+  "/getallocworkshop/:id",
+  authenticateUser,
+  authorizeRole("trainer"),
+  workshopController.getAllocatedWorkshops
+);
+
+router.post(
+  "/markworkshopcomplete/:id",
+  authenticateUser,
+  authorizeRole("trainer"),
+  workshopController.updateWorkshopStatustoComplete
+);
+
+
 
 /**
  * // Trainer Leave Request Routes
@@ -80,5 +109,7 @@ router.delete(
   authorizeRole("trainer"),
   leaveRequestController.deleteLeaveRequest
 );
+
+
 
 module.exports = router;

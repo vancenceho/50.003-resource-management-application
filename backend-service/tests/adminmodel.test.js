@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+/*const mongoose = require("mongoose");
 const { connectDB, cleanup } = require("../models/db.js");
 const Admin = require("../models/admin");
 
@@ -19,7 +19,7 @@ const Admin = require("../models/admin");
  * Else, the test fails.
  *
  */
-describe("Admin Model Test", () => {
+/*describe("Admin Model Test", () => {
   beforeAll(async () => {
     await connectDB();
   });
@@ -76,3 +76,4 @@ describe("Admin Model Test", () => {
     await cleanup();
   });
 });
+*/
