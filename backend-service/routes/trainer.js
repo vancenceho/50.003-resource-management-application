@@ -83,28 +83,28 @@ router.post(
  *
  */
 router.get(
-  "/get/:trainerId",
+  "/getleave/:trainerId",
   authenticateUser,
   authorizeRole("trainer"),
   leaveRequestController.getLeaveRequestByTrainerId
 );
 
 router.post(
-  "/submit/:trainerId",
+  "/submitleave/:trainerId",
   authenticateUser,
   authorizeRole("trainer"),
   leaveRequestController.createLeaveRequest
 );
 
 router.put(
-  "/update/:_id",
+  "/updateleave/:id",
   authenticateUser,
   authorizeRole("trainer"),
   leaveRequestController.updateLeaveRequest
 );
 
 router.delete(
-  "/delete/:_id",
+  "/deleteleave/:id",
   authenticateUser,
   authorizeRole("trainer"),
   leaveRequestController.deleteLeaveRequest

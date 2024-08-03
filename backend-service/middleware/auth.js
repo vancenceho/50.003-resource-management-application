@@ -8,6 +8,7 @@ const secretKey = "root";
 
 const authenticateUser = async (req, res, next) => {
   console.log("TESTING...............AU0.................");
+  var response = {};
   if (!req.headers.authorization) {
     response = {
       code: 401,
