@@ -28,12 +28,17 @@ exports.adminLogin = async (req, res) => {
   console.log("TESTING...............1at.................");
   let response = {};
   try {
-    const credential = req.body.credential;
-    const password = req.body.password;
-    
+    const credential = req.query.credential;
+    const password = req.query.password;
+
     // Check if credential and password are provided
     if (!credential || !password) {
-      return res.status(400).json({ message: "Credential and password are required" });
+      response = {
+        code: 400,
+        type: "validation error",
+        message: "Credential and password are required",
+      };
+      return res.status(400).json(response);
     }
 
     let query = {};
@@ -46,11 +51,11 @@ exports.adminLogin = async (req, res) => {
     const admin = await Admin.findOne(query);
     if (!admin) {
       response = {
-        code: 401,
+        code: 404,
         type: "validation error",
         message: "Admin not found",
       };
-      return res.status(401).json(response);
+      return res.status(404).json(response);
     }
     const result = await bcrypt.compare(password, admin.password);
     if (!result) {
@@ -77,7 +82,10 @@ exports.adminLogin = async (req, res) => {
       code: 200,
       type: "success",
       message: "Authentication successful",
+      userId: admin._id,
+      username: admin.username,
       token: token,
+      role: admin.role,
     };
     return res.status(200).json(response);
   } catch (error) {
@@ -110,9 +118,6 @@ exports.adminLogin = async (req, res) => {
 exports.adminLogout = async (req, res) => {
   let response = {};
   try {
-    console.log("TESTING...............3at.................");
-    // TODO: Implement logout functionality
-
     response = {
       code: 200,
       type: "success",

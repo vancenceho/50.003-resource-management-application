@@ -25,17 +25,18 @@ const secretKey = "root";
  * If there is an error logging in the client, returns a 500 status code with an error message.
  */
 exports.clientLogin = async (req, res) => {
-  console.log("TESTING...............1at.................");
-  console.log("Request body:", req.body);
+  let response = {};
   try {
-    const credential = req.body.credential;
-    const password = req.body.password;
+    const credential = req.query.credential;
+    const password = req.query.password;
     console.log("Credential:", credential);
-    console.log("Password:", password); 
-    
+    console.log("Password:", password);
+
     // Check if credential and password are provided
     if (!credential || !password) {
-      return res.status(400).json({ message: "Credential and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Credential and password are required" });
     }
 
     let query = {};
@@ -47,7 +48,8 @@ exports.clientLogin = async (req, res) => {
 
     const user = await Client.findOne(query);
     if (!user) {
-      return res.status(401).json({ message: "Client not found" });
+      console.log(user);
+      return res.status(404).json({ message: "Client not found" });
     }
     console.log("User:", user);
     console.log("User password:", user.password);
@@ -66,15 +68,20 @@ exports.clientLogin = async (req, res) => {
         expiresIn: "1h",
       }
     );
-    //res.status(200).json(user);
-    return res
-    .status(200)
-    .json({ message: "Authentication successful", token: token });
-
+    response = {
+      code: 200,
+      type: "success",
+      message: "Authentication successful",
+      userId: user._id,
+      username: user.username,
+      token: token,
+      role: user.role,
+    };
+    return res.status(200).json(response);
   } catch (error) {
     console.error("Error logging in client:", error);
     if (!res.headersSent) {
-    res.status(500).json({ message: "Internal Server Error" });
+      res.status(500).json({ message: "Internal Server Error" });
     }
   }
 };
@@ -94,11 +101,21 @@ exports.clientLogin = async (req, res) => {
  * If there is an error logging out the user, returns a 500 status code with an error message.
  */
 exports.clientLogout = async (req, res) => {
+  let response = {};
   try {
-    // TODO: Implement logout functionality
-    res.status(200).json({ message: "User logged out" });
+    response = {
+      code: 200,
+      type: "success",
+      message: "User logged out",
+    };
+    res.status(200).json(response);
   } catch (error) {
     console.error("Error logging out user:", error);
+    response = {
+      code: 500,
+      type: "server error",
+      message: "Internal Server Error",
+    };
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -119,6 +136,7 @@ exports.clientLogout = async (req, res) => {
  * If there is an error retrieving the client users, returns a 500 status code with an error message.
  */
 exports.getAllClients = async (req, res) => {
+  let response = {};
   try {
     const users = await Client.find();
     res.status(200).json(users);
@@ -156,11 +174,12 @@ exports.getAllClients = async (req, res) => {
  * If a user with the same username already exists, returns a 409 status code with an error message.
  */
 exports.createClient = async (req, res) => {
+  let response = {};
   try {
     console.log(req.body);
     const { username, firstName, lastName, email, password, role } = req.body;
     // Validate that all required fields are provided
-    if (!username || !firstName || !lastName || !email || !password || !role) {
+    if (!username || !firstName || !email || !password || !role) {
       response = {
         code: 400,
         type: "validation error",
