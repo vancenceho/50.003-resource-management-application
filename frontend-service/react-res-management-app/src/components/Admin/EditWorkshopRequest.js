@@ -59,7 +59,7 @@ const EditWorkshopRequest = () => {
     };
 
     const handleAccept = () => {
-        setLastAction('Accepted');
+        setLastAction('Approved');
     };
 
     const handleReject = () => {
@@ -73,18 +73,20 @@ const EditWorkshopRequest = () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(formData)
+                body: JSON.stringify({ ...formData, status: lastAction || 'Pending' }) // Ensure status is included
             });
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-            navigate('/workshop-requests');
+            const updatedWorkshop = await response.json(); // Fetch the updated workshop data
+            navigate('/workshop-requests', { state: { updatedWorkshop: updatedWorkshop.workshop } });
         } catch (error) {
             console.error('Failed to update workshop:', error);
         }
     };
     
-
+    
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         handleConfirm();
