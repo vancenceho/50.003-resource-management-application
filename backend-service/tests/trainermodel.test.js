@@ -1,4 +1,4 @@
-/*const mongoose = require("mongoose");
+const mongoose = require("mongoose");
 const { connectDB, cleanup } = require("../models/db.js");
 const Trainer = require("../models/trainer");
 
@@ -19,7 +19,7 @@ const Trainer = require("../models/trainer");
  * Else, the test fails.
  *
  */
-/*describe("Trainer Model Test", () => {
+describe("Trainer Model Test", () => {
   beforeAll(async () => {
     await connectDB();
   });
@@ -78,4 +78,3 @@ const Trainer = require("../models/trainer");
     await cleanup();
   });
 });
-*/
