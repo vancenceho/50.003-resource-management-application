@@ -58,10 +58,7 @@ function App() {
             path="/client-request-submitted"
             element={<RequestSubmitted />}
           />
-          <Route
-            path="/client-request-details"
-            element={<ViewWorkshopRequest />}
-          />
+          <Route path="/client-request-details/:id" element={<ViewWorkshopRequest />} />
           <Route
             path="/client-workshop-history"
             element={<ClientWorkshopHistory />}

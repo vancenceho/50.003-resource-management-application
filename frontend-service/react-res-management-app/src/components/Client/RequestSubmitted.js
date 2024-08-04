@@ -11,7 +11,6 @@ const RequestSubmitted = ({ handleBackToHome }) => {
             <ul className="navbar-list">
               <li><Link to="/client-home">Home</Link></li>
               <li><Link to="/client-new-request">New Workshop Request</Link></li>
-              <li><Link to="/client-request-details">Request Details</Link></li>
               <li><Link to="/client-workshop-history">Workshop History</Link></li>
             </ul>
           </nav>
@@ -29,9 +28,6 @@ const RequestSubmitted = ({ handleBackToHome }) => {
         </div>
         <footer className="footer">
         <div className="footer-content">
-          <div className="footer-logo">
-            <img src="/Users/hardikshah/50.003-resource-management-application/frontend-service/react-res-management-app/public/logo192.png" alt="Logo" />
-          </div>
           <div className="footer-details">
             <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
             <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
