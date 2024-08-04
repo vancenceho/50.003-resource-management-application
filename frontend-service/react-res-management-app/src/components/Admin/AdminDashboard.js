@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import Chart from 'chart.js/auto';
-import { Link } from 'react-router-dom';
-import './AdminDashboard.css';
+import React, { useEffect, useRef } from "react";
+import Chart from "chart.js/auto";
+import { Link } from "react-router-dom";
+import "./AdminDashboard.css";
+import NavBar from "../../NavBar";
 
 const AdminDashboard = () => {
   const dealSizesChartRef = useRef(null);
@@ -10,78 +11,98 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     // Deal Sizes Chart
-    const ctxDealSizes = dealSizesChartRef.current.getContext('2d');
+    const ctxDealSizes = dealSizesChartRef.current.getContext("2d");
     const dealSizesChart = new Chart(ctxDealSizes, {
-      type: 'line',
+      type: "line",
       data: {
-        labels: ['5k', '10k', '15k', '20k', '25k', '30k', '35k', '40k', '45k', '50k', '55k', '60k'],
-        datasets: [{
-          label: 'Deal Size',
-          data: [30, 50, 80, 60, 70, 50, 40, 60, 70, 90, 60, 70],
-          backgroundColor: 'rgba(0, 123, 255, 0.2)',
-          borderColor: 'rgba(0, 123, 255, 1)',
-          borderWidth: 1,
-          fill: true,
-        }]
+        labels: [
+          "5k",
+          "10k",
+          "15k",
+          "20k",
+          "25k",
+          "30k",
+          "35k",
+          "40k",
+          "45k",
+          "50k",
+          "55k",
+          "60k",
+        ],
+        datasets: [
+          {
+            label: "Deal Size",
+            data: [30, 50, 80, 60, 70, 50, 40, 60, 70, 90, 60, 70],
+            backgroundColor: "rgba(0, 123, 255, 0.2)",
+            borderColor: "rgba(0, 123, 255, 1)",
+            borderWidth: 1,
+            fill: true,
+          },
+        ],
       },
       options: {
         responsive: true,
         scales: {
           y: {
-            beginAtZero: true
-          }
-        }
-      }
+            beginAtZero: true,
+          },
+        },
+      },
     });
 
     // Pipeline Breakdown Chart
-    const ctxPipeline = pipelineChartRef.current.getContext('2d');
+    const ctxPipeline = pipelineChartRef.current.getContext("2d");
     const pipelineChart = new Chart(ctxPipeline, {
-      type: 'doughnut',
+      type: "doughnut",
       data: {
-        labels: ['Accepted', 'Pending', 'Rejected'],
-        datasets: [{
-          label: 'Pipeline',
-          data: [60, 30, 10],
-          backgroundColor: [
-            'rgba(0, 123, 255, 1)',
-            'rgba(255, 193, 7, 1)',
-            'rgba(220, 53, 69, 1)'
-          ],
-          borderWidth: 5
-        }]
+        labels: ["Accepted", "Pending", "Rejected"],
+        datasets: [
+          {
+            label: "Pipeline",
+            data: [60, 30, 10],
+            backgroundColor: [
+              "rgba(0, 123, 255, 1)",
+              "rgba(255, 193, 7, 1)",
+              "rgba(220, 53, 69, 1)",
+            ],
+            borderWidth: 5,
+          },
+        ],
       },
       options: {
-        responsive: true
-      }
+        responsive: true,
+      },
     });
 
     // Trainer Breakdown Chart
-    const ctxTrainerBreakdown = trainerBreakdownChartRef.current.getContext('2d');
+    const ctxTrainerBreakdown =
+      trainerBreakdownChartRef.current.getContext("2d");
     const trainerBreakdownChart = new Chart(ctxTrainerBreakdown, {
-      type: 'bar',
+      type: "bar",
       data: {
-        labels: ['Trainer 1', 'Trainer 2', 'Trainer 3', 'Trainer 4'],
-        datasets: [{
-          label: 'Sessions',
-          data: [40, 50, 70, 30],
-          backgroundColor: [
-            'rgba(0, 123, 255, 0.8)',
-            'rgba(0, 123, 255, 0.6)',
-            'rgba(0, 123, 255, 0.4)',
-            'rgba(0, 123, 255, 0.2)'
-          ],
-          borderWidth: 1
-        }]
+        labels: ["Trainer 1", "Trainer 2", "Trainer 3", "Trainer 4"],
+        datasets: [
+          {
+            label: "Sessions",
+            data: [40, 50, 70, 30],
+            backgroundColor: [
+              "rgba(0, 123, 255, 0.8)",
+              "rgba(0, 123, 255, 0.6)",
+              "rgba(0, 123, 255, 0.4)",
+              "rgba(0, 123, 255, 0.2)",
+            ],
+            borderWidth: 1,
+          },
+        ],
       },
       options: {
         responsive: true,
         scales: {
           y: {
-            beginAtZero: true
-          }
-        }
-      }
+            beginAtZero: true,
+          },
+        },
+      },
     });
 
     // Cleanup function to destroy charts
@@ -95,16 +116,7 @@ const AdminDashboard = () => {
   return (
     <>
       <header className="App-header">
-        <nav className="navbar">
-          <ul className="navbar-list">
-            <li><Link to="/admin-home">Home</Link></li>
-            <li><Link to="/workshop-requests">Workshop Requests</Link></li>
-            <li><Link to="/dashboard">Dashboard</Link></li>
-            <li><Link to="/leave-requests">Leave Requests</Link></li>
-            <li><Link to="/create-admin">New Admin</Link></li>
-            <li><Link to="/create-trainer">New Trainer</Link></li>
-          </ul>
-        </nav>
+        <NavBar />
       </header>
 
       <div className="container">
@@ -131,11 +143,17 @@ const AdminDashboard = () => {
           <div className="charts">
             <div className="chart wide">
               <h2>Workshop Deal Sizes</h2>
-              <canvas data-testid="deal-sizes-chart" ref={dealSizesChartRef}></canvas>
+              <canvas
+                data-testid="deal-sizes-chart"
+                ref={dealSizesChartRef}
+              ></canvas>
             </div>
             <div className="chart medium">
               <h2>Pipeline Breakdown</h2>
-              <canvas data-testid="pipeline-chart" ref={pipelineChartRef}></canvas>
+              <canvas
+                data-testid="pipeline-chart"
+                ref={pipelineChartRef}
+              ></canvas>
             </div>
             <div className="chart medium">
               <div className="chart small">
@@ -149,7 +167,10 @@ const AdminDashboard = () => {
             </div>
             <div className="chart wide">
               <h3>Trainer Breakdown</h3>
-              <canvas data-testid="trainer-breakdown-chart" ref={trainerBreakdownChartRef}></canvas>
+              <canvas
+                data-testid="trainer-breakdown-chart"
+                ref={trainerBreakdownChartRef}
+              ></canvas>
             </div>
           </div>
         </main>
@@ -157,7 +178,10 @@ const AdminDashboard = () => {
       <footer className="footer">
         <div className="footer-content">
           <div className="footer-logo">
-            <img src="/Users/hardikshah/50.003-resource-management-application/frontend-service/react-res-management-app/public/logo192.png" alt="Logo" />
+            <img
+              src="/Users/hardikshah/50.003-resource-management-application/frontend-service/react-res-management-app/public/logo192.png"
+              alt="Logo"
+            />
           </div>
           <div className="footer-details">
             <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
@@ -167,11 +191,21 @@ const AdminDashboard = () => {
             <p>info@company.io</p>
           </div>
           <div className="footer-social">
-            <a href="#"><i className="fab fa-facebook-f"></i></a>
-            <a href="#"><i className="fab fa-twitter"></i></a>
-            <a href="#"><i className="fab fa-instagram"></i></a>
-            <a href="#"><i className="fab fa-linkedin-in"></i></a>
-            <a href="#"><i className="fab fa-youtube"></i></a>
+            <a href="#">
+              <i className="fab fa-facebook-f"></i>
+            </a>
+            <a href="#">
+              <i className="fab fa-twitter"></i>
+            </a>
+            <a href="#">
+              <i className="fab fa-instagram"></i>
+            </a>
+            <a href="#">
+              <i className="fab fa-linkedin-in"></i>
+            </a>
+            <a href="#">
+              <i className="fab fa-youtube"></i>
+            </a>
           </div>
         </div>
         <div className="footer-bottom">

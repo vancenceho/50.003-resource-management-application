@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import "./test-home.css";
@@ -40,6 +40,9 @@ const tailFormItemLayout = {
 // username, firstName, lastName, email, password
 
 function TestSignUp() {
+  useEffect(() => {
+    document.title = "Dell Resources | Sign Up";
+  }, []);
   const [form] = Form.useForm();
   const navigate = useNavigate();
 

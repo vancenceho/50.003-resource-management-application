@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./test-home.css";
 import dellLogo from "./assets/dell-logo.png";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,6 +6,10 @@ import { Button, Checkbox, Form, Input, Flex, Radio, notification } from "antd";
 import axios from "axios";
 
 function TestHome() {
+  useEffect(() => {
+    document.title = "Dell Resources | Login";
+  }, []);
+
   const [form] = Form.useForm();
   const [userType, setUserType] = useState("b"); // a: admin, b: client, c: trainer
   const navigate = useNavigate();

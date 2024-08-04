@@ -1,12 +1,18 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+
+import TestHome from "./test-home.js";
+import TestSignUp from "./test-signup.js";
+
+import AdminHome from "./components/Admin/AdminHome.js";
+import AdminTrainers from "./components/Admin/AdminTrainers.js";
+import AdminDashboard from "./components/Admin/AdminDashboard.js";
 import AdminWorkshopRequests from "./components/Admin/AdminWorkshopRequests";
 import LeaveRequests from "./components/Admin/LeaveRequests";
 import "./App.css";
+
 import TrainerWorkshopRequests from "./components/Trainer/TrainerWorkshopRequests.js";
-import AdminDashboard from "./components/Admin/AdminDashboard.js";
 import EditWorkshopRequest from "./components/Admin/EditWorkshopRequest.js";
-import AdminHome from "./components/Admin/AdminHome.js";
 import NewWorkshopRequest from "./components/Client/NewWorkshopRequest.js";
 import TrainerHome from "./components/Trainer/TrainerHome.js";
 import SignIn from "./components/SignIn.js";
@@ -20,8 +26,6 @@ import RequestSubmitted from "./components/Client/RequestSubmitted.js";
 import ViewWorkshopRequest from "./components/Client/ViewWorkshopRequest.js";
 import ClientHome from "./components/Client/ClientHome.js";
 import ClientWorkshopHistory from "./components/Client/ClientWorkshopHistory.js";
-import TestHome from "./test-home.js";
-import TestSignUp from "./test-signup.js";
 
 function App() {
   return (
@@ -30,6 +34,8 @@ function App() {
         <Routes>
           <Route path="/" element={<TestHome />} />
           <Route path="/test-signup" element={<TestSignUp />} />
+          <Route path="/trainers" element={<AdminTrainers />} />
+
           <Route path="/create-client" element={<CreateClientAccount />} />
           <Route path="/create-admin" element={<CreateAdminAccount />} />
           <Route path="/create-trainer" element={<CreateTrainerAccount />} />
