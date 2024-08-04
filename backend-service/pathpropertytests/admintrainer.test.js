@@ -1,7 +1,7 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
 const { connectDB, clearDB, cleanup } = require("../models/db.js");
-const setDatabase = require("./setDatabase.js");
+const setDatabase = require("../systemintegrationtests/setDatabase");
 const jwt = require("jsonwebtoken");
 const fc = require('fast-check');
 

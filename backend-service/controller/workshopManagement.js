@@ -175,6 +175,17 @@ exports.updateWorkshopRequest = async (req, res) => {
   try {
     const id = req.params.id;
     const { _id, ...updateData } = req.body;
+    
+    // Validate input data
+    if (!id || Object.keys(updateData).length === 0) {
+      response = {
+        code: 400,
+        type: "validation error",
+        message: "Invalid input data",
+      };
+      return res.status(400).json(response);
+    }
+
     const data = await Workshop.findByIdAndUpdate(id, updateData);
     if (!data) {
       response = {
@@ -484,7 +495,7 @@ exports.getWorkshopsCountForTrainers = async (req, res) => {
     // Parse the input months
     const parsedStartMonth = moment(startMonth, "MMMM YYYY", true).startOf('month');
     const parsedEndMonth = moment(endMonth, "MMMM YYYY", true).endOf('month');
-    
+
     if (parsedStartMonth.isAfter(parsedEndMonth)) {
       return res.status(400).json({ code: 400, message: "Start month cannot be after end month" });
     }

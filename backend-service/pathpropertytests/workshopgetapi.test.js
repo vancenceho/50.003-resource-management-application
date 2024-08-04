@@ -8,14 +8,37 @@ const path = require('path');
 const jwt = require('jsonwebtoken'); // Add this line to import jwt
 const setDatabase = require("../systemintegrationtests/setDatabase");
 
-let adminToken;
 
 // Function to log errors to a file
 function logErrorToFile(error) {
-  const logFilePath = path.join(__dirname, 'error.log');
-  const logMessage = `${new Date().toISOString()} - ${error.message}\n`;
-  fs.appendFileSync(logFilePath, logMessage, 'utf8');
-}
+    const logFilePath = path.join(__dirname, 'error.log');
+    const logMessage = `${new Date().toISOString()} - ${error.message}\n`;
+    fs.appendFileSync(logFilePath, logMessage, 'utf8');
+  }
+ 
+describe("Fuzz Testing Workshop Endpoints", () => {
+    let adminToken;
+    beforeAll(async () => {
+        try {
+        console.log("Connecting to the database...");
+        await connectDB();
+        console.log("Database connected successfully.");
+        
+        // Ensure the connection is established
+        if (mongoose.connection.readyState !== 1) {
+            throw new Error("Database connection not established");
+        }
+        await cleanup();
+        const ids = await setDatabase();
+        adminToken = jwt.sign({ AdminId: ids.adminId.toString(), role: "admin" }, "root", { expiresIn: "1h" });
+        } catch (error) {
+        console.error("Error connecting to the database:", error);
+        logErrorToFile(error);
+        throw error;
+        }
+    });
+  
+
 
 // Function to generate fuzzed parameters
 const generateFuzzedParameters = () => {
@@ -60,26 +83,6 @@ const generateFuzzedParameters = () => {
   });
 };
 
-beforeAll(async () => {
-  try {
-    console.log("Connecting to the database...");
-    await connectDB();
-    console.log("Database connected successfully.");
-  
-    // Ensure the connection is established
-    if (mongoose.connection.readyState !== 1) {
-      throw new Error("Database connection not established");
-    }
-    await cleanup();
-    const ids = await setDatabase();
-    adminToken = jwt.sign({ AdminId: ids.adminId.toString(), role: "admin" }, "root", { expiresIn: "1h" });
-  } catch (error) {
-    console.error("Error connecting to the database:", error);
-    logErrorToFile(error);
-    throw error;
-  }
-});
-
 afterAll(async () => {
   try {
     await mongoose.disconnect();
@@ -90,7 +93,6 @@ afterAll(async () => {
   }
 });
 
-describe("Fuzz Testing Workshop Endpoints", () => {
   it("should handle various parameters for add, update, and delete workshop endpoints", async () => {
     await fc.assert(
       fc.asyncProperty(
