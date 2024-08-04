@@ -1,11 +1,60 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./AdminHome.css";
-import { Button } from "antd";
+import {
+  Button,
+  Col,
+  Drawer,
+  Form,
+  Input,
+  Row,
+  Select,
+  Space,
+  notification,
+} from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
+
+const { Option } = Select;
 
 const AdminHome = () => {
   const navigate = useNavigate();
+  const [form] = Form.useForm();
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+    role: "",
+  });
+  const [open, setOpen] = useState(false);
+  const [role, setRole] = useState("client"); // admin, trainer, client
+
+  const openNotificationWithIcon = (type, message, description) => {
+    notification[type]({
+      message: message,
+      description: description,
+    });
+  };
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const onChange = (value) => {
+    setRole(value);
+    console.log(`selected ${value}`);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
   const handleLogout = () => {
     axios
@@ -21,6 +70,64 @@ const AdminHome = () => {
         console.log("Error: ", error);
       });
   };
+
+  const handleCreateUser = async (values) => {
+    let endpoint = "";
+    switch (role) {
+      case "admin":
+        endpoint = "http://localhost:3000/admin/createAdmin";
+        break;
+      case "trainer":
+        endpoint = "http://localhost:3000/admin/addtrainer";
+        break;
+      case "client":
+        endpoint = "http://localhost:3000/admin/addclient";
+        break;
+      default:
+        endpoint = "http://localhost:3000/admin/addclient";
+    }
+
+    const payload = {
+      username: form.getFieldValue("username"),
+      password: form.getFieldValue("password"),
+      firstName: form.getFieldValue("firstName"),
+      lastName: form.getFieldValue("lastName"),
+      email: form.getFieldValue("email"),
+      role: role,
+    };
+
+    console.log("Payload: ", payload);
+
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await axios.post(endpoint, payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Response: ", response);
+
+      if (response.status === 200) {
+        openNotificationWithIcon(
+          "success",
+          "User created successfully!",
+          "User has been created successfully."
+        );
+        form.resetFields();
+        onClose();
+      }
+    } catch (error) {
+      console.log("Error: ", error);
+      openNotificationWithIcon(
+        "error",
+        "User creation failed!",
+        "User creation failed. Please try again."
+      );
+    }
+  };
+
   return (
     <>
       <header className="App-header">
@@ -39,10 +146,145 @@ const AdminHome = () => {
               <Link to="/leave-requests">Leave Requests</Link>
             </li>
             <li>
-              <Link to="/create-admin">New Admin</Link>
-            </li>
-            <li>
-              <Link to="/create-trainer">New Trainer</Link>
+              <Button
+                className="logout-button"
+                type="text"
+                size="large"
+                onClick={showDrawer}
+                icon={<PlusOutlined />}
+              >
+                New User
+              </Button>
+              <Drawer
+                title="Create A New User"
+                width={720}
+                onClose={onClose}
+                open={open}
+                styles={{
+                  body: {
+                    paddingBottom: 80,
+                  },
+                }}
+                extra={
+                  <Space>
+                    <Button onClick={onClose}>Cancel</Button>
+                    <Button
+                      onClick={handleCreateUser}
+                      type="primary"
+                      htmlType="submit"
+                    >
+                      Create
+                    </Button>
+                  </Space>
+                }
+              >
+                <Form
+                  form={form}
+                  layout="vertical"
+                  initialValues={{ remember: true }}
+                  hideRequiredMark
+                >
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item
+                        name="username"
+                        label="Username"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter username",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="Please enter username" />
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item
+                        name="password"
+                        label="Password"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter password",
+                          },
+                        ]}
+                      >
+                        <Input.Password placeholder="Please enter password" />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item
+                        name="firstName"
+                        label="First Name"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please enter first name!",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="Please enter first name" />
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item
+                        name="lastName"
+                        label="Last Name"
+                        rules={[
+                          {
+                            required: false,
+                            message: "Please enter phone",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="Please enter last name" />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item
+                        name="email"
+                        label="Email"
+                        rules={[
+                          {
+                            type: "email",
+                            required: true,
+                            message: "Please enter email",
+                          },
+                        ]}
+                      >
+                        <Input placeholder="Please enter email" />
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item
+                        name="role"
+                        label="Role"
+                        rules={[
+                          {
+                            required: true,
+                            message: "Please choose the role",
+                          },
+                        ]}
+                      >
+                        <Select
+                          placeholder="Please choose the role"
+                          onChange={onChange}
+                          defaultValue="client"
+                        >
+                          <Option value="admin">Admin</Option>
+                          <Option value="trainer">Trainer</Option>
+                          <Option value="client">Client</Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </Form>
+              </Drawer>
             </li>
             <li>
               <Button
