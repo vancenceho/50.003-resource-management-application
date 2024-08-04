@@ -120,13 +120,15 @@ function AdminWorkshopRequests() {
               dateFormat="yyyy-MM-dd"
               placeholderText="Select Date"
             />
-            <select name="type" value={filters.type} onChange={(e) => handleFilterChange('type', e.target.value)}>
+            <label htmlFor="type">Type</label>
+            <select id="type" name="type" value={filters.type} onChange={(e) => handleFilterChange('type', e.target.value)}>
               <option value="">All Types</option>
               <option value="Business Value Discovery">Business Value Discovery</option>
               <option value="AI Platform">AI Platform</option>
               <option value="Infrastructure and Demo">Infrastructure and Demo</option>
             </select>
-            <select name="status" value={filters.status} onChange={(e) => handleFilterChange('status', e.target.value)}>
+            <label htmlFor="status">Status</label>
+            <select id="status" name="status" value={filters.status} onChange={(e) => handleFilterChange('status', e.target.value)}>
               <option value="">All Statuses</option>
               <option value="Pending">Pending</option>
               <option value="Approved">Approved</option>

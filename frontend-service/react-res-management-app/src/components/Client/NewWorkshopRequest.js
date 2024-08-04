@@ -102,6 +102,7 @@ const NewWorkshopRequest = () => {
                             type="text"
                             id="clientCompany"
                             name="clientCompany"
+                            aria-label='Client Company'
                             value={formData.clientCompany}
                             onChange={handleChange}
                         />
@@ -111,6 +112,7 @@ const NewWorkshopRequest = () => {
                         <select
                             id="clientType"
                             name="clientType"
+                            aria-label='Client Type'
                             value={formData.clientType}
                             onChange={handleChange}
                         >
@@ -126,6 +128,7 @@ const NewWorkshopRequest = () => {
                             type="text"
                             id="workshopName"
                             name="workshopName"
+                            aria-label='Workshop Name'
                             value={formData.workshopName}
                             onChange={handleChange}
                         />
@@ -135,6 +138,7 @@ const NewWorkshopRequest = () => {
                         <select
                             id="workshopType"
                             name="workshopType"
+                            aria-label='Workshop Type'
                             value={formData.workshopType}
                             onChange={handleChange}
                         >
@@ -151,6 +155,7 @@ const NewWorkshopRequest = () => {
                             type="date"
                             id="startDate"
                             name="startDate"
+                            aria-label='Start Date'
                             value={formData.startDate}
                             onChange={handleChange}
                         />
@@ -161,6 +166,7 @@ const NewWorkshopRequest = () => {
                             type="date"
                             id="endDate"
                             name="endDate"
+                            aria-label='End Date'
                             value={formData.endDate}
                             onChange={handleChange}
                         />
@@ -171,6 +177,7 @@ const NewWorkshopRequest = () => {
                             type="text"
                             id="dealSizePotential"
                             name="dealSizePotential"
+                            aria-label='Deal Size Potential'
                             value={formData.dealSizePotential}
                             onChange={handleChange}
                         />
@@ -180,6 +187,7 @@ const NewWorkshopRequest = () => {
                         <select
                             id="localOrOverseas"
                             name="localOrOverseas"
+                            aria-label='Local/Overseas'
                             value={formData.localOrOverseas}
                             onChange={handleChange}
                         >
@@ -195,6 +203,7 @@ const NewWorkshopRequest = () => {
                             type="text"
                             id="venue"
                             name="venue"
+                            aria-label='Venue'
                             value={formData.venue}
                             onChange={handleChange}
                         />
@@ -204,6 +213,7 @@ const NewWorkshopRequest = () => {
                         <select
                             id="numberOfAttendees"
                             name="numberOfAttendees"
+                            aria-label='Number of Attendees'
                             value={formData.numberOfAttendees}
                             onChange={handleChange}
                         >
@@ -220,6 +230,7 @@ const NewWorkshopRequest = () => {
                         <textarea
                             id="resourcesRequired"
                             name="resourcesRequired"
+                            aria-label='Resources Required'
                             value={formData.resourcesRequired}
                             onChange={handleChange}
                         ></textarea>
@@ -229,6 +240,7 @@ const NewWorkshopRequest = () => {
                         <textarea
                             id="comments"
                             name="comments"
+                            aria-label='Comments'
                             value={formData.comments}
                             onChange={handleChange}
                         ></textarea>
