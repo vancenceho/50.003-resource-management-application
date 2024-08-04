@@ -21,7 +21,7 @@ import {
 } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import "./AdminHome.css";
-import NavBar from "../../NavBar";
+import NavBar from "./NavBar";
 import axios from "axios";
 import bcrypt from "bcryptjs";
 
@@ -193,10 +193,6 @@ const AdminTrainers = () => {
       });
   };
 
-  /**
-   * // DEBUGGING
-   *
-   */
   const handleMenuClick = (e) => {
     setStatus(e.key);
     console.log("Clicked on: ", e.key);

@@ -2,7 +2,7 @@ const Workshop = require("../models/workshopRequest");
 const Trainer = require("../models/trainer");
 const mongoose = require("mongoose");
 const moment = require("moment");
-require('moment-parseformat'); // Ensure you require the plugin
+require("moment-parseformat"); // Ensure you require the plugin
 
 /**
  * // Get Workshop Requests
@@ -21,9 +21,9 @@ require('moment-parseformat'); // Ensure you require the plugin
  */
 exports.getWorkshopRequests = async (req, res) => {
   try {
-    const workshops = await Workshop.find() 
-    .populate("client")
-    .populate("trainer");
+    const workshops = await Workshop.find()
+      .populate("client")
+      .populate("trainer");
     res.status(200).json(workshops);
     console.log(workshops);
   } catch (error) {
@@ -100,6 +100,8 @@ exports.createWorkshopRequest = async (req, res) => {
     console.log("TESTING...............5at.................");
     const workshop = new Workshop({
       _id: new mongoose.Types.ObjectId(),
+      clientCompany: req.body.clientCompany,
+      clientType: req.body.clientType,
       name: req.body.name,
       description: req.body.description,
       startDate: req.body.startDate,
@@ -226,7 +228,6 @@ exports.deleteWorkshopRequest = async (req, res) => {
   }
 };
 
-
 // Admin allocate Trainer to Workshop and once allocated, workshop status is updated from 'pending' to 'accepted'
 // if no trainer is allocated, workshop status is updated from 'pending' to 'rejected'
 exports.allocateTrToWorkshop = async (req, res) => {
@@ -234,13 +235,13 @@ exports.allocateTrToWorkshop = async (req, res) => {
     const { workshopId, trainerIds } = req.query;
 
     console.log(workshopId);
-    console.log(trainerIds);  
-    
+    console.log(trainerIds);
+
     if (!workshopId) {
       return res.status(400).json({ message: "Workshop ID is required" });
     }
 
-    console.log("TESTING...............allocate..1.................")
+    console.log("TESTING...............allocate..1.................");
     if (!trainerIds) {
       return res.status(400).json({ message: "Trainer IDs are required" });
     }
@@ -253,8 +254,8 @@ exports.allocateTrToWorkshop = async (req, res) => {
     if (!workshop) {
       return res.status(404).json({ message: "Workshop not found" });
     }
-    console.log("TESTING...............allocate..2.................")
-    
+    console.log("TESTING...............allocate..2.................");
+
     let allocatedTrainers = [];
     for (const trainerId of trainerIdsArray) {
       const trimmedTrainerId = trainerId.trim();
@@ -262,12 +263,16 @@ exports.allocateTrToWorkshop = async (req, res) => {
       const trainer = await Trainer.findById(trimmedTrainerId);
       if (!trainer) {
         console.log(`Trainer with ID ${trainerId} not found`); // Log if trainer not found
-        res.status(404).json({ message: `Trainer with ID ${trainerId} not found`});
+        res
+          .status(404)
+          .json({ message: `Trainer with ID ${trainerId} not found` });
         continue;
       }
       if (!trainer.status) {
         console.log(`Trainer with ID ${trainerId} is not available`); // Log if trainer not available
-        res.status(400).json({ message: `Trainer with ID ${trainerId} is not available` });
+        res
+          .status(400)
+          .json({ message: `Trainer with ID ${trainerId} is not available` });
         continue;
       }
       console.log(`Adding trainer ID ${trainerId} to allocatedTrainers`); // Log successful addition
@@ -275,34 +280,39 @@ exports.allocateTrToWorkshop = async (req, res) => {
       await trainer.save();
     }
     if (allocatedTrainers.length === 0) {
-      console.log('No trainers were allocated. Check the conditions above.'); // Log if no trainers were added
+      console.log("No trainers were allocated. Check the conditions above."); // Log if no trainers were added
     }
     // Allocate trainers to the workshop
     workshop.trainer = allocatedTrainers;
-    console.log(allocatedTrainers)
+    console.log(allocatedTrainers);
     // Save the updated workshop
     await workshop.save();
-    console.log(workshop)
+    console.log(workshop);
 
-    
     let updateStatus = {};
     if (workshop.trainer) {
-      updateStatus = { status: 'Accepted' };
+      updateStatus = { status: "Accepted" };
     } else {
-      updateStatus = { status: 'Rejected' };
+      updateStatus = { status: "Rejected" };
     }
 
-    const updatedWorkshop = await Workshop.findByIdAndUpdate(workshopId, updateStatus, { new: true });
+    const updatedWorkshop = await Workshop.findByIdAndUpdate(
+      workshopId,
+      updateStatus,
+      { new: true }
+    );
 
     if (!updatedWorkshop) {
-      return res.status(400).json({ message: "Workshop status was not updated" });
+      return res
+        .status(400)
+        .json({ message: "Workshop status was not updated" });
     }
 
     // Respond with the updated workshop information
     res.json({
       code: 200,
       message: `Trainers allocated successfully. Workshop status updated to ${updatedWorkshop.status}`,
-      workshop: updatedWorkshop
+      workshop: updatedWorkshop,
     });
   } catch (error) {
     console.error("Error allocating trainers to workshop request: ", error);
@@ -311,8 +321,6 @@ exports.allocateTrToWorkshop = async (req, res) => {
     }
   }
 };
-
-
 
 //trainer permission
 exports.updateWorkshopStatustoComplete = async (req, res) => {
@@ -323,7 +331,7 @@ exports.updateWorkshopStatustoComplete = async (req, res) => {
     if (!workshopId) {
       return res.status(400).json({ message: "Workshop ID is required" });
     }
-    
+
     // Find the workshop by ID and update its status
     const workshop = await Workshop.findById(workshopId);
     if (!workshop) {
@@ -331,23 +339,32 @@ exports.updateWorkshopStatustoComplete = async (req, res) => {
     }
 
     // Check if the workshop is already in the desired state
-    if (workshop.status === 'Completed') {
-      return res.status(400).json({ message: "Workshop is already marked as Completed" });
+    if (workshop.status === "Completed") {
+      return res
+        .status(400)
+        .json({ message: "Workshop is already marked as Completed" });
     }
-    if (workshop.status === 'Accepted') {
+    if (workshop.status === "Accepted") {
       // Assuming the status you want to change is from 'Accepted' to 'Completed'
-      const data = await Workshop.findByIdAndUpdate(workshopId, { status: 'Completed' }, { new: true });
-    
-    return res.json({ 
-      code: 200,
-      message: "Workshop marked as complete" ,
-      workshop: data
+      const data = await Workshop.findByIdAndUpdate(
+        workshopId,
+        { status: "Completed" },
+        { new: true }
+      );
 
-    });
-  } else {
-    return res.status(400).json({ message: "Workshop cannot be marked as complete from its current status" });
-  }
-
+      return res.json({
+        code: 200,
+        message: "Workshop marked as complete",
+        workshop: data,
+      });
+    } else {
+      return res
+        .status(400)
+        .json({
+          message:
+            "Workshop cannot be marked as complete from its current status",
+        });
+    }
   } catch (error) {
     console.error("Error updating workshop request: ", error);
     if (!res.headersSent) {
@@ -364,10 +381,10 @@ exports.getAllocatedWorkshops = async (req, res) => {
     if (!trainerId) {
       return res.status(400).json({ message: "Trainer ID is required" });
     }
-  
-    console.log ("-----getting allocated workshops 1-------");
+
+    console.log("-----getting allocated workshops 1-------");
     //Query the DB for all workshops allocated to the trainer
-    const workshops = await Workshop.find({ trainer:  trainerId });
+    const workshops = await Workshop.find({ trainer: trainerId });
     console.log("Workshops found:", workshops);
 
     if (workshops.length === 0) {
@@ -377,9 +394,8 @@ exports.getAllocatedWorkshops = async (req, res) => {
     res.json({
       code: 200,
       message: "Workshops found",
-      workshop: workshops
+      workshop: workshops,
     });
-
   } catch (error) {
     console.error("Error retrieving allocated workshops: ", error);
     if (!res.headersSent) {
@@ -391,36 +407,46 @@ exports.getAllocatedWorkshops = async (req, res) => {
 //admin permission                                                                   -works
 exports.checkforSchedConflict = async (req, res) => {
   try {
-    const { workshopId } = req.query; 
-    console.log(workshopId)
+    const { workshopId } = req.query;
+    console.log(workshopId);
     if (!workshopId) {
       return res.status(400).json({ message: "Workshop ID are required" });
     }
 
     // Query the DB for the workshop with the given ID
     const requestedWorkshop = await Workshop.findById(workshopId);
-    console.log(requestedWorkshop)
+    console.log(requestedWorkshop);
     if (!requestedWorkshop) {
       return res.status(404).json({ message: "Requested workshop not found" });
     }
 
     const dateFormat = "Do MMMM YYYY"; // Custom date format
-    const requestedStartDate = moment(requestedWorkshop.startDate, dateFormat, true);
-    const requestedEndDate = moment(requestedWorkshop.endDate, dateFormat, true);
+    const requestedStartDate = moment(
+      requestedWorkshop.startDate,
+      dateFormat,
+      true
+    );
+    const requestedEndDate = moment(
+      requestedWorkshop.endDate,
+      dateFormat,
+      true
+    );
     console.log(requestedStartDate, requestedEndDate);
 
     if (!requestedStartDate.isValid() || !requestedEndDate.isValid()) {
       return res.status(400).json({ message: "Invalid date format" });
     }
-    
+
     // Query the DB for all trainers
     const allTrainers = await Trainer.find();
 
     let availableTrainers = [];
     for (const trainer of allTrainers) {
       // Query the DB for all workshops allocated to the trainer
-      const workshopsAllocToTR = await Workshop.find({ trainer: trainer._id }).populate("trainer");
-      console.log(trainer.username, workshopsAllocToTR)
+      const workshopsAllocToTR = await Workshop.find({
+        trainer: trainer._id,
+      }).populate("trainer");
+      console.log(trainer.username, workshopsAllocToTR);
 
       let hasConflict = false;
       for (const workshop of workshopsAllocToTR) {
@@ -428,7 +454,10 @@ exports.checkforSchedConflict = async (req, res) => {
         const workshopEndDate = moment(workshop.endDate, dateFormat, true);
 
         // Check for conflicts
-        if (requestedStartDate <= workshopEndDate && requestedEndDate >= workshopStartDate) {
+        if (
+          requestedStartDate <= workshopEndDate &&
+          requestedEndDate >= workshopStartDate
+        ) {
           hasConflict = true;
           break;
         }
@@ -441,7 +470,10 @@ exports.checkforSchedConflict = async (req, res) => {
 
     if (availableTrainers.length > 0) {
       console.log("Available trainers:", availableTrainers);
-      res.json({ message: "Available trainers found", trainers: availableTrainers });
+      res.json({
+        message: "Available trainers found",
+        trainers: availableTrainers,
+      });
     } else {
       res.status(409).json({ message: "No available trainers found" });
     }
@@ -453,19 +485,22 @@ exports.checkforSchedConflict = async (req, res) => {
   }
 };
 
-
 // dashboard method to calculate the number of workshops allocated for each trainer  -works
 exports.getWorkshopsCountForTrainers = async (req, res) => {
   try {
     const { startMonth, endMonth } = req.query;
 
     if (!startMonth || !endMonth) {
-      return res.status(400).json({ message: "Start month and end month are required" });
+      return res
+        .status(400)
+        .json({ message: "Start month and end month are required" });
     }
 
     // Parse the input months
-    const parsedStartMonth = moment(startMonth, "MMMM YYYY", true).startOf('month');
-    const parsedEndMonth = moment(endMonth, "MMMM YYYY", true).endOf('month');
+    const parsedStartMonth = moment(startMonth, "MMMM YYYY", true).startOf(
+      "month"
+    );
+    const parsedEndMonth = moment(endMonth, "MMMM YYYY", true).endOf("month");
 
     console.log("Parsed Start Month:", parsedStartMonth);
     console.log("Parsed End Month:", parsedEndMonth);
@@ -474,32 +509,46 @@ exports.getWorkshopsCountForTrainers = async (req, res) => {
     const workshops = await Workshop.find();
     console.log("All Workshops:", workshops);
     // Filter workshops based on the parsed dates
-    const filteredWorkshops = workshops.filter(workshop => {
-      const workshopStartDate = moment(workshop.startDate, "Do MMMM YYYY", true).startOf('day');
-      const workshopEndDate = moment(workshop.endDate, "Do MMMM YYYY", true).endOf('day');
-            
+    const filteredWorkshops = workshops.filter((workshop) => {
+      const workshopStartDate = moment(
+        workshop.startDate,
+        "Do MMMM YYYY",
+        true
+      ).startOf("day");
+      const workshopEndDate = moment(
+        workshop.endDate,
+        "Do MMMM YYYY",
+        true
+      ).endOf("day");
+
       // Log each workshop's start and end dates
-      console.log(`Workshop: ${workshop.name}, Start Date: ${workshopStartDate}, End Date: ${workshopEndDate}`);
-      console.log(`Parsed Start Month: ${parsedStartMonth}, Parsed End Month: ${parsedEndMonth}`);
-      
-      const isWithinRange = workshopStartDate.isSameOrAfter(parsedStartMonth) && workshopEndDate.isSameOrBefore(parsedEndMonth);
+      console.log(
+        `Workshop: ${workshop.name}, Start Date: ${workshopStartDate}, End Date: ${workshopEndDate}`
+      );
+      console.log(
+        `Parsed Start Month: ${parsedStartMonth}, Parsed End Month: ${parsedEndMonth}`
+      );
+
+      const isWithinRange =
+        workshopStartDate.isSameOrAfter(parsedStartMonth) &&
+        workshopEndDate.isSameOrBefore(parsedEndMonth);
       console.log(`Is within range: ${isWithinRange}`);
       return isWithinRange;
     });
 
     // Log the workshops retrieved from the database
     console.log("Filtered Workshops found:", filteredWorkshops);
-        
+
     // Fetch all trainers
     const trainers = await Trainer.find();
     // Create a map to count workshops for each trainer
     const trainerWorkshopCount = {};
-    trainers.forEach(trainer => {
+    trainers.forEach((trainer) => {
       trainerWorkshopCount[trainer._id] = 0;
     });
-    
-    filteredWorkshops.forEach(workshop => {
-      workshop.trainer.forEach(trainerId => {
+
+    filteredWorkshops.forEach((workshop) => {
+      workshop.trainer.forEach((trainerId) => {
         if (!trainerWorkshopCount[trainerId]) {
           trainerWorkshopCount[trainerId] = 0;
         }
@@ -510,9 +559,8 @@ exports.getWorkshopsCountForTrainers = async (req, res) => {
     res.json({
       code: 200,
       message: "Workshops count retrieved successfully",
-      data: trainerWorkshopCount
+      data: trainerWorkshopCount,
     });
-
   } catch (error) {
     console.error("Error retrieving workshops count: ", error);
     if (!res.headersSent) {
@@ -520,7 +568,6 @@ exports.getWorkshopsCountForTrainers = async (req, res) => {
     }
   }
 };
-  
 
 // dashboard method to calculate the trend of deal sizes                             -works
 exports.getDealSizeTrend = async (req, res) => {
@@ -528,11 +575,15 @@ exports.getDealSizeTrend = async (req, res) => {
     const { startMonth, endMonth } = req.query;
 
     if (!startMonth || !endMonth) {
-      return res.status(400).json({ message: "Start month and end month are required" });
+      return res
+        .status(400)
+        .json({ message: "Start month and end month are required" });
     }
     // Parse the input months
-    const parsedStartMonth = moment(startMonth, "MMMM YYYY", true).startOf('month');
-    const parsedEndMonth = moment(endMonth, "MMMM YYYY", true).endOf('month');
+    const parsedStartMonth = moment(startMonth, "MMMM YYYY", true).startOf(
+      "month"
+    );
+    const parsedEndMonth = moment(endMonth, "MMMM YYYY", true).endOf("month");
 
     console.log("Parsed Start Month:", parsedStartMonth);
     console.log("Parsed End Month:", parsedEndMonth);
@@ -541,15 +592,29 @@ exports.getDealSizeTrend = async (req, res) => {
     const workshops = await Workshop.find();
     console.log("All Workshops:", workshops);
     // Filter workshops based on the parsed dates
-    const filteredWorkshops = workshops.filter(workshop => {
-      const workshopStartDate = moment(workshop.startDate, "Do MMMM YYYY", true).startOf('day');
-      const workshopEndDate = moment(workshop.endDate, "Do MMMM YYYY", true).endOf('day');
-            
+    const filteredWorkshops = workshops.filter((workshop) => {
+      const workshopStartDate = moment(
+        workshop.startDate,
+        "Do MMMM YYYY",
+        true
+      ).startOf("day");
+      const workshopEndDate = moment(
+        workshop.endDate,
+        "Do MMMM YYYY",
+        true
+      ).endOf("day");
+
       // Log each workshop's start and end dates
-      console.log(`Workshop: ${workshop.name}, Start Date: ${workshopStartDate}, End Date: ${workshopEndDate}`);
-      console.log(`Parsed Start Month: ${parsedStartMonth}, Parsed End Month: ${parsedEndMonth}`);
-      
-      const isWithinRange = workshopStartDate.isSameOrAfter(parsedStartMonth) && workshopEndDate.isSameOrBefore(parsedEndMonth);
+      console.log(
+        `Workshop: ${workshop.name}, Start Date: ${workshopStartDate}, End Date: ${workshopEndDate}`
+      );
+      console.log(
+        `Parsed Start Month: ${parsedStartMonth}, Parsed End Month: ${parsedEndMonth}`
+      );
+
+      const isWithinRange =
+        workshopStartDate.isSameOrAfter(parsedStartMonth) &&
+        workshopEndDate.isSameOrBefore(parsedEndMonth);
       console.log(`Is within range: ${isWithinRange}`);
       return isWithinRange;
     });
@@ -566,8 +631,10 @@ exports.getDealSizeTrend = async (req, res) => {
     //let dealSizes = [];
 
     for (const workshop of filteredWorkshops) {
-      if (typeof workshop.dealSize === 'number' && !isNaN(workshop.dealSize)) {
-        console.log(`Workshop ${workshop.name} Deal Size: ${workshop.dealSize}`);
+      if (typeof workshop.dealSize === "number" && !isNaN(workshop.dealSize)) {
+        console.log(
+          `Workshop ${workshop.name} Deal Size: ${workshop.dealSize}`
+        );
         totalDealSize += workshop.dealSize;
         validDealSizeCount++;
         //dealSizes.push(workshop.dealSize);
@@ -577,12 +644,21 @@ exports.getDealSizeTrend = async (req, res) => {
     console.log(`Total Deal Size: ${totalDealSize}`);
     console.log(`Valid Deal Size Count: ${validDealSizeCount}`);
 
-    const averageDealSize = validDealSizeCount > 0 ? totalDealSize / validDealSizeCount : null;
+    const averageDealSize =
+      validDealSizeCount > 0 ? totalDealSize / validDealSizeCount : null;
     const totalRequests = workshops.length;
-    const acceptedRequests = workshops.filter(workshop => workshop.status === 'Accepted').length;
-    const pendingRequests = workshops.filter(workshop => workshop.status === 'Pending').length;
-    const completedRequests = workshops.filter(workshop => workshop.status === 'Completed').length;
-    const rejectedRequests = workshops.filter(workshop => workshop.status === 'Rejected').length;
+    const acceptedRequests = workshops.filter(
+      (workshop) => workshop.status === "Accepted"
+    ).length;
+    const pendingRequests = workshops.filter(
+      (workshop) => workshop.status === "Pending"
+    ).length;
+    const completedRequests = workshops.filter(
+      (workshop) => workshop.status === "Completed"
+    ).length;
+    const rejectedRequests = workshops.filter(
+      (workshop) => workshop.status === "Rejected"
+    ).length;
 
     res.json({
       code: 200,
@@ -593,7 +669,6 @@ exports.getDealSizeTrend = async (req, res) => {
       pendingRequests,
       completedRequests,
       rejectedRequests,
-
     });
   } catch (error) {
     console.error("Error calculating deal size trend: ", error);
@@ -604,7 +679,7 @@ exports.getDealSizeTrend = async (req, res) => {
 };
 
 /**
- * // Aggregate Workshops by Status                                                  
+ * // Aggregate Workshops by Status
  *
  * @details
  * This function aggregates workshops by their status and counts the number of workshops for each status.
@@ -619,40 +694,40 @@ exports.getDealSizeTrend = async (req, res) => {
 exports.aggregateWorkshopsByStatus = async (req, res) => {
   try {
     const statuses = ["Accepted", "Rejected", "Pending", "Completed"];
-    
+
     const pipeline = [
       {
         $match: {
-          status: { $in: statuses }
-        }
+          status: { $in: statuses },
+        },
       },
       {
         $group: {
           _id: "$status",
-          count: { $sum: 1 }
-        }
+          count: { $sum: 1 },
+        },
       },
       {
         $project: {
           _id: 0,
           status: "$_id",
-          count: 1
-        }
+          count: 1,
+        },
       },
       {
-        $sort: { status: 1 } // Sort by status if needed
-      }
+        $sort: { status: 1 }, // Sort by status if needed
+      },
     ];
 
     // Perform the aggregation
     const aggregatedData = await Workshop.aggregate(pipeline);
 
     // Ensure all statuses are included, even if their count is zero
-    const result = statuses.map(status => {
-      const entry = aggregatedData.find(item => item.status === status);
+    const result = statuses.map((status) => {
+      const entry = aggregatedData.find((item) => item.status === status);
       return {
         status,
-        count: entry ? entry.count : 0
+        count: entry ? entry.count : 0,
       };
     });
 

@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
 import { Link } from "react-router-dom";
 import "./AdminDashboard.css";
-import NavBar from "../../NavBar";
+import NavBar from "./NavBar";
 
 const AdminDashboard = () => {
   const dealSizesChartRef = useRef(null);

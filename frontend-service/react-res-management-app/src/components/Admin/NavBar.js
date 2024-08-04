@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../src/components/Admin/AdminHome.css";
+import "./AdminHome.css";
 import {
   Button,
   Col,
@@ -12,7 +12,13 @@ import {
   Space,
   notification,
 } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import {
+  PlusOutlined,
+  LogoutOutlined,
+  HomeOutlined,
+  BarChartOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import axios from "axios";
 
 const { Option } = Select;
@@ -181,16 +187,47 @@ const NavBar = (onUserCreated) => {
     <nav className="navbar">
       <ul className="navbar-list">
         <li>
-          <Link to="/admin-home">Home</Link>
+          <Button
+            className="logout-button"
+            type="text"
+            size="large"
+            icon={<HomeOutlined />}
+            onClick={() => navigate("/admin-home")}
+          >
+            Home
+          </Button>
         </li>
         <li>
-          <Link to="/dashboard">Dashboard</Link>
+          <Button
+            className="logout-button"
+            type="text"
+            size="large"
+            icon={<BarChartOutlined />}
+            onClick={() => navigate("/dashboard")}
+          >
+            Dashboard
+          </Button>
         </li>
         <li>
-          <Link to="/trainers">Trainers</Link>
+          <Button
+            className="logout-button"
+            type="text"
+            size="large"
+            icon={<UserOutlined />}
+            onClick={() => navigate("/trainers")}
+          >
+            Trainers
+          </Button>
         </li>
         <li>
-          <Link to="/leave-requests">Leave Requests</Link>
+          <Button
+            className="logout-button"
+            type="text"
+            size="large"
+            icon={<UserOutlined />}
+          >
+            Clients
+          </Button>
         </li>
         <li>
           <Button
@@ -339,6 +376,7 @@ const NavBar = (onUserCreated) => {
             type="text"
             size="large"
             onClick={handleLogout}
+            icon={<LogoutOutlined />}
           >
             Logout
           </Button>

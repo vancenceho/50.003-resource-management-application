@@ -137,7 +137,7 @@ function TestHome() {
             form={form}
             name="basic"
             labelCol={{ span: 8 }}
-            wrapperCol={{ span: 24 }}
+            wrapperCol={{ span: 12 }}
             initialValues={{ remember: true }}
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}

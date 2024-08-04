@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./AdminHome.css";
 
-import NavBar from "../../NavBar";
+import NavBar from "./NavBar";
 
 const AdminHome = () => {
   useEffect(() => {
