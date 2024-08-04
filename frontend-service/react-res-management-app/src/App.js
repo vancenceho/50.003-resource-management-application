@@ -42,7 +42,7 @@ function App() {
           />
           <Route path="/leave-requests" element={<LeaveRequests />} />
           <Route path="/dashboard" element={<AdminDashboard />} />
-          <Route path="/edit-request" element={<EditWorkshopRequest />} />
+          <Route path="/edit-workshop/:id" element={<EditWorkshopRequest />} />
 
           <Route path="/trainer-login" element={<TrainerLoginPage />} />
           <Route path="/trainer-home" element={<TrainerHome />} />
@@ -58,10 +58,7 @@ function App() {
             path="/client-request-submitted"
             element={<RequestSubmitted />}
           />
-          <Route
-            path="/client-request-details"
-            element={<ViewWorkshopRequest />}
-          />
+          <Route path="/client-request-details/:id" element={<ViewWorkshopRequest />} />
           <Route
             path="/client-workshop-history"
             element={<ClientWorkshopHistory />}
