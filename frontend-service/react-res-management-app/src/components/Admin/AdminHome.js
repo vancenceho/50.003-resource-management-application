@@ -30,6 +30,7 @@ const AdminHome = () => {
   });
   const [open, setOpen] = useState(false);
   const [role, setRole] = useState("client"); // admin, trainer, client
+  console.log("Role: ", role);
 
   const openNotificationWithIcon = (type, message, description) => {
     notification[type]({
@@ -99,6 +100,7 @@ const AdminHome = () => {
     console.log("Payload: ", payload);
 
     const token = localStorage.getItem("token");
+    console.log("endpoint: " + endpoint);
 
     try {
       const response = await axios.post(endpoint, payload, {
@@ -120,11 +122,54 @@ const AdminHome = () => {
       }
     } catch (error) {
       console.log("Error: ", error);
-      openNotificationWithIcon(
-        "error",
-        "User creation failed!",
-        "User creation failed. Please try again."
-      );
+
+      if (error.response.status === 400) {
+        openNotificationWithIcon(
+          "error",
+          "Error Notification: Bad request!",
+          "400: Bad request. Please check that all fields are filled and try again."
+        );
+      }
+
+      if (error.response.status === 401) {
+        openNotificationWithIcon(
+          "error",
+          "Error Notification: Unauthorized!",
+          "401: Unauthorized. Please login and try again."
+        );
+      }
+
+      if (error.response.status === 403) {
+        openNotificationWithIcon(
+          "error",
+          "Error Notification: Forbidden!",
+          "403: Forbidden. You do not have permission to access this resource."
+        );
+      }
+
+      if (error.response.status === 404) {
+        openNotificationWithIcon(
+          "error",
+          "Error Notification: Not Found!",
+          "404: Not Found. Please check that the endpoint is correct."
+        );
+      }
+
+      if (error.response.status === 409) {
+        openNotificationWithIcon(
+          "error",
+          "Error Notification: Validation Error!",
+          "409: Conflict. The username or email already exists. Please try again."
+        );
+      }
+
+      if (error.response.status === 500) {
+        openNotificationWithIcon(
+          "error",
+          "Error Notification: Internal Server Error!",
+          "500: Internal Server Error. Please try again later."
+        );
+      }
     }
   };
 
