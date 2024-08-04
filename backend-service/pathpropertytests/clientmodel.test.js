@@ -26,7 +26,7 @@ const objectIdArbitrary = fc.hexaString({ minLength: 24, maxLength: 24 })
   .map((id) => new mongoose.Types.ObjectId(id));
 // Generate and log some example ObjectIds
 const sampleObjectIds = fc.sample(objectIdArbitrary, 10);
-console.log(sampleObjectIds);
+//console.log(sampleObjectIds);
 
 describe("Client Model Test with Path Testing and MCDC", () => {
   beforeAll(async () => {

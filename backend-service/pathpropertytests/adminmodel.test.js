@@ -25,7 +25,7 @@ const objectIdArbitrary = fc.hexaString({ minLength: 24, maxLength: 24 })
   .map((id) => new mongoose.Types.ObjectId(id));
 // Generate and log some example ObjectIds
 const sampleObjectIds = fc.sample(objectIdArbitrary, 10);
-console.log(sampleObjectIds);
+//console.log(sampleObjectIds);
 
 describe("Admin Model Test with Path Testing and MCDC", () => {
   beforeAll(async () => {
@@ -33,6 +33,7 @@ describe("Admin Model Test with Path Testing and MCDC", () => {
   });
 
   beforeEach(async () => {
+    await Admin.deleteMany({});
     generatedIds.clear();
   });
   
@@ -123,15 +124,20 @@ describe("Admin Model Test with Path Testing and MCDC", () => {
 
     await fc.assert(
       fc.asyncProperty(
-        fc.string({ minLength: 1, maxLength: 2 }), // Invalid username
-        async (username) => {
-          const admin = await Admin.findOne({ username });
-          expect(admin).toBeNull();
-        }
+          fc.string({ minLength: 1, maxLength: 2 }), // Invalid username
+          async (username) => {
+              try {
+                  const admin = await Admin.findOne({ username });
+                  expect(admin).toBeNull();
+              } catch (error) {
+                  console.error('An error occurred:', error);
+                  logErrorToFile(error);
+                  throw error;
+              }
+          }
       )
-    );
-  });
-
+  );
+});
   // Path Test Case 4: Updating an admin email with valid and invalid emails
   it("update admin email with valid and invalid emails", async () => {
     await fc.assert(
