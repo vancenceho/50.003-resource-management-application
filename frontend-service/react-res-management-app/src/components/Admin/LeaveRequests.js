@@ -101,8 +101,6 @@ const LeaveRequests = () => {
             <li><a href="/workshop-requests">Workshop Requests</a></li>
             <li><a href="/dashboard">Dashboard</a></li>
             <li><a href="/leave-requests">Leave Requests</a></li>
-            <li><a href="/create-admin">New Admin</a></li>
-            <li><a href="/create-trainer">New Trainer</a></li>
           </ul>
         </nav>
       </header>
@@ -172,9 +170,6 @@ const LeaveRequests = () => {
       </div>
       <footer className="footer">
         <div className="footer-content">
-          <div className="footer-logo">
-            <img src="/logo192.png" alt="Logo" />
-          </div>
           <div className="footer-details">
             <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
             <p>1672 345 0987</p>

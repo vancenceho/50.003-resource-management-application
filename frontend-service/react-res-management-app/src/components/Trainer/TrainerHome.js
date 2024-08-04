@@ -63,12 +63,6 @@ const TrainerHome = () => {
       </div>
       <footer className="footer">
         <div className="footer-content">
-          <div className="footer-logo">
-            <img
-              src="/Users/hardikshah/50.003-resource-management-application/frontend-service/react-res-management-app/public/logo192.png"
-              alt="Logo"
-            />
-          </div>
           <div className="footer-details">
             <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
             <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
