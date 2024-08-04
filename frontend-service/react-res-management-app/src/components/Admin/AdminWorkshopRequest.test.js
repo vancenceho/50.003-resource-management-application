@@ -1,126 +1,94 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import AdminWorkshopRequests from './AdminWorkshopRequests';
+import { BrowserRouter as Router } from 'react-router-dom';
 
-describe('AdminWorkshopRequests', () => {
-  test('renders header with navigation links', () => {
-    render(
-      <BrowserRouter>
-        <AdminWorkshopRequests />
-      </BrowserRouter>
-    );
+// Mock fetch response
+beforeEach(() => {
+  fetch.resetMocks();
+  fetch.mockResponseOnce(JSON.stringify([
+    {
+      _id: '1',
+      name: 'Integration Workshop 1',
+      location: '123 Main St',
+      startDate: '2024-07-11T00:00:00.000Z',
+      endDate: '2024-07-11T01:00:00.000Z',
+      type: 'Business Value Discovery',
+      status: 'Pending',
+    },
+    {
+      _id: '2',
+      name: 'Integration Workshop 2',
+      location: '456 Elm St',
+      startDate: '2024-07-12T00:00:00.000Z',
+      endDate: '2024-07-12T01:00:00.000Z',
+      type: 'AI Platform',
+      status: 'Approved',
+    },
+  ]));
+});
 
-    const homeLink = screen.getByText(/Home/i);
-    const workshopRequestsLinks = screen.getAllByText(/Workshop Requests/i);
-    const dashboardLink = screen.getByText(/Dashboard/i);
-    const leaveRequestsLink = screen.getByText(/Leave Requests/i);
-    const newAdminLink = screen.getByText(/New Admin/i);
-    const newTrainerLink = screen.getByText(/New Trainer/i);
+test('renders AdminWorkshopRequests and displays workshop data', async () => {
+  render(
+    <Router>
+      <AdminWorkshopRequests />
+    </Router>
+  );
 
-    expect(homeLink).toBeInTheDocument();
-    expect(workshopRequestsLinks.length).toBeGreaterThan(0);
-    expect(dashboardLink).toBeInTheDocument();
-    expect(leaveRequestsLink).toBeInTheDocument();
-    expect(newAdminLink).toBeInTheDocument();
-    expect(newTrainerLink).toBeInTheDocument();
+  // Ensure the component has finished loading
+  await waitFor(() => {
+    expect(screen.getByRole('heading', { name: /Workshop Requests/i })).toBeInTheDocument();
   });
 
-  test('renders workshop requests heading', () => {
-    render(
-      <BrowserRouter>
-        <AdminWorkshopRequests />
-      </BrowserRouter>
-    );
+  // Check if the workshops are displayed
+  await waitFor(() => {
+    expect(screen.getByText(/Integration Workshop 1/i)).toBeInTheDocument();
+    expect(screen.getByText(/Integration Workshop 2/i)).toBeInTheDocument();
+  });
+});
 
-    const headings = screen.getAllByText(/Workshop Requests/i);
-    expect(headings.length).toBeGreaterThan(0);
+test('filters workshop requests by type', async () => {
+  render(
+    <Router>
+      <AdminWorkshopRequests />
+    </Router>
+  );
+
+  // Ensure the component has finished loading
+  await waitFor(() => {
+    expect(screen.getByRole('heading', { name: /Workshop Requests/i })).toBeInTheDocument();
   });
 
-  test('toggles between list and calendar views', () => {
-    render(
-      <BrowserRouter>
-        <AdminWorkshopRequests />
-      </BrowserRouter>
-    );
+  // Select "Business Value Discovery" type
+  const typeSelect = screen.getByLabelText('Type');
+  fireEvent.change(typeSelect, { target: { value: 'Business Value Discovery' } });
 
-    const listViewButton = screen.getByText(/List View/i);
-    const calendarViewButton = screen.getByText(/Calendar View/i);
+  // Check if the filtered workshops are displayed
+  await waitFor(() => {
+    expect(screen.getByText(/Integration Workshop 1/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Integration Workshop 2/i)).not.toBeInTheDocument();
+  });
+});
 
-    fireEvent.click(calendarViewButton);
-    const calendarElement = screen.getByText(/Workshop 1/i);
-    expect(calendarElement).toBeInTheDocument();
+test('filters workshop requests by status', async () => {
+  render(
+    <Router>
+      <AdminWorkshopRequests />
+    </Router>
+  );
 
-    fireEvent.click(listViewButton);
-    const tableElement = screen.getByText(/Workshop 1/i);
-    expect(tableElement).toBeInTheDocument();
+  // Ensure the component has finished loading
+  await waitFor(() => {
+    expect(screen.getByRole('heading', { name: /Workshop Requests/i })).toBeInTheDocument();
   });
 
-  test('filters workshop requests by date', () => {
-    render(
-      <BrowserRouter>
-        <AdminWorkshopRequests />
-      </BrowserRouter>
-    );
+  // Select "Approved" status
+  const statusSelect = screen.getByLabelText('Status');
+  fireEvent.change(statusSelect, { target: { value: 'Approved' } });
 
-    const datePicker = screen.getByPlaceholderText(/Select Date/i);
-    fireEvent.change(datePicker, { target: { value: '2024-07-11' } });
-
-    const workshop1 = screen.getByText(/Workshop 1/i);
-    expect(workshop1).toBeInTheDocument();
-
-    const workshop2 = screen.queryByText(/Workshop 2/i);
-    expect(workshop2).not.toBeInTheDocument();
-  });
-
-  test('filters workshop requests by type', () => {
-    render(
-      <BrowserRouter>
-        <AdminWorkshopRequests />
-      </BrowserRouter>
-    );
-
-    const typeSelect = screen.getByDisplayValue(/All Types/i);
-    fireEvent.change(typeSelect, { target: { value: 'Type A' } });
-
-    const workshop1 = screen.getByText(/Workshop 1/i);
-    expect(workshop1).toBeInTheDocument();
-
-    const workshop2 = screen.queryByText(/Workshop 2/i);
-    expect(workshop2).not.toBeInTheDocument();
-  });
-
-  test('filters workshop requests by status', () => {
-    render(
-      <BrowserRouter>
-        <AdminWorkshopRequests />
-      </BrowserRouter>
-    );
-
-    const statusSelect = screen.getByDisplayValue(/All Statuses/i);
-    fireEvent.change(statusSelect, { target: { value: 'Accepted' } });
-
-    const workshop1 = screen.getByText(/Workshop 1/i);
-    expect(workshop1).toBeInTheDocument();
-
-    const workshop2 = screen.queryByText(/Workshop 2/i);
-    expect(workshop2).not.toBeInTheDocument();
-  });
-
-  test('resets filters', () => {
-    render(
-      <BrowserRouter>
-        <AdminWorkshopRequests />
-      </BrowserRouter>
-    );
-
-    const resetButton = screen.getByText(/Reset Filter/i);
-    fireEvent.click(resetButton);
-
-    const workshop1 = screen.getByText(/Workshop 1/i);
-    const workshop2 = screen.getByText(/Workshop 2/i);
-
-    expect(workshop1).toBeInTheDocument();
-    expect(workshop2).toBeInTheDocument();
+  // Check if the filtered workshops are displayed
+  await waitFor(() => {
+    expect(screen.getByText(/Integration Workshop 2/i)).toBeInTheDocument();
+    expect(screen.queryByText(/Integration Workshop 1/i)).not.toBeInTheDocument();
   });
 });

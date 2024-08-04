@@ -1,180 +1,196 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DatePicker from 'react-datepicker';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import 'react-datepicker/dist/react-datepicker.css';
 import './LeaveRequests.css';
+import moment from 'moment';
+
+const trainerMapping = {
+  "668d5ba4a5f8eca9ff47283e": "Trainer 1",
+  "668d5ba4a5f8eca9ff47284e": "Trainer 2",
+  "668d5ba4a5f8eca9ff47285e": "Trainer 3",
+  "668d5ba4a5f8eca9ff47286e": "Trainer 4",
+  "668d5ba4a5f8eca9ff47287e": "Trainer 5",
+  "668d5ba4a5f8eca9ff47288e": "Trainer 6"
+};
 
 const LeaveRequests = () => {
-  const [requests, setRequests] = useState([
-    {
-      id: 1,
-      trainer: 'Trainer 1',
-      reason: 'Personal Leave',
-      date: new Date('2024-07-21'),
-      status: 'Pending',
-    },
-    {
-      id: 2,
-      trainer: 'Trainer 2',
-      reason: 'Medical Leave',
-      date: new Date('2024-07-19'),
-      status: 'Accepted',
-    },
-    {
-      id: 3,
-      trainer: 'Trainer 3',
-      reason: 'Family Emergency',
-      date: new Date('2024-07-14'),
-      status: 'Pending',
-    },
-    {
-      id: 4,
-      trainer: 'Trainer 4',
-      reason: 'Vacation',
-      date: new Date('2024-09-8'),
-      status: 'Rejected',
-    },
-    {
-      id: 5,
-      trainer: 'Trainer 5',
-      reason: 'Workshop Preparation',
-      date: new Date('2024-08-16'),
-      status: 'Accepted',
-    },
-    // Add more requests as needed
-  ]);
-  const [filterDate, setFilterDate] = useState(null);
-  const [filterTrainer, setFilterTrainer] = useState('');
-  const [filterStatus, setFilterStatus] = useState('');
+  const [filters, setFilters] = useState({
+    date: null,
+    trainer: '',
+    status: '',
+  });
+  const [leaveData, setLeaveData] = useState([]);
 
-  const handleStatusChange = (id, newStatus) => {
-    setRequests(requests.map(req => req.id === id ? { ...req, status: newStatus } : req));
+  useEffect(() => {
+    const fetchLeaveRequests = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/leaveRequest', {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        const mappedData = data.map(leave => ({
+          ...leave,
+          trainerName: trainerMapping[leave.trainer] || leave.trainer
+        }));
+        setLeaveData(mappedData);
+      } catch (error) {
+        console.error('Failed to fetch leave data:', error);
+      }
+    };
+
+    fetchLeaveRequests();
+  }, []);
+
+  const handleFilterChange = (name, value) => {
+    setFilters({
+      ...filters,
+      [name]: value,
+    });
   };
 
   const handleResetFilters = () => {
-    setFilterDate(null);
-    setFilterTrainer('');
-    setFilterStatus('');
+    setFilters({
+      date: null,
+      trainer: '',
+      status: '',
+    });
   };
 
-  const filteredRequests = requests.filter(request => {
-    const matchesDate = filterDate ? request.date.toDateString() === filterDate.toDateString() : true;
-    const matchesTrainer = filterTrainer ? request.trainer === filterTrainer : true;
-    const matchesStatus = filterStatus ? request.status === filterStatus : true;
-    return matchesDate && matchesTrainer && matchesStatus;
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const response = await fetch(`http://localhost:3000/leaveRequest/update/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: newStatus })
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const updatedLeave = await response.json();
+      setLeaveData(prevData => prevData.map(leave => leave._id === id ? { ...leave, status: newStatus } : leave));
+    } catch (error) {
+      console.error('Failed to update leave status:', error);
+    }
+  };
+
+  const filteredData = leaveData.filter((leave) => {
+    return (
+      (!filters.date || moment(leave.startDate).isSame(filters.date, 'day')) &&
+      (!filters.trainer || leave.trainerName.toLowerCase().includes(filters.trainer.toLowerCase())) &&
+      (!filters.status || leave.status.toLowerCase() === filters.status.toLowerCase())
+    );
   });
 
   return (
     <>
-    <header className="App-header">
-          <nav className="navbar">
-            <ul className="navbar-list">
-              <li><Link to="/admin-home">Home</Link></li>
-              <li><Link to="/workshop-requests">Workshop Requests</Link></li>
-              <li><Link to="/dashboard">Dashboard</Link></li>
-              <li><Link to="/leave-requests">Leave Requests</Link></li>
-              <li><Link to="/create-admin">New Admin</Link></li>
-              <li><Link to="/create-trainer">New Trainer</Link></li>
-            </ul>
-          </nav>
-    </header>
-
-    <div className="leave-requests">
-      <h1>Leave Requests</h1>
-      <div className="filters">
-        <button className="filter-button">Filter By</button>
-        <DatePicker
-          selected={filterDate}
-          onChange={date => setFilterDate(date)}
-          placeholderText="Select Date"
-          className="filter-input"
-        />
-        <select
-          value={filterTrainer}
-          onChange={(e) => setFilterTrainer(e.target.value)}
-          className="filter-input"
-        >
-          <option value="">All Trainers</option>
-          <option value="Trainer 1">Trainer 1</option>
-          <option value="Trainer 2">Trainer 2</option>
-          <option value="Trainer 3">Trainer 3</option>
-          <option value="Trainer 4">Trainer 4</option>
-          <option value="Trainer 5">Trainer 5</option>
-        </select>
-        <select
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="filter-input"
-        >
-          <option value="">All Statuses</option>
-          <option value="Accepted">Accepted</option>
-          <option value="Pending">Pending</option>
-          <option value="Rejected">Rejected</option>
-        </select>
-        <button onClick={handleResetFilters} className="filter-button">Reset Filter</button>
+      <header className="App-header">
+        <nav className="navbar">
+          <ul className="navbar-list">
+            <li><a href="/admin-home">Home</a></li>
+            <li><a href="/workshop-requests">Workshop Requests</a></li>
+            <li><a href="/dashboard">Dashboard</a></li>
+            <li><a href="/leave-requests">Leave Requests</a></li>
+          </ul>
+        </nav>
+      </header>
+      
+      <div className="leave-requests">
+        <div className="content">
+          <h1>Leave Requests</h1>
+          <div className="filters">
+            <button>Filter By</button>
+            <DatePicker
+              selected={filters.date}
+              onChange={(date) => handleFilterChange('date', date)}
+              dateFormat="yyyy-MM-dd"
+              placeholderText="Select Date"
+            />
+            <select name="trainer" value={filters.trainer} onChange={(e) => handleFilterChange('trainer', e.target.value)}>
+              <option value="">All Trainers</option>
+              <option value="Trainer 1">Trainer 1</option>
+              <option value="Trainer 2">Trainer 2</option>
+              <option value="Trainer 3">Trainer 3</option>
+              <option value="Trainer 4">Trainer 4</option>
+              <option value="Trainer 5">Trainer 5</option>
+              <option value="Trainer 6">Trainer 6</option>
+            </select>
+            <select name="status" value={filters.status} onChange={(e) => handleFilterChange('status', e.target.value)}>
+              <option value="">All Statuses</option>
+              <option value="Pending">Pending</option>
+              <option value="Accepted">Accepted</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+            <button onClick={handleResetFilters}>Reset Filter</button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Trainer Name</th>
+                <th>Reason</th>
+                <th>Date</th>
+                <th>Action</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredData.map((leave) => (
+                <tr key={leave._id}>
+                  <td>{leave._id.slice(0, 8)}...</td>
+                  <td>{leave.trainerName}</td>
+                  <td>{leave.reason}</td>
+                  <td>{moment(leave.startDate).format('YYYY-MM-DD')}</td>
+                  <td>
+                    <select
+                      value={leave.status}
+                      onChange={(e) => handleStatusChange(leave._id, e.target.value)}
+                    >
+                      <option value="Pending">Pending</option>
+                      <option value="Accepted">Accepted</option>
+                      <option value="Rejected">Rejected</option>
+                    </select>
+                  </td>
+                  <td>{leave.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Trainer Name</th>
-            <th>Reason</th>
-            <th>Date</th>
-            <th>Action</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredRequests.map(request => (
-            <tr key={request.id}>
-              <td>{request.id}</td>
-              <td>{request.trainer}</td>
-              <td>{request.reason}</td>
-              <td>{request.date.toDateString()}</td>
-              <td>
-                <select
-                  value={request.status === 'Pending' ? '' : request.status}
-                  onChange={(e) => handleStatusChange(request.id, e.target.value || 'Pending')}
-                >
-                  <option value="">Pending</option>
-                  <option value="Accepted">Accept</option>
-                  <option value="Rejected">Reject</option>
-                </select>
-              </td>
-              <td>{request.status}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-    <footer className="footer">
-    <div className="footer-content">
-      <div className="footer-logo">
-        <img src="/Users/hardikshah/50.003-resource-management-application/frontend-service/react-res-management-app/public/logo192.png" alt="Logo" />
-      </div>
-      <div className="footer-details">
-        <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
-        <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
-        <p>1672 345 0987</p>
-        <p>1672 345 0987</p>
-        <p>info@company.io</p>
-      </div>
-      <div className="footer-social">
-        <a href="#"><i className="fab fa-facebook-f"></i></a>
-        <a href="#"><i className="fab fa-twitter"></i></a>
-        <a href="#"><i className="fab fa-instagram"></i></a>
-        <a href="#"><i className="fab fa-linkedin-in"></i></a>
-        <a href="#"><i className="fab fa-youtube"></i></a>
-      </div>
-    </div>
-    <div className="footer-bottom">
-      <p>© 2023 Company. All rights reserved.</p>
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-      <a href="#">Cookies Settings</a>
-    </div>
-  </footer>
-  </>
+      <footer className="footer">
+        <div className="footer-content">
+          <div className="footer-details">
+            <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
+            <p>1672 345 0987</p>
+            <p>info@company.io</p>
+          </div>
+          <div className="footer-social">
+            <a href="#"><i className="fab fa-facebook-f"></i></a>
+            <a href="#"><i className="fab fa-twitter"></i></a>
+            <a href="#"><i className="fab fa-instagram"></i></a>
+            <a href="#"><i className="fab fa-linkedin-in"></i></a>
+            <a href="#"><i className="fab fa-youtube"></i></a>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <p>© 2023 Company. All rights reserved.</p>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookies Settings</a>
+        </div>
+      </footer>
+    </>
   );
 }
 

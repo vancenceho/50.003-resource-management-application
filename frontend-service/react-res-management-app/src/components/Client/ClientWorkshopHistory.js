@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
@@ -10,22 +10,40 @@ import './ClientWorkshopHistory.css';
 const localizer = momentLocalizer(moment);
 
 function ClientWorkshopHistory() {
-  const [view, setView] = useState('list'); // State to toggle between views
+  const [view, setView] = useState('list');
   const [filters, setFilters] = useState({
     date: null,
     type: '',
     status: '',
   });
+  const [workshopData, setWorkshopData] = useState([]);
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
+  const navigate = useNavigate();
+  
+  const clientId = localStorage.getItem('userId');
 
-  const workshopData = [
-    { id: '00001', name: 'Workshop 1', address: '089 Kutch Green Apt. 448', date: '2024-07-11', type: 'Type A', status: 'Accepted' },
-    { id: '00002', name: 'Workshop 2', address: '979 Immanuel Ferry Suite 526', date: '2024-07-12', type: 'Type B', status: 'Pending' },
-    { id: '00003', name: 'Workshop 3', address: '8587 Frida Ports', date: '2024-07-13', type: 'Type C', status: 'Rejected' },
-    { id: '00004', name: 'Workshop 4', address: '768 Destiny Lake Suite 600', date: '2024-07-14', type: 'Type A', status: 'Accepted' },
-    { id: '00005', name: 'Workshop 5', address: '042 Mylene Throughway', date: '2024-07-15', type: 'Type B', status: 'Pending' },
-    { id: '00006', name: 'Workshop 6', address: '543 Weinman Mountain', date: '2024-07-16', type: 'Type C', status: 'Completed' },
-  ];
+  useEffect(() => {
+    const fetchWorkshops = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/workshop', {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        setWorkshopData(data);
+      } catch (error) {
+        console.error('Failed to fetch workshop data:', error);
+      }
+    };
+
+    fetchWorkshops();
+  }, []);
 
   const handleFilterChange = (name, value) => {
     setFilters({
@@ -44,17 +62,18 @@ function ClientWorkshopHistory() {
 
   const filteredData = workshopData.filter((workshop) => {
     return (
-      (!filters.date || moment(workshop.date).isSame(filters.date, 'day')) &&
-      (!filters.type || workshop.type === filters.type) &&
-      (!filters.status || workshop.status === filters.status)
+      workshop.client && workshop.client._id === clientId &&
+      (!filters.date || moment(workshop.startDate).isSame(filters.date, 'day')) &&
+      (!filters.type || workshop.type.toLowerCase() === filters.type.toLowerCase()) &&
+      (!filters.status || workshop.status.toLowerCase() === filters.status.toLowerCase())
     );
   });
 
   const events = filteredData.map((workshop, index) => ({
     id: index,
     title: workshop.name,
-    start: new Date(workshop.date),
-    end: new Date(workshop.date),
+    start: new Date(workshop.startDate),
+    end: new Date(workshop.endDate),
   }));
 
   const handleSelectEvent = (event) => {
@@ -62,104 +81,101 @@ function ClientWorkshopHistory() {
     setSelectedWorkshop(workshop);
   };
 
+  const handleWorkshopClick = (workshopId) => {
+    navigate(`//localhost:3001/client-request-details/${workshopId}`);
+  };
+
   return (
     <>
-    <header className="App-header">
-          <nav className="navbar">
-            <ul className="navbar-list">
-              <li><Link to="/client-home">Home</Link></li>
-              <li><Link to="/client-new-request">New Workshop Request</Link></li>
-              <li><Link to="/client-request-details">Request Details</Link></li>
-              <li><Link to="/client-workshop-history">Workshop History</Link></li>
-            </ul>
-          </nav>
-        </header>
+      <header className="App-header">
+        <nav className="navbar">
+          <ul className="navbar-list">
+            <li><Link to="/client-home">Home</Link></li>
+            <li><Link to="/client-new-request">New Workshop Request</Link></li>
+            <li><Link to="/client-workshop-history">Workshop History</Link></li>
+          </ul>
+        </nav>
+      </header>
 
-
-    <div className="admin-workshop-requests">
-      <div className="content">
-        <h1>Workshop Request History</h1>
-        <div className="filters">
-          <button>Filter By</button>
-          <DatePicker
-            selected={filters.date}
-            onChange={(date) => handleFilterChange('date', date)}
-            dateFormat="yyyy-MM-dd"
-            placeholderText="Select Date"
-          />
-          <select name="type" value={filters.type} onChange={(e) => handleFilterChange('type', e.target.value)}>
-            <option value="">All Types</option>
-            <option value="Type A">Type A</option>
-            <option value="Type B">Type B</option>
-            <option value="Type C">Type C</option>
-          </select>
-          <select name="status" value={filters.status} onChange={(e) => handleFilterChange('status', e.target.value)}>
-            <option value="">All Statuses</option>
-            <option value="Accepted">Accepted</option>
-            <option value="Pending">Pending</option>
-            <option value="Rejected">Rejected</option>
-            <option value="Completed">Completed</option>
-          </select>
-          <button onClick={handleResetFilters}>Reset Filter</button>
-        </div>
-        {view === 'list' ? (
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Workshop Name</th>
-                <th>Address</th>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.map((workshop) => (
-                <tr key={workshop.id}>
-                  <td>{workshop.id}</td>
-                  <td>{workshop.name}</td>
-                  <td>{workshop.address}</td>
-                  <td>{workshop.date}</td>
-                  <td>{workshop.type}</td>
-                  <td>{workshop.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <div>
-            <Calendar
-              localizer={localizer}
-              events={events}
-              startAccessor="start"
-              endAccessor="end"
-              style={{ height: 500 }}
-              onSelectEvent={handleSelectEvent}
+      <div className="admin-workshop-requests">
+        <div className="content">
+          <h1>Workshop Request History</h1>
+          <div className="filters">
+            <button>Filter By</button>
+            <DatePicker
+              selected={filters.date}
+              onChange={(date) => handleFilterChange('date', date)}
+              dateFormat="yyyy-MM-dd"
+              placeholderText="Select Date"
             />
-            {selectedWorkshop && (
-              <div className="workshop-details">
-                <h2>{selectedWorkshop.name}</h2>
-                <p><strong>Address:</strong> {selectedWorkshop.address}</p>
-                <p><strong>Date:</strong> {selectedWorkshop.date}</p>
-                <p><strong>Type:</strong> {selectedWorkshop.type}</p>
-                <p><strong>Status:</strong> {selectedWorkshop.status}</p>
-              </div>
-            )}
+            <select name="type" value={filters.type} onChange={(e) => handleFilterChange('type', e.target.value)}>
+              <option value="">All Types</option>
+              <option value="Business Value Discovery">Business Value Discovery</option>
+              <option value="AI Platform">AI Platform</option>
+              <option value="Infrastructure and Demo">Infrastructure and Demo</option>
+            </select>
+            <select name="status" value={filters.status} onChange={(e) => handleFilterChange('status', e.target.value)}>
+              <option value="">All Statuses</option>
+              <option value="Accepted">Accepted</option>
+              <option value="Pending">Pending</option>
+              <option value="Rejected">Rejected</option>
+              <option value="Completed">Completed</option>
+            </select>
+            <button onClick={handleResetFilters}>Reset Filter</button>
           </div>
-        )}
+          {view === 'list' ? (
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Workshop Name</th>
+                  <th>Address</th>
+                  <th>Date</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredData.map((workshop) => (
+                  <tr key={workshop._id || workshop.tempId} onClick={() => handleWorkshopClick(workshop._id)}>
+                    <td>{workshop._id ? workshop._id.slice(0, 8) : 'N/A'}...</td>
+                    <td>{workshop.name}</td>
+                    <td>{workshop.location}</td>
+                    <td>{moment(workshop.startDate).format('YYYY-MM-DD')}</td>
+                    <td>{workshop.type}</td>
+                    <td>{workshop.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div>
+              <Calendar
+                localizer={localizer}
+                events={events}
+                startAccessor="start"
+                endAccessor="end"
+                style={{ height: 500 }}
+                onSelectEvent={handleSelectEvent}
+              />
+              {selectedWorkshop && (
+                <div className="workshop-details">
+                  <h2>{selectedWorkshop.name}</h2>
+                  <p><strong>Address:</strong> {selectedWorkshop.location}</p>
+                  <p><strong>Date:</strong> {moment(selectedWorkshop.startDate).format('YYYY-MM-DD')}</p>
+                  <p><strong>Type:</strong> {selectedWorkshop.type}</p>
+                  <p><strong>Status:</strong> {selectedWorkshop.status}</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-    
-    <footer className="footer">
+      
+      <footer className="footer">
         <div className="footer-content">
-          <div className="footer-logo">
-            <img src="/Users/hardikshah/50.003-resource-management-application/frontend-service/react-res-management-app/public/logo192.png" alt="Logo" />
-          </div>
           <div className="footer-details">
             <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
-            <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
-            <p>1672 345 0987</p>
             <p>1672 345 0987</p>
             <p>info@company.io</p>
           </div>
