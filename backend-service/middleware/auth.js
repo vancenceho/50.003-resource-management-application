@@ -18,11 +18,11 @@ const authenticateUser = async (req, res, next) => {
     return res.status(401).send(response);
   }
   const token = req.headers.authorization.replace("Bearer ", "");
-  console.log("TESTING...............AU1.................");
+  console.log("Received Token:", token);
   try {
     console.log("TESTING...............authenticate1.................");  
     const decoded = jwt.verify(token, secretKey);
-    console.log("TESTING...............authenticate2.................");  
+    console.log("Decoded Token:", decoded);
     let user;
     console.log(token);
 
@@ -30,22 +30,25 @@ const authenticateUser = async (req, res, next) => {
     console.log(decoded);
     if (decoded.role === 'admin') {
       user = await Admin.findById(decoded.AdminId);
+      console.log("Admin user:", user);
   } 
     else if (decoded.role === 'trainer') {
       user = await Trainer.findById(decoded.TrainerId);
+      console.log("Trainer user:", user);
   } 
     /*if (decoded.role !== 'trainer') {
       return res.status(403).send({ error: "Only Trainer can perform this action" });
   }*/
     else if (decoded.role === 'client') {
       user = await Client.findById(decoded.clientId);
+      console.log("Client user:", user);
   }
     /*if (decoded.role !== 'client') {
       return res.status(403).send({ error: "Only Client can perform this action" });
   }*/
 
     if (!user) {
-      console.log(user)
+      console.log("not existing" , {user})
       response = {
         code: 404,
         type: "validation error",

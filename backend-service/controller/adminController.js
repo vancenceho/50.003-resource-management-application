@@ -28,8 +28,8 @@ exports.adminLogin = async (req, res) => {
   console.log("TESTING...............1at.................");
   let response = {};
   try {
-    const credential = req.body.credential;
-    const password = req.body.password;
+    const credential = req.query.credential;
+    const password = req.query.password;
     
     // Check if credential and password are provided
     if (!credential || !password) {
@@ -211,7 +211,7 @@ exports.createAdmin = async (req, res) => {
     }
 
     // Create a new user instance
-    const admins = new Admin({
+    const admins = new Admin({  
       _id: new mongoose.Types.ObjectId(),
       username: username,
       firstName: firstName,

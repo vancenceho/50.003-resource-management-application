@@ -39,9 +39,10 @@ describe("Testing Admin Client Endpoints", () => {
       firstName: "Robin",
       lastName: "Hood",
       email: "robin@example.com",
-      password: "12345",
+      password: "12345robin",
       role: "client"
     });
+    console.log(res.body); // Log response body for debugging
 
     expect.stringContaining("json");
     expect(res.status).toBe(200);

@@ -10,7 +10,6 @@ jest.mock("../models/trainer");
 jest.mock("../models/client");
 
 const { authenticateUser, authorizeRole } = require("../middleware/auth");
-const { describe } = require("node:test");
 
 const app = express();
 app.use(express.json());
