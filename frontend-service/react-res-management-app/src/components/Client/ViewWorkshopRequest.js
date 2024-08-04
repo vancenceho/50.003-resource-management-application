@@ -40,7 +40,7 @@ const ViewWorkshopRequest = () => {
                     venue: workshopDetails.venue || '', // Adjust based on actual data
                     numberOfAttendees: workshopDetails.maxParticipants,
                     resourcesRequired: workshopDetails.resourcesRequired || '', // Adjust based on actual data
-                    comments: workshopDetails.comments || '', // Adjust based on actual data
+                    comments: workshopDetails.description || '', // Adjust based on actual data
                 });
             } catch (error) {
                 console.error('Failed to fetch workshop details:', error);
