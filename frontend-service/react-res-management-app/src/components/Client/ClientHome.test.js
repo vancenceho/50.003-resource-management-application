@@ -1,13 +1,13 @@
 // import React from 'react';
 // import { render, screen } from '@testing-library/react';
 // import { BrowserRouter } from 'react-router-dom';
-// import AdminHome from './AdminHome';
+// import ClientHome from './ClientHome';
 
-// describe('AdminHome Component', () => {
+// describe('ClientHome Component', () => {
 //   test('renders without crashing', () => {
 //     render(
 //       <BrowserRouter>
-//         <AdminHome />
+//         <ClientHome />
 //       </BrowserRouter>
 //     );
 //   });
@@ -15,7 +15,7 @@
 //   test('renders main content correctly', () => {
 //     render(
 //       <BrowserRouter>
-//         <AdminHome />
+//         <ClientHome />
 //       </BrowserRouter>
 //     );
 //     expect(screen.getByRole('main')).toBeInTheDocument();
@@ -24,39 +24,37 @@
 //   test('renders header navigation links correctly', () => {
 //     render(
 //       <BrowserRouter>
-//         <AdminHome />
+//         <ClientHome />
 //       </BrowserRouter>
 //     );
 //     const links = screen.getAllByRole('link');
 //     const linkTexts = links.map(link => link.textContent);
 
 //     expect(linkTexts).toContain('Home');
-//     expect(linkTexts).toContain('Workshop Requests');
-//     expect(linkTexts).toContain('Dashboard');
-//     expect(linkTexts).toContain('Leave Requests');
-//     expect(linkTexts).toContain('New Admin');
-//     expect(linkTexts).toContain('New Trainer');
+//     expect(linkTexts).toContain('New Workshop Request');
+//     expect(linkTexts).toContain('Request Details');
+//     expect(linkTexts).toContain('Workshop History');
 //   });
 
 //   test('renders main content cards correctly', () => {
 //     render(
 //       <BrowserRouter>
-//         <AdminHome />
+//         <ClientHome />
 //       </BrowserRouter>
 //     );
-//     const cards = screen.getAllByAltText(/Dashboard|Leave Requests|Workshop Requests/);
+//     const cards = screen.getAllByAltText(/New Request|View Request|Workshop History/);
 
 //     expect(cards).toHaveLength(3);
 
-//     expect(cards[0]).toHaveAttribute('alt', 'Dashboard');
-//     expect(cards[1]).toHaveAttribute('alt', 'Leave Requests');
-//     expect(cards[2]).toHaveAttribute('alt', 'Workshop Requests');
+//     expect(cards[0]).toHaveAttribute('alt', 'New Request');
+//     expect(cards[1]).toHaveAttribute('alt', 'View Request');
+//     expect(cards[2]).toHaveAttribute('alt', 'Workshop History');
 //   });
 
 //   test('renders footer details correctly', () => {
 //     render(
 //       <BrowserRouter>
-//         <AdminHome />
+//         <ClientHome />
 //       </BrowserRouter>
 //     );
 //     const footerDetails = screen.getAllByText(/Level 1, 12 Sample St, Sydney NSW 2000/i);
