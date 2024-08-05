@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const { connectDB, clearDB, cleanup } = require("../models/db.js");
 const setDatabase = require("./setDatabase");
 const jwt = require("jsonwebtoken");
+const { app, dbConnectionPromise } = require("../app.js");
 
 describe("Testing Admin Trainer Endpoints", () => {
   let adminToken, trainerToken;
@@ -10,21 +11,14 @@ describe("Testing Admin Trainer Endpoints", () => {
 
   /* Connecting to the database before all tests. */
   beforeAll(async () => {
-    await connectDB();
+    await dbConnectionPromise;
     const ids = await setDatabase();
-    app = require("../app.js");
     adminToken = jwt.sign({ AdminId: ids.adminId.toString(), role: "admin" }, "root", { expiresIn: "1h" });
     client1Id = ids.clientId.toString();
     trainer1Id = ids.trainerId.toString();
     workshopId = ids.workshopId.toString(); 
     trainerToken = jwt.sign({ TrainerId: trainer1Id, role: "trainer" },  "root", { expiresIn: "1h" });
   });
-
-  /*beforeEach(async () => {
-    await setDatabase();
-    adminToken = jwt.sign({ AdminId: "66978299528ea72d01e2d308", role: "admin" }, "root", { expiresIn: "1h" });
-    //trainerToken = jwt.sign({ TrainerId: "66978299528ea72d01e2d310", role: "trainer" }, "root", { expiresIn: "1h" });
-  });*/
 
  describe("ATT.1.0 - Admin Adds a New Trainer", () => {
     it("create trainer account", async () => {

@@ -34,7 +34,7 @@ app.use("/workshop", workshopRequestRouter);
 app.use("/leaveRequest", leaveRequestRouter);
 
 // Connect to MongoDB
-connectDB().then(() => {
+const dbConnectionPromise = connectDB().then(() => {
   // Cleanup on exit
   process.on("SIGINT", async () => {
     await cleanup();
@@ -73,4 +73,4 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 
-module.exports = app;
+module.exports = { app, dbConnectionPromise };

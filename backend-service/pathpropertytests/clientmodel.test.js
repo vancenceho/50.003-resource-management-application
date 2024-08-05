@@ -4,6 +4,7 @@ const Client = require("../models/client.js");
 const fc = require("fast-check");
 const fs = require('fs');
 const path = require('path');
+const { app, dbConnectionPromise } = require("../app.js");
 
 // Function to log errors to a file
 function logErrorToFile(error) {
@@ -30,7 +31,7 @@ const sampleObjectIds = fc.sample(objectIdArbitrary, 10);
 
 describe("Client Model Test with Path Testing and MCDC", () => {
   beforeAll(async () => {
-    await connectDB();
+    await dbConnectionPromise;
   });
 
   beforeEach(async () => {

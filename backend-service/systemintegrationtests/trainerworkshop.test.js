@@ -5,7 +5,7 @@ const { connectDB, clearDB, cleanup } = require("../models/db.js");
 const setDatabase = require("./setDatabase.js");
 const jwt = require("jsonwebtoken");
 const admin = require("../models/admin.js");
-
+const { app, dbConnectionPromise } = require("../app.js");
 
 
  describe("Testing Trainer to Workshop Endpoints", () => {
@@ -14,10 +14,8 @@ const admin = require("../models/admin.js");
 
   /* Connecting to the database before all test. */
   beforeAll(async () => {
-    // Insert initial data
-    await connectDB();
+    await dbConnectionPromise;
     const ids = await setDatabase();
-    app = require("../app.js");
     adminToken = jwt.sign({ AdminId: ids.adminId.toString(), role: "admin" }, "root", { expiresIn: "1h" });
     trainerToken = jwt.sign({ TrainerId: ids.trainerId.toString(), role: "trainer" }, "root", { expiresIn: "1h" });
     client1Id = ids.clientId.toString();

@@ -2,17 +2,16 @@ const request = require('supertest');
 const setDatabase = require("../systemintegrationtests/setDatabase");
 const jwt = require("jsonwebtoken");
 const { connectDB, clearDB, cleanup } = require("../models/db.js");
+const { app, dbConnectionPromise } = require("../app.js");
 const fc = require('fast-check');
 
 describe('Dashboard Management', () => {
     let adminToken;
-    let app;
 
     beforeAll(async () => {
         // Connect to the test database
-        await connectDB();
+        await dbConnectionPromise;
         const ids = await setDatabase();
-        app = require("../app.js");
         adminToken = jwt.sign({ AdminId: ids.adminId.toString(), role: "admin" }, "root", { expiresIn: "1h" });
     });
 

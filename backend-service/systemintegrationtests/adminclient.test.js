@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const { connectDB, clearDB, cleanup } = require("../models/db.js");
 const setDatabase = require("./setDatabase");
 const jwt = require("jsonwebtoken");
+const { app, dbConnectionPromise } = require("../app.js");
+
 
 describe("Testing Admin Client Endpoints", () => {
   let adminToken;
@@ -11,22 +13,16 @@ describe("Testing Admin Client Endpoints", () => {
   
   /* Connecting to the database before all tests. */
   beforeAll(async () => {
-    await connectDB();
+    await dbConnectionPromise;
     const ids = await setDatabase();
-    app = require("../app.js");
     client1Id = ids.clientId.toString();
     trainer1Id = ids.trainerId.toString();
     workshopId = ids.workshopId.toString(); 
     adminToken = jwt.sign({ AdminId: ids.adminId.toString() , role: "admin" }, "root", { expiresIn: "1h" });
+    console.log("Generated adminToken:", adminToken);
     clientToken = jwt.sign({ clientId: client1Id, role: "client" }, "root", { expiresIn: "1h" });
 
   });
-
-  /*beforeEach(async () => {
-    await setDatabase();
-    adminToken = jwt.sign({ AdminId: "66978299528ea72d01e2d308", role: "admin" }, "root", { expiresIn: "1h" });
-    //clientToken = jwt.sign({ clientId: "66978299528ea72d01e2d309", role: "client" }, "root", { expiresIn: "1h" });
-  });*/
 
  // ACT.1.0 - Admin Adds a New Client
   describe("ACT.1.0 - Admin Adds a New Client", () => {

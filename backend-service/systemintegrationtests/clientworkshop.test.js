@@ -3,18 +3,15 @@ const mongoose = require("mongoose");
 const { connectDB, clearDB, cleanup } = require("../models/db.js");
 const setDatabase = require("./setDatabase");
 const jwt = require("jsonwebtoken");
-
+const { app, dbConnectionPromise } = require("../app.js");
 
  describe("Testing Client to Workshop Endpoints", () => {
     let clientToken;
     let client1Id, trainer1Id, workshopId;
   /* Connecting to the database before all test. */
   beforeAll(async () => {
-
-    // Insert initial data
-    await connectDB();
+    await dbConnectionPromise;
     const ids = await setDatabase();
-    app = require("../app.js");
     client1Id = ids.clientId.toString();
     trainer1Id = ids.trainerId.toString();
     workshopId = ids.workshopId.toString(); 

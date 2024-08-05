@@ -4,17 +4,15 @@ const setDatabase = require("./setDatabase");
 const jwt = require("jsonwebtoken");
 const { connectDB, clearDB, cleanup } = require("../models/db.js");
 const admin = require("../models/admin.js");
-
+const { app, dbConnectionPromise } = require("../app.js");
 
 describe('Dashboard Management', () => {
     let adminToken;
     let trainer1Id, trainer2Id, workshopId, workshopId2;
 
   beforeAll(async () => {
-    // Connect to the test database
-    await connectDB();
+    await dbConnectionPromise;
     const ids = await setDatabase();
-    app = require("../app.js");
     adminToken = jwt.sign({ AdminId: ids.adminId.toString(), role: "admin" }, "root", { expiresIn: "1h" });
     trainer1Id = ids.trainerId.toString();
     trainer2Id = ids.trainerId2.toString();

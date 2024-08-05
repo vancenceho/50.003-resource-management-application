@@ -4,28 +4,28 @@ const { connectDB, clearDB, cleanup } = require("../models/db.js");
 const setDatabase = require("./setDatabase");
 const jwt = require("jsonwebtoken");
 const fc = require("fast-check");
+const { app, dbConnectionPromise } = require("../app.js");
 
 // Mock the setDatabase module
 jest.mock("./setDatabase");
 
 describe("Testing Admin Client Endpoints", () => {
-  let app;
   let adminToken;
   let client1Id;
 
   /* Connecting to the database before all tests. */
   beforeAll(async () => {
-    await connectDB();
+    await dbConnectionPromise;
     const ids = {
       clientId: new mongoose.Types.ObjectId(),
       adminId: new mongoose.Types.ObjectId(),
     };
     console.log("Generated IDs:", ids);
-    setDatabase.mockResolvedValue(ids);
-    app = require("../app.js");
+    //setDatabase.mockResolvedValue(ids);
     client1Id = ids.clientId.toString();
     adminToken = jwt.sign({ AdminId: ids.adminId.toString(), role: "admin" }, "root", { expiresIn: "1h" });
-   
+    setDatabase.mockResolvedValue(ids);
+    console.log("Generated adminToken:", adminToken);
   });
 
 // ACT.1.0 - Admin Adds a New Client with fuzzing

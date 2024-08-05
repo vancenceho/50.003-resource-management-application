@@ -1,9 +1,8 @@
 const request = require('supertest');
 const { connectDB, clearDB, cleanup } = require('../models/db.js');
 const jwt = require('jsonwebtoken');
-const { describe, it, beforeAll, afterAll, expect } = require('@jest/globals');
 const fastCheck = require('fast-check');
-const app = require('../app.js');
+const { app, dbConnectionPromise } = require("../app.js");
 const setDatabase = require("../systemintegrationtests/setDatabase");
 
 
@@ -12,8 +11,7 @@ let workshopId;
 
 beforeAll(async () => {
   // Connect to the test database
-  await connectDB();
-  // Setup database and obtain test data
+  await dbConnectionPromise;
   const ids = await setDatabase();
   adminToken = jwt.sign({ AdminId: ids.adminId.toString(), role: 'admin' }, 'root', { expiresIn: '1h' });
   workshopId = ids.workshopId.toString(); 
