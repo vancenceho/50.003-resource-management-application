@@ -1,54 +1,44 @@
-// import React from 'react';
-// import { render } from '@testing-library/react';
-// import { BrowserRouter as Router } from 'react-router-dom';
-// import AdminCalendarView from './AdminCalendarView';
+import React from 'react';
+import { render, screen, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom';
+import AdminCalendarView from './AdminCalendarView';
 
-// describe('AdminCalendarView', () => {
-//   test('renders without crashing', () => {
-//     render(
-//       <Router>
-//         <AdminCalendarView />
-//       </Router>
-//     );
-//     // Add specific assertions if needed
-//   });
+describe('AdminCalendarView Component', () => {
+  // Increase timeout to 10 seconds for all tests in this suite
+  jest.setTimeout(10000);
 
-//   test('renders navigation links with correct text', () => {
-//     const { getByText } = render(
-//       <Router>
-//         <AdminCalendarView />
-//       </Router>
-//     );
+  test('renders the Admin Calendar View page and calendar', async () => {
+    render(
+      <MemoryRouter>
+        <AdminCalendarView />
+      </MemoryRouter>
+    );
 
-//     // Check each navigation link
-//     expect(getByText(/Home/i)).toBeInTheDocument();
-//     expect(getByText(/Workshop Requests/i)).toBeInTheDocument();
-//     expect(getByText(/Dashboard/i)).toBeInTheDocument();
-//     expect(getByText(/Leave Requests/i)).toBeInTheDocument();
-//     expect(getByText(/New Admin/i)).toBeInTheDocument();
-//     expect(getByText(/New Trainer/i)).toBeInTheDocument();
-//   });
+    await waitFor(() => {
+      expect(screen.getByRole('heading', { name: /Workshop Calendar/i })).toBeInTheDocument();
+    });
 
-//   test('renders the calendar component', () => {
-//     const { container } = render(
-//       <Router>
-//         <AdminCalendarView />
-//       </Router>
-//     );
+    expect(screen.getByText('Home')).toBeInTheDocument();
+    expect(screen.getByText('Workshop Requests')).toBeInTheDocument();
+    expect(screen.getByText('Dashboard')).toBeInTheDocument();
+    expect(screen.getByText('Leave Requests')).toBeInTheDocument();
+  });
 
-//     // Check if the calendar is in the document
-//     const calendar = container.querySelector('.rbc-calendar');
-//     expect(calendar).toBeInTheDocument();
-//   });
+  test('renders navigation links', async () => {
+    render(
+      <MemoryRouter>
+        <AdminCalendarView />
+      </MemoryRouter>
+    );
 
-//   test('renders the header title correctly', () => {
-//     const { getByText } = render(
-//       <Router>
-//         <AdminCalendarView />
-//       </Router>
-//     );
+    await waitFor(() => {
+      expect(screen.getByText('Home')).toBeInTheDocument();
+    });
 
-//     // Check header title text
-//     expect(getByText(/Workshop Calendar/i)).toBeInTheDocument();
-//   });
-// });
+    expect(screen.getByText('Home')).toBeInTheDocument();
+    expect(screen.getByText('Workshop Requests')).toBeInTheDocument();
+    expect(screen.getByText('Dashboard')).toBeInTheDocument();
+    expect(screen.getByText('Leave Requests')).toBeInTheDocument();
+  });
+});

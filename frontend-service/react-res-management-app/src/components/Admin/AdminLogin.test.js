@@ -1,55 +1,52 @@
-// import React from 'react';
-// import { render, screen, fireEvent } from '@testing-library/react';
-// import AdminLoginPage from './AdminLogin';
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import AdminLoginPage from './AdminLogin';
 
-// describe('AdminLoginPage Component', () => {
-//   test('renders without crashing', () => {
-//     render(<AdminLoginPage />);
-//   });
+beforeAll(() => {
+  global.console = {
+    log: jest.fn(),
+    // Add other console methods if needed
+  };
+});
 
-//   test('renders the login form correctly', () => {
-//     render(<AdminLoginPage />);
-//     expect(screen.getByPlaceholderText('Username')).toBeInTheDocument();
-//     expect(screen.getByPlaceholderText('Password')).toBeInTheDocument();
-//     expect(screen.getByText('Log In')).toBeInTheDocument();
-//   });
+test('renders AdminLoginPage', () => {
+  render(
+    <Router>
+      <AdminLoginPage />
+    </Router>
+  );
 
-//   test('updates username and password fields on input change', () => {
-//     render(<AdminLoginPage />);
+  // Check if the logo is present
+  const logo = screen.getByAltText(/Dell Technologies/i);
+  expect(logo).toBeInTheDocument();
 
-//     const usernameInput = screen.getByPlaceholderText('Username');
-//     const passwordInput = screen.getByPlaceholderText('Password');
+  // Check if the heading is present
+  expect(screen.getByRole('heading', { name: /Sign In To Admin Account/i })).toBeInTheDocument();
 
-//     fireEvent.change(usernameInput, { target: { value: 'testuser' } });
-//     fireEvent.change(passwordInput, { target: { value: 'testpass' } });
+  // Check if the username and password input fields are present
+  expect(screen.getByPlaceholderText(/Username/i)).toBeInTheDocument();
+  expect(screen.getByPlaceholderText(/Password/i)).toBeInTheDocument();
 
-//     expect(usernameInput.value).toBe('testuser');
-//     expect(passwordInput.value).toBe('testpass');
-//   });
+  // Check if the login button is present
+  expect(screen.getByRole('button', { name: /Log In/i })).toBeInTheDocument();
+});
 
-//   test('handles form submission', () => {
-//     render(<AdminLoginPage />);
+test('submits the login form', () => {
+  render(
+    <Router>
+      <AdminLoginPage />
+    </Router>
+  );
 
-//     const usernameInput = screen.getByPlaceholderText('Username');
-//     const passwordInput = screen.getByPlaceholderText('Password');
-//     const loginButton = screen.getByText('Log In');
+  // Fill in the username and password fields
+  fireEvent.change(screen.getByPlaceholderText(/Username/i), { target: { value: 'testadmin' } });
+  fireEvent.change(screen.getByPlaceholderText(/Password/i), { target: { value: 'adminpassword' } });
 
-//     fireEvent.change(usernameInput, { target: { value: 'testuser' } });
-//     fireEvent.change(passwordInput, { target: { value: 'testpass' } });
-//     fireEvent.click(loginButton);
+  // Submit the form
+  fireEvent.click(screen.getByRole('button', { name: /Log In/i }));
 
-//     // Assuming handleSubmit logs the username and password
-//     // This can be verified by checking console output or mock function
-//     // For this test case, you might want to mock the console or verify side effects
-//   });
-
-//   test('renders the Dell logo correctly', () => {
-//     render(<AdminLoginPage />);
-//     expect(screen.getByAltText('Dell Technologies')).toBeInTheDocument();
-//   });
-
-//   test('renders header text correctly', () => {
-//     render(<AdminLoginPage />);
-//     expect(screen.getByText('Sign In To Admin Account')).toBeInTheDocument();
-//   });
-// });
+  // Check if the console logs are correct
+  expect(console.log).toHaveBeenCalledWith('Username:', 'testadmin');
+  expect(console.log).toHaveBeenCalledWith('Password:', 'adminpassword');
+});
