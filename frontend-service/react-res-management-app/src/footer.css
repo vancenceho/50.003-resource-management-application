@@ -1,0 +1,23 @@
+.footer-logo {
+  margin-bottom: -15px;
+}
+
+.footer-details {
+  color: antiquewhite;
+  font-size: 14px;
+  header {
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+  }
+}
+
+.footer-contributions {
+  color: antiquewhite;
+  font-size: 15px;
+  text-align: left;
+}
+
+.footer-bottom {
+  font-size: large;
+}

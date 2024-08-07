@@ -22,6 +22,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import "./AdminHome.css";
 import NavBar from "./NavBar";
+import Footer from "../../footer";
 import axios from "axios";
 import bcrypt from "bcryptjs";
 
@@ -357,6 +358,7 @@ const AdminTrainers = () => {
           </Form.Item>
         </Form>
       </Modal>
+      <Footer />
     </>
   );
 };
