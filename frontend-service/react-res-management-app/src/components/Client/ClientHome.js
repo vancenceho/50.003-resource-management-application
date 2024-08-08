@@ -1,6 +1,15 @@
+<<<<<<< HEAD
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import "./ClientHome.css";
+import { Button } from "antd";
+import axios from "axios";
+import Footer from "../../footer";
+=======
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './ClientHome.css';
+>>>>>>> 7e2578a9926dee7f291da5e54f6a86e178260696
 
 const ClientHome = () => {
   return (
@@ -45,6 +54,9 @@ const ClientHome = () => {
       <div className="footer-logo">
         <img src="/Users/hardikshah/50.003-resource-management-application/frontend-service/react-res-management-app/public/logo192.png" alt="Logo" />
       </div>
+<<<<<<< HEAD
+      <Footer />
+=======
       <div className="footer-details">
         <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
         <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
@@ -67,6 +79,7 @@ const ClientHome = () => {
       <a href="#">Cookies Settings</a>
     </div>
   </footer>
+>>>>>>> 7e2578a9926dee7f291da5e54f6a86e178260696
     </>
   );
 };

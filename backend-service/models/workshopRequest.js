@@ -55,7 +55,7 @@ const workshopSchema = new Schema({
     default: "workshop",
   },
   maxParticipants: {
-    type: Number,
+    type: String,
     required: true,
   },
   client: {
@@ -63,13 +63,18 @@ const workshopSchema = new Schema({
     ref: "Client",
     required: true,
   },
-  trainer: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Trainer",
-    required: true,
-  }],
-  dealSize: Number, //total amount of money involved in the deal
-
+  trainer: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Trainer",
+      required: true,
+    },
+  ],
+  dealSize: {
+    type: Number, //total amount of money involved in the deal
+    required: false,
+    default: 0,
+  },
 });
 
 module.exports = mongoose.model("Workshop", workshopSchema);

@@ -1,3 +1,21 @@
+<<<<<<< HEAD
+import React, { useState, useEffect } from "react";
+import "./AdminHome.css";
+
+import NavBar from "./NavBar";
+import Footer from "../../footer";
+
+const AdminHome = () => {
+  useEffect(() => {
+    document.title = "Dell Resources | Home";
+  }, []);
+
+  return (
+    <>
+      <header className="App-header">
+        <NavBar />
+      </header>
+=======
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './AdminHome.css';
@@ -18,6 +36,7 @@ const AdminHome = () => {
             </ul>
           </nav>
     </header>
+>>>>>>> 7e2578a9926dee7f291da5e54f6a86e178260696
 
     <div className="home-container">
 
@@ -47,6 +66,9 @@ const AdminHome = () => {
       <div className="footer-logo">
         <img src="/Users/hardikshah/50.003-resource-management-application/frontend-service/react-res-management-app/public/logo192.png" alt="Logo" />
       </div>
+<<<<<<< HEAD
+      <Footer />
+=======
       <div className="footer-details">
         <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
         <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
@@ -69,6 +91,7 @@ const AdminHome = () => {
       <a href="#">Cookies Settings</a>
     </div>
   </footer>
+>>>>>>> 7e2578a9926dee7f291da5e54f6a86e178260696
     </>
   );
 };

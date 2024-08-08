@@ -1625,6 +1625,12 @@ components:
           type: string
           example: 668d5ba4a5f8eca9ff47283e
           description: MongoDB ObjectID as a hexadecimal string.
+        clientCompany:
+          type: string
+          example: Dell Technologies
+        clientType:
+          type: string
+          example: MNC
         name:
           type: string
           example: Introduction to Dell Technologies
@@ -1671,18 +1677,26 @@ components:
             - talks
             - educational
         maxParticipants:
-          type: integer
-          example: 20
+          type: string
+          example: 10 - 20
+          enum:
+            - < 10
+            - 10 - 20
+            - 20 - 50
+            - 50 >
+        dealSize:
+          type: number
+          example: 1000
         client:
           type: string
-          example: 668d5ba4a5f8eca9ff47283e
+          example: 66adbcece3ee4ea68b4bf464
           description: MongoDB ObjectID as a hexadecimal string.
         trainer:
           type: object
           properties:
             _id:
               type: string
-              example: 668d5ba4a5f8eca9ff47283e
+              example: 66ae4c8cfa5e0145c88f8dc5
               description: MongoDB ObjectID as a hexadecimal string.
       xml:
         name: workshop
@@ -1694,9 +1708,12 @@ components:
           example: 668d5ba4a5f8eca9ff47283e
           description: MongoDB ObjectID as a hexadecimal string.
         trainer:
-          type: string
-          example: 668d5ba4a5f8eca9ff47283e
-          description: MongoDB ObjectID of trainer as a hexadecimal string.
+          type: object
+          properties:
+            _id:
+              type: string
+              example: 66ae4c8cfa5e0145c88f8dc5
+              description: MongoDB ObjectID as a hexadecimal string.
         startDate:
           type: string
           example: 12th July 2024

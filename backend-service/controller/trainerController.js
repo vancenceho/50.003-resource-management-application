@@ -217,8 +217,10 @@ exports.createTrainer = async (req, res) => {
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-    // Check if a trainer with the same userName already exists
-    const existingTrainer = await Trainer.findOne({ username: username });
+    // Check if a trainer with the same username or email already exists
+    const existingTrainer = await Trainer.findOne({
+      $or: [{ username: username }, { email: email }],
+    });
     if (existingTrainer) {
       response = {
         code: 409,
