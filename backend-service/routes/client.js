@@ -21,7 +21,7 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth.js"); //
  *
  */
 router.post("/login", clientController.clientLogin);
-router.get("/logout", clientController.clientLogout);
+router.post("/logout", clientController.clientLogout);
 router.get("/getClients", clientController.getAllClients);
 router.post("/createClient", clientController.createClient);
 
