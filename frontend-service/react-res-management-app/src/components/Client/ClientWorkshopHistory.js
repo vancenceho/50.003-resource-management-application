@@ -6,6 +6,7 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./ClientWorkshopHistory.css";
+import NavBar from "./NavBar";
 import Footer from "../../footer";
 
 const localizer = momentLocalizer(moment);
@@ -108,22 +109,7 @@ function ClientWorkshopHistory() {
   return (
     <>
       <header className="App-header">
-        <nav className="navbar">
-          <ul className="navbar-list">
-            <li>
-              <Link to="/client-home">Home</Link>
-            </li>
-            <li>
-              <Link to="/client-new-request">New Workshop Request</Link>
-            </li>
-            <li>
-              <Link to="/client-request-details">Request Details</Link>
-            </li>
-            <li>
-              <Link to="/client-workshop-history">Workshop History</Link>
-            </li>
-          </ul>
-        </nav>
+        <NavBar />
       </header>
 
       <div className="admin-workshop-requests">

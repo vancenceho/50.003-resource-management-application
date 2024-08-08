@@ -65,7 +65,7 @@ const NavBar = (onUserCreated) => {
 
   const handleLogout = () => {
     axios
-      .post("http://localhost:3000/client/logout")
+      .post("http://localhost:3000/admin/logout")
       .then((response) => {
         if (response.status === 200) {
           console.log("Admin logged out successfully!");

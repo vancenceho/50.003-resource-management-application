@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import "./NewWorkshopRequest.css";
 import axios from "axios";
 import moment from "moment";
+import NavBar from "./NavBar";
 import Footer from "../../footer";
 
 const NewWorkshopRequest = () => {
@@ -123,22 +124,7 @@ const NewWorkshopRequest = () => {
   return (
     <>
       <header className="App-header">
-        <nav className="navbar">
-          <ul className="navbar-list">
-            <li>
-              <Link to="/client-home">Home</Link>
-            </li>
-            <li>
-              <Link to="/client-new-request">New Workshop Request</Link>
-            </li>
-            <li>
-              <Link to="/client-request-details">Request Details</Link>
-            </li>
-            <li>
-              <Link to="/client-workshop-history">Workshop History</Link>
-            </li>
-          </ul>
-        </nav>
+        <NavBar />
       </header>
       <div className="edit-workshop-request">
         <h2>New Workshop Request</h2>

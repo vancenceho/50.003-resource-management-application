@@ -28,11 +28,13 @@ const secretKey = "root";
 exports.trainerLogin = async (req, res) => {
   console.log("Request body:", req.body);
   try {
-    const credential = req.body.credential;
-    const password = req.body.password;
+    const credential = req.query.credential;
+    const password = req.query.password;
     // Check if credential and password are provided
     if (!credential || !password) {
-      return res.status(400).json({ message: "Credential and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Credential and password are required" });
     }
 
     let query = {};
