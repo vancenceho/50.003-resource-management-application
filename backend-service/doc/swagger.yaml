@@ -146,12 +146,8 @@ paths:
             application/xml:
               schema:
                 $ref: "#/components/schemas/successfulResponse"
-        "400":
-          description: Bad Request! All Fields Are Required
         "401":
-          description: Password Incorrect
-        "404":
-          description: Admin Not Found
+          description: username or password incorrect
         "500":
           description: "Error Logging In: Internal Server Error"
   /admin/logout:
@@ -1036,12 +1032,10 @@ paths:
             application/xml:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
-        "400":
-          description: "Bad Request! All Fields Are Required"
         "401":
-          description: Password Incorrect
+          description: usernmae or password incorrect
         "404":
-          description: Client Not Found
+          description: Invalid username/password supplied
         "500":
           description: "Error Logging In: Internal Server Error"
   /client/logout:
@@ -1167,12 +1161,10 @@ paths:
             application/xml:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
-        "400":
-          description: "Bad Request! All Fields Are Required"
         "401":
-          description: Password Incorrect
+          description: username or password incorrect
         "404":
-          description: Trainer Not Found
+          description: Invalid username/password supplied
         "500":
           description: "Error Logging In: Internal Server Error"
   /trainer/logout:

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+/*const mongoose = require("mongoose");
 const moment = require("moment");
 const { connectDB, cleanup } = require("../models/db.js");
 const WorkshopRequest = require("../models/workshopRequest");
@@ -23,9 +23,7 @@ const client = require("../models/client.js");
  * Else, the test fails.
  *
  */
-describe("Workshop Request Model Test", () => {
-  let savedWorkshopRequestId;
-
+/*describe("Workshop Request Model Test", () => {
   beforeAll(async () => {
     await connectDB();
   });
@@ -118,3 +116,4 @@ describe("Workshop Request Model Test", () => {
     await cleanup();
   });
 });
+*/

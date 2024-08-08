@@ -21,7 +21,7 @@ describe("Testing Authentication Middleware", () => {
   });
 
   describe("Testing authenticateUser()", () => {
-    it("should reject requests without authorization token", async () => {
+    it("should rejest requests without authorization token", async () => {
       const response = await request(app).get("/test");
       expect(response.status).toBe(401);
       expect(response.body).toEqual({
