@@ -17,7 +17,6 @@ import {
   Table,
   Tag,
   Modal,
-  Card,
   Form,
   Input,
   DatePicker,
@@ -47,6 +46,10 @@ function AdminWorkshopRequests() {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [editFormData, setEditFormData] = useState({});
   const [trainers, setTrainers] = useState([]);
+
+  useEffect(() => {
+    document.title = "Dell Resources | Workshop Requests";
+  }, []);
 
   useEffect(() => {
     axios

@@ -1,14 +1,49 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
 import { Link } from "react-router-dom";
 import "./AdminDashboard.css";
+import { Card, Col, Row, Statistic } from "antd";
 import NavBar from "./NavBar";
 import Footer from "../../footer";
+
+import axios from "axios";
 
 const AdminDashboard = () => {
   const dealSizesChartRef = useRef(null);
   const pipelineChartRef = useRef(null);
   const trainerBreakdownChartRef = useRef(null);
+
+  // define constant for total requests
+  const [totalRequests, setRequests] = useState(null); // total requests
+  const [acceptedRequests, setAcceptedRequests] = useState(null); // accepted requests
+  const [pendingRequests, setPendingRequests] = useState(null); // pending requests
+  const [rejectedRequests, setRejectedRequests] = useState(null); // rejected requests
+
+  // useEffect to get total workshop request data
+  useEffect(() => {
+    document.title = "Dell Resources | Admin Dashboard";
+
+    // function to count total requests
+    axios
+      .get("http://localhost:3000/admin/getworkshop", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        setRequests(response.data.length);
+        setAcceptedRequests(
+          response.data.filter((req) => req.status === "accepted").length
+        );
+        setPendingRequests(
+          response.data.filter((req) => req.status === "pending").length
+        );
+        setRejectedRequests(
+          response.data.filter((req) => req.status === "rejected").length
+        );
+      });
+  }, []);
 
   useEffect(() => {
     // Deal Sizes Chart
@@ -123,23 +158,46 @@ const AdminDashboard = () => {
       <div className="container">
         <main>
           <h1>DASHBOARD</h1>
-          <div className="stats">
-            <div className="stat">
-              <p>Total Requests</p>
-              <h8>406</h8>
-            </div>
-            <div className="stat">
-              <p>Accepted Requests</p>
-              <h8>293</h8>
-            </div>
-            <div className="stat">
-              <p>Pending Requests</p>
-              <h8>89</h8>
-            </div>
-            <div className="stat">
-              <p>Rejected Requests</p>
-              <h8>24</h8>
-            </div>
+          <div className="cards">
+            <Row gutter={16}>
+              <Col span={6}>
+                <Card bordered={true} style={{ borderColor: "#0b57d0" }}>
+                  <Statistic
+                    title="Total Requests"
+                    value={totalRequests}
+                    valueStyle={{ color: "#0b57d0" }}
+                    loading={false}
+                  />
+                </Card>
+              </Col>
+              <Col span={6}>
+                <Card bordered={true} style={{ borderColor: "#0b57d0" }}>
+                  <Statistic
+                    title="Accepted Requests"
+                    value={acceptedRequests}
+                    valueStyle={{ color: "#0b57d0" }}
+                  />
+                </Card>
+              </Col>
+              <Col span={6}>
+                <Card bordered={true} style={{ borderColor: "#0b57d0" }}>
+                  <Statistic
+                    title="Pending Requests"
+                    value={pendingRequests}
+                    valueStyle={{ color: "#0b57d0" }}
+                  />
+                </Card>
+              </Col>
+              <Col span={6}>
+                <Card bordered={true} style={{ borderColor: "#0b57d0" }}>
+                  <Statistic
+                    title="Rejected Requests"
+                    value={rejectedRequests}
+                    valueStyle={{ color: "#0b57d0" }}
+                  />
+                </Card>
+              </Col>
+            </Row>
           </div>
           <div className="charts">
             <div className="chart wide">
