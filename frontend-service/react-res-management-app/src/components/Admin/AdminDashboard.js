@@ -101,6 +101,8 @@ const AdminDashboard = () => {
             <li><Link to="/workshop-requests">Workshop Requests</Link></li>
             <li><Link to="/dashboard">Dashboard</Link></li>
             <li><Link to="/leave-requests">Leave Requests</Link></li>
+            <li><Link to="/create-admin">New Admin</Link></li>
+            <li><Link to="/create-trainer">New Trainer</Link></li>
           </ul>
         </nav>
       </header>
@@ -154,6 +156,9 @@ const AdminDashboard = () => {
       </div>
       <footer className="footer">
         <div className="footer-content">
+          <div className="footer-logo">
+            <img src="/Users/hardikshah/50.003-resource-management-application/frontend-service/react-res-management-app/public/logo192.png" alt="Logo" />
+          </div>
           <div className="footer-details">
             <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
             <p>Level 1, 12 Sample St, Sydney NSW 2000</p>

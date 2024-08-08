@@ -19,15 +19,13 @@
 .signin-container {
   top: 50%;
   left: 50%;
-  right: 50%;
-  bottom: 50%;
   transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
   position: absolute;
   background-color: #ffffff;
-  width: 500px;
+  width: 450px;
   height: fit-content;
   display: flex;
   border-radius: 15px;
@@ -55,7 +53,6 @@
   border-color: #fff;
   border-radius: 25px;
   margin-right: 10px;
-  margin-left: 10px;
   padding: 10px;
   padding-top: 25px;
   padding-bottom: 25px;
