@@ -26,16 +26,13 @@ const secretKey = "root";
  * If there is an error logging in the trainer, returns a 500 status code with an error message.
  */
 exports.trainerLogin = async (req, res) => {
-  let response = {};
   console.log("Request body:", req.body);
   try {
-    const credential = req.query.credential;
-    const password = req.query.password;
+    const credential = req.body.credential;
+    const password = req.body.password;
     // Check if credential and password are provided
     if (!credential || !password) {
-      return res
-        .status(400)
-        .json({ message: "Credential and password are required" });
+      return res.status(400).json({ message: "Credential and password are required" });
     }
 
     let query = {};
@@ -48,7 +45,7 @@ exports.trainerLogin = async (req, res) => {
     const trainer = await Trainer.findOne(query);
 
     if (!trainer) {
-      return res.status(404).json({ message: "Incorrect username or email." });
+      return res.status(401).json({ message: "Incorrect username or email." });
     }
     const result = await bcrypt.compare(password, trainer.password);
     if (!result) {
@@ -64,16 +61,9 @@ exports.trainerLogin = async (req, res) => {
         expiresIn: "1h",
       }
     );
-    response = {
-      code: 200,
-      type: "success",
-      message: "Authentication successful",
-      userId: trainer._id,
-      username: trainer.username,
-      token: token,
-      role: trainer.role,
-    };
-    return res.status(200).json(response);
+    return res
+      .status(200)
+      .json({ message: "Authentication successful", token: token });
   } catch (error) {
     console.error("Error logging in trainer: ", error);
     if (!res.headersSent) {
@@ -97,22 +87,12 @@ exports.trainerLogin = async (req, res) => {
  * If there is an error logging out the user, returns a 500 status code with an error message.
  */
 exports.trainerLogout = async (req, res) => {
-  let response = {};
   try {
-    response = {
-      code: 200,
-      type: "success",
-      message: "Trainer logged out successfully",
-    };
-    res.status(200).json(response);
+    // TODO: Implement logout functionality
+    res.status(200).json({ message: "Trainer logged out" });
   } catch (error) {
     console.error("Error logging out trainer:", error);
-    response = {
-      code: 500,
-      type: "server error",
-      message: "Internal Server Error",
-    };
-    res.status(500).json(response);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

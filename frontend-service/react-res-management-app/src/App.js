@@ -48,18 +48,10 @@ function App() {
 
           <Route path="/client-home" element={<ClientHome />} />
           <Route path="/client-new-request" element={<NewWorkshopRequest />} />
-          <Route
-            path="/client-request-submitted"
-            element={<RequestSubmitted />}
-          />
-          <Route
-            path="/client-request-details"
-            element={<ViewWorkshopRequest />}
-          />
-          <Route
-            path="/client-workshop-history"
-            element={<ClientWorkshopHistory />}
-          />
+          <Route path="/client-request-submitted" element={<RequestSubmitted />} />
+          <Route path="/client-request-details" element={<ViewWorkshopRequest />} />
+          <Route path="/client-workshop-history" element={<ClientWorkshopHistory />} />
+
         </Routes>
       </div>
     </Router>
