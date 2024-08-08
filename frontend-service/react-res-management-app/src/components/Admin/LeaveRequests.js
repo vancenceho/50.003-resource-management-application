@@ -116,8 +116,7 @@ const LeaveRequests = () => {
               dateFormat="yyyy-MM-dd"
               placeholderText="Select Date"
             />
-            <label htmlFor="trainer">Trainer</label>
-            <select name="trainer" id="trainer" value={filters.trainer} onChange={(e) => handleFilterChange('trainer', e.target.value)}>
+            <select name="trainer" value={filters.trainer} onChange={(e) => handleFilterChange('trainer', e.target.value)}>
               <option value="">All Trainers</option>
               <option value="Trainer 1">Trainer 1</option>
               <option value="Trainer 2">Trainer 2</option>
@@ -126,8 +125,7 @@ const LeaveRequests = () => {
               <option value="Trainer 5">Trainer 5</option>
               <option value="Trainer 6">Trainer 6</option>
             </select>
-            <label htmlFor="status">Status</label>
-            <select name="status" id="status" value={filters.status} onChange={(e) => handleFilterChange('status', e.target.value)}>
+            <select name="status" value={filters.status} onChange={(e) => handleFilterChange('status', e.target.value)}>
               <option value="">All Statuses</option>
               <option value="Pending">Pending</option>
               <option value="Accepted">Accepted</option>
