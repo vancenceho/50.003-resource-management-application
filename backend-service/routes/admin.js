@@ -169,6 +169,7 @@ router.delete(
  * Route 3: Route to create a new workshop request
  * Route 4: Route to update a workshop request
  * Route 5: Route to delete a workshop request
+ * Route 6: Route to allocate a trainer to a workshop
  *
  * @returns
  * Route 1: Returns a 200 status code with the workshop requests data.
@@ -176,6 +177,7 @@ router.delete(
  * Route 3: Returns a 200 status code with the new workshop request data.
  * Route 4: Returns a 200 status code with the updated workshop request data.
  * Route 5: Returns a 200 status code with the deleted workshop request data.
+ * Route 6: Returns a 200 status code with the allocated trainer data.
  *
  * @throws
  * Route 1 - 5: Returns a 500 status code with an error message if there is an error.

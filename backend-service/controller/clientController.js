@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const secretKey = "root";
+const { body, validationResult } = require('express-validator');
 
 /**
  * // Client Login
@@ -156,7 +157,21 @@ exports.getAllClients = async (req, res) => {
  * If required fields are not provided, returns a 400 status code with an error message.
  * If a user with the same username already exists, returns a 409 status code with an error message.
  */
+
 exports.createClient = async (req, res) => {
+  // Validate and sanitize input
+  await body('username').notEmpty().trim().escape().run(req);
+  await body('firstName').notEmpty().trim().escape().run(req);
+  await body('lastName').notEmpty().trim().escape().run(req);
+  await body('email').isEmail().normalizeEmail().run(req);
+  await body('password').notEmpty().trim().escape().run(req);
+  await body('role').isIn(['client']).run(req);
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
   try {
     console.log(req.body);
     const { username, firstName, lastName, email, password, role } = req.body;
@@ -169,6 +184,42 @@ exports.createClient = async (req, res) => {
       };
       return res.status(400).json(response);
     }
+
+    // Validate username, firstName, lastName
+    const usernameRegex = /^[a-zA-Z0-9]{3,30}$/;
+    const nameRegex = /^[a-zA-Z]{2,50}$/;
+    if (!usernameRegex.test(username) || !nameRegex.test(firstName) || !nameRegex.test(lastName)) {
+      response = {
+        code: 400,
+        type: "validation error",
+        message: "Invalid username or name format",
+      };
+      return res.status(400).json(response);
+    }
+  
+    // Example regex adjustment for passwords
+    const passwordRegex = /^(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        code: 400,
+        type: "validation error",
+        message: "Password must be at least 8 characters long and include both letters and numbers.",
+      });
+    }
+    // Validate email using the custom function
+    function isValidEmail(email) {
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      return emailRegex.test(email);
+    }
+
+    if (!isValidEmail(email)) {
+      return res.status(400).json({
+        code: 400,
+        type: "validation error",
+        message: "Invalid email format",
+      });
+    }
+
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 

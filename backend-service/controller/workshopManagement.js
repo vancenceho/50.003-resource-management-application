@@ -98,6 +98,15 @@ exports.getWorkshopRequestById = async (req, res) => {
 exports.createWorkshopRequest = async (req, res) => {
   try {
     console.log("TESTING...............5at.................");
+    // Validate input
+    if (!req.body.name || !req.body.startDate || !req.body.endDate) {
+      return res.status(400).json({
+        code: 400,
+        type: "client error",
+        message: "Invalid input: name, startDate, and endDate are required",
+      });
+    }
+
     const workshop = new Workshop({
       _id: new mongoose.Types.ObjectId(),
       clientCompany: req.body.clientCompany,
@@ -122,6 +131,15 @@ exports.createWorkshopRequest = async (req, res) => {
     console.log("Workshop request created: ", data);
     res.status(200).json(data);
   } catch (error) {
+    if (error.name === 'validation error') {
+      return res.status(422).json({
+        code: 422,
+        type: "validation error",
+        message: "Validation exception",
+        details: error.message,
+      });
+    }
+
     const response = {
       code: 500,
       type: "server error",
@@ -159,6 +177,17 @@ exports.updateWorkshopRequest = async (req, res) => {
   try {
     const id = req.params.id;
     const { _id, ...updateData } = req.body;
+    
+    // Validate input data
+    if (!id || Object.keys(updateData).length === 0) {
+      response = {
+        code: 400,
+        type: "validation error",
+        message: "Invalid input data",
+      };
+      return res.status(400).json(response);
+    }
+
     const data = await Workshop.findByIdAndUpdate(id, updateData);
     if (!data) {
       response = {
@@ -501,6 +530,10 @@ exports.getWorkshopsCountForTrainers = async (req, res) => {
       "month"
     );
     const parsedEndMonth = moment(endMonth, "MMMM YYYY", true).endOf("month");
+
+    if (parsedStartMonth.isAfter(parsedEndMonth)) {
+      return res.status(400).json({ code: 400, message: "Start month cannot be after end month" });
+    }
 
     console.log("Parsed Start Month:", parsedStartMonth);
     console.log("Parsed End Month:", parsedEndMonth);

@@ -55,14 +55,14 @@ exports.getLeaveRequestByTrainerId = async (req, res) => {
   let response = {};
   try {
     const trainerId = req.query.trainerId;
-    const leaveRequest = await LeaveRequest.findOne({ trainerId: trainerId });
+    const leaveRequest = await LeaveRequest.find({ trainerId: trainerId });
     if (!leaveRequest) {
       response = {
         code: 404,
         type: "validation error",
         message: "Leave request not found",
       };
-      res.status(404).json(response);
+      return res.status(404).json(response);
     }
     res.status(200).json(leaveRequest);
   } catch (error) {
@@ -72,15 +72,9 @@ exports.getLeaveRequestByTrainerId = async (req, res) => {
       message: "Internal Server Error",
     };
     console.error("Error getting leave request by trainer id: ", error);
-    res.status(500).json(response);
+    return res.status(500).json(response);
   }
 };
-
-/**
- * // Get Leave Request by Trainer Username
- *
- * @todo: Implement this function
- */
 
 /**
  * // Create Leave Request
@@ -151,21 +145,21 @@ exports.updateLeaveRequest = async (req, res) => {
   try {
     const id = req.params.id;
     const { _id, ...updateData } = req.body;
-    const data = await LeaveRequest.findByIdAndUpdate(id, updateData);
+    const data = await LeaveRequest.findByIdAndUpdate(id, updateData, { new: true });
     if (!data) {
       response = {
         code: 404,
         type: "validation error",
         message: "Leave request not found",
       };
-      res.status(404).json(response);
+      return res.status(404).json(response);
     }
     response = {
       code: 200,
       message: "Leave request successfully updated",
       leaveRequest: updateData,
     };
-    res.status(200).json(response);
+    return res.status(200).json(response);
   } catch (error) {
     response = {
       code: 500,
@@ -174,7 +168,7 @@ exports.updateLeaveRequest = async (req, res) => {
     };
     console.error("Error updating leave request: ", error);
     if (!res.headersSent) {
-      res.status(500).json(response);
+      return res.status(500).json(response);
     }
   }
 };
