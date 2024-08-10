@@ -1,188 +1,529 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-import './AdminWorkshopRequests.css';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import "react-datepicker/dist/react-datepicker.css";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import moment from "moment";
+
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "./AdminWorkshopRequests.css";
+
+import axios from "axios";
+
+import NavBar from "./NavBar";
+import Footer from "../../footer";
+import {
+  Button,
+  Space,
+  Table,
+  Tag,
+  Modal,
+  Form,
+  Input,
+  DatePicker,
+  TimePicker,
+  Cascader,
+  Select,
+  notification,
+} from "antd";
+import { MoreOutlined, DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const localizer = momentLocalizer(moment);
+const { RangePicker } = DatePicker;
+
+const openNotificationWithIcon = (type, title, message) => {
+  notification[type]({
+    message: title,
+    description: message,
+  });
+};
 
 function AdminWorkshopRequests() {
-  const [view, setView] = useState('list'); // State to toggle between views
-  const [filters, setFilters] = useState({
-    date: null,
-    type: '',
-    status: '',
-  });
+  const [data, setData] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
+  const [clientDetails, setClientDetails] = useState(null);
+  const [form] = Form.useForm();
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [editFormData, setEditFormData] = useState({});
+  const [trainers, setTrainers] = useState([]);
 
-  const workshopData = [
-    { id: '00001', name: 'Workshop 1', address: '089 Kutch Green Apt. 448', date: '2024-07-17', type: 'Type A', status: 'Accepted' },
-    { id: '00002', name: 'Workshop 2', address: '979 Immanuel Ferry Suite 526', date: '2024-07-19', type: 'Type B', status: 'Pending' },
-    { id: '00003', name: 'Workshop 3', address: '8587 Frida Ports', date: '2024-07-13', type: 'Type C', status: 'Rejected' },
-    { id: '00004', name: 'Workshop 4', address: '768 Destiny Lake Suite 600', date: '2024-07-21', type: 'Type A', status: 'Accepted' },
-    { id: '00005', name: 'Workshop 5', address: '042 Mylene Throughway', date: '2024-07-24', type: 'Type B', status: 'Pending' },
-    { id: '00006', name: 'Workshop 6', address: '543 Weinman Mountain', date: '2024-07-26', type: 'Type C', status: 'Completed' },
-  ];
+  useEffect(() => {
+    document.title = "Dell Resources | Workshop Requests";
+  }, []);
 
-  const handleFilterChange = (name, value) => {
-    setFilters({
-      ...filters,
-      [name]: value,
-    });
-  };
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/admin/getworkshop", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data: ", error);
+      });
+  }, []);
 
-  const handleResetFilters = () => {
-    setFilters({
-      date: null,
-      type: '',
-      status: '',
-    });
-  };
+  useEffect(() => {
+    const fetchTrainers = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/admin/gettrainer",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log("Trainers: ", response.data);
+        setTrainers(response.data);
+      } catch (error) {
+        console.error("Error fetching trainers: ", error);
+      }
+    };
+    fetchTrainers();
+  }, []);
 
-  const filteredData = workshopData.filter((workshop) => {
-    return (
-      (!filters.date || moment(workshop.date).isSame(filters.date, 'day')) &&
-      (!filters.type || workshop.type === filters.type) &&
-      (!filters.status || workshop.status === filters.status)
-    );
-  });
-
-  const events = filteredData.map((workshop, index) => ({
-    id: index,
-    title: workshop.name,
-    start: new Date(workshop.date),
-    end: new Date(workshop.date),
-  }));
-
-  const handleSelectEvent = (event) => {
-    const workshop = filteredData.find(w => w.name === event.title);
+  const showModal = (workshop) => {
+    console.log("Selected Workshop: ", workshop);
+    console.log("Selected Workshop Client: ", workshop.client.firstName);
     setSelectedWorkshop(workshop);
+    setIsModalVisible(true);
   };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setSelectedWorkshop(null);
+    setClientDetails(null);
+  };
+
+  const showEditModal = (record) => {
+    setEditFormData(record);
+    form.setFieldsValue({
+      name: record.name,
+      description: record.description,
+      startDate: record.startDate,
+      endDate: record.endDate,
+      location: record.location,
+      timeStart: record.timeStart,
+      timeEnd: record.timeEnd,
+      duration: record.duration,
+      status: record.status,
+      type: record.type,
+      maxParticipants: record.maxParticipants,
+      client: record.client,
+      trainers: record.trainers,
+      dealSize: record.dealSize,
+    });
+    console.log("Editing workshop: ", record);
+    console.log("Edit form data: ", record.client);
+    setIsEditModalVisible(true);
+  };
+
+  const handleEditFormChange = (event) => {
+    const { name, value } = event.target;
+    setEditFormData({ ...editFormData, [name]: value });
+  };
+
+  const handleDateRangeChange = (dates) => {
+    setEditFormData({
+      ...editFormData,
+      startDate: dates[0].toISOString(),
+      endDate: dates[1].toISOString(),
+    });
+  };
+
+  const handleEditFormSubmit = (record) => {
+    console.log("Submitting edited workshop: ", editFormData);
+
+    console.log("Edit form data before validation: ", editFormData);
+
+    form.validateFields().then((values) => {
+      console.log("Form values: ", values);
+      console.log("Edit form data: ", editFormData);
+
+      const updatedWorkshop = {
+        _id: editFormData._id,
+        name: values.name,
+        description: values.description,
+        startDate: editFormData.startDate,
+        endDate: editFormData.endDate,
+        location: values.location,
+        timeStart: values.timeStart,
+        timeEnd: values.timeEnd,
+        duration: values.duration,
+        status: Array.isArray(values.status) ? values.status[0] : values.status,
+        type: Array.isArray(values.type) ? values.type[0] : values.type,
+        maxParticipants: values.maxParticipants,
+        client: values.client,
+        trainers: values.trainers,
+        dealSize: values.dealSize,
+      };
+
+      console.log("Updated workshop: ", updatedWorkshop._id);
+
+      axios
+        .put(
+          `http://localhost:3000/admin/updateworkshop/${updatedWorkshop._id}`,
+          updatedWorkshop,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((response) => {
+          console.log("Workshop updated: ", response);
+          const updatedData = data.map((item) => {
+            if (item._id === editFormData._id) {
+              return { ...item, ...updatedWorkshop };
+            }
+            return item;
+          });
+          setData(updatedData);
+          setIsEditModalVisible(false);
+          setEditFormData({});
+        })
+        .catch((error) => {
+          console.error("Error updating workshop: ", error);
+          openNotificationWithIcon(
+            "error",
+            "Error Notification: 500",
+            "Error updating workshop"
+          );
+        });
+    });
+  };
+
+  const handleEditCancel = () => {
+    setIsEditModalVisible(false);
+    setEditFormData({});
+  };
+
+  const onCascadeChange = (value) => {
+    console.log("Cascader value: ", value);
+  };
+
+  const handleDelete = (workshop) => {
+    console.log("Deleting workshop: ", workshop);
+    axios
+      .delete(`http://localhost:3000/admin/deleteworkshop/${workshop._id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+      .then((response) => {
+        console.log("Workshop deleted: ", response);
+        // Remove the deleted workshop from the list
+        setData(data.filter((item) => item._id !== workshop._id));
+        setIsModalVisible(false);
+        setSelectedWorkshop(null);
+        setClientDetails(null);
+      })
+      .catch((error) => {
+        console.error("Error deleting workshop: ", error);
+      });
+  };
+
+  const columns = [
+    {
+      title: "Workshop Name",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Type",
+      dataIndex: "type",
+      key: "type",
+    },
+    {
+      title: "Location",
+      dataIndex: "location",
+      key: "location",
+    },
+    {
+      title: "Client",
+      dataIndex: "client",
+      key: "client",
+    },
+    {
+      title: "Start Date",
+      dataIndex: "startDate",
+      key: "startDate",
+    },
+    {
+      title: "End Date",
+      dataIndex: "endDate",
+      key: "endDate",
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      filters: [
+        {
+          text: "Accepted",
+          value: "Accepted",
+        },
+        {
+          text: "Pending",
+          value: "Pending",
+        },
+        {
+          text: "Rejected",
+          value: "Rejected",
+        },
+      ],
+      onFilter: (value, record) => record.status.indexOf(value) === 0,
+      render: (status) => {
+        let color = "";
+        if (status === "Accepted") {
+          color = "green";
+        } else if (status === "Pending") {
+          color = "yellow";
+        } else {
+          color = "red";
+        }
+        return (
+          <Tag color={color} key={status}>
+            {status}
+          </Tag>
+        );
+      },
+    },
+    {
+      title: "Action",
+      dataIndex: "",
+      key: "action",
+      render: (text, record) => (
+        <Space size="middle">
+          <Button
+            type="text"
+            size="medium"
+            icon={<MoreOutlined />}
+            onClick={() => showModal(record)}
+          ></Button>
+          <Button
+            type="text"
+            size="medium"
+            icon={<EditOutlined />}
+            onClick={() => showEditModal(record)}
+          ></Button>
+          <Button
+            type="text"
+            size="medium"
+            icon={<DeleteOutlined />}
+            danger
+            onClick={() => handleDelete(record)}
+          ></Button>
+        </Space>
+      ),
+    },
+  ];
 
   return (
     <>
-    <header className="App-header">
-          <nav className="navbar">
-            <ul className="navbar-list">
-              <li><Link to="/admin-home">Home</Link></li>
-              <li><Link to="/workshop-requests">Workshop Requests</Link></li>
-              <li><Link to="/dashboard">Dashboard</Link></li>
-              <li><Link to="/leave-requests">Leave Requests</Link></li>
-              <li><Link to="/create-admin">New Admin</Link></li>
-              <li><Link to="/create-trainer">New Trainer</Link></li>
-            </ul>
-          </nav>
-    </header>
+      <header className="App-header">
+        <NavBar />
+      </header>
 
-
-    <div className="admin-workshop-requests">
-      <div className="content">
-        <h1>Workshop Requests</h1>
-        <div className="tabs">
-          <button className={`tab ${view === 'list' ? 'active' : ''}`} onClick={() => setView('list')}>List View</button>
-          <button className={`tab ${view === 'calendar' ? 'active' : ''}`} onClick={() => setView('calendar')}>Calendar View</button>
-        </div>
-        <div className="filters">
-          <button>Filter By</button>
-          <DatePicker
-            selected={filters.date}
-            onChange={(date) => handleFilterChange('date', date)}
-            dateFormat="yyyy-MM-dd"
-            placeholderText="Select Date"
+      <div className="admin-workshop-requests">
+        <div className="content">
+          <h1>Workshop Requests</h1>
+          <Table
+            columns={columns}
+            dataSource={data}
+            expandable={{
+              expandableRowRender: (record) => (
+                <p
+                  style={{
+                    margin: 0,
+                  }}
+                >
+                  {record.description}
+                </p>
+              ),
+              rowExpandable: (record) => record.name !== "Not Expandable",
+            }}
           />
-          <select name="type" value={filters.type} onChange={(e) => handleFilterChange('type', e.target.value)}>
-            <option value="">All Types</option>
-            <option value="Type A">Type A</option>
-            <option value="Type B">Type B</option>
-            <option value="Type C">Type C</option>
-          </select>
-          <select name="status" value={filters.status} onChange={(e) => handleFilterChange('status', e.target.value)}>
-            <option value="">All Statuses</option>
-            <option value="Accepted">Accepted</option>
-            <option value="Pending">Pending</option>
-            <option value="Rejected">Rejected</option>
-            <option value="Completed">Completed</option>
-          </select>
-          <button onClick={handleResetFilters}>Reset Filter</button>
+          <Modal
+            title="Edit Workshop"
+            visible={isEditModalVisible}
+            onCancel={handleEditCancel}
+            footer={[
+              <Button key="back" onClick={handleEditCancel}>
+                Cancel
+              </Button>,
+              <Button
+                key="submit"
+                type="primary"
+                htmlType="submit"
+                onClick={handleEditFormSubmit}
+              >
+                Update
+              </Button>,
+            ]}
+          >
+            <Form
+              form={form}
+              name="edit_workshop_form"
+              initialValues={editFormData}
+              onFinish={handleEditFormSubmit}
+              onChange={handleEditFormChange}
+              labelCol={{ span: 6 }}
+              wrapperCol={{ span: 16 }}
+            >
+              <Form.Item name="name" label="Workshop Name">
+                <Input type="text" name="name" />
+              </Form.Item>
+              <Form.Item name="description" label="Description">
+                <Input type="text" name="description" />
+              </Form.Item>
+              <Form.Item
+                name="dateRange"
+                label="Date"
+                initialValue={[
+                  moment(editFormData.startDate),
+                  moment(editFormData.endDate),
+                ]}
+              >
+                <RangePicker onChange={handleDateRangeChange} />
+              </Form.Item>
+              <Form.Item name="location" label="Location">
+                <Cascader
+                  name="location"
+                  options={["Local", "Overseas"].map((location) => ({
+                    value: location,
+                    label: location,
+                  }))}
+                  onChange={onCascadeChange}
+                  placeholder="Select Location"
+                />
+              </Form.Item>
+              <Form.Item name="time" label="Time">
+                <TimePicker.RangePicker />
+              </Form.Item>
+              <Form.Item name="status" label="Status">
+                <Cascader
+                  name="status"
+                  options={["Pending", "Accepted", "Rejected"]
+                    .sort()
+                    .map((status) => ({ value: status, label: status }))}
+                  onChange={onCascadeChange}
+                  placeholder="Select Status"
+                />
+              </Form.Item>
+              <Form.Item name="type" label="Type">
+                <Cascader
+                  name="type"
+                  options={[
+                    "Business Value Discovery",
+                    "AI Platform",
+                    "Infrastructure & Demo",
+                  ].map((type) => ({ value: type, label: type }))}
+                  onChange={onCascadeChange}
+                  placeholder="Select Type"
+                />
+              </Form.Item>
+              <Form.Item name="maxParticipants" label="Max Participants">
+                <Cascader
+                  name="maxParticipants"
+                  options={["< 10", "10-20", "20-50", "> 50"].map(
+                    (maxParticipants) => ({
+                      value: maxParticipants,
+                      label: maxParticipants,
+                    })
+                  )}
+                  onChange={onCascadeChange}
+                  placeholder="Select Max Participants"
+                />
+              </Form.Item>
+              <Form.Item name="trainer" label="Trainers">
+                <Select>
+                  {trainers.map((trainer) => (
+                    <Select.Option key={trainer._id} value={trainer._id}>
+                      {trainer.firstName} {trainer.lastName}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+              <Form.Item name="dealSize" label="Deal Size (SGD)">
+                <Input type="text" name="dealSize" />
+              </Form.Item>
+            </Form>
+          </Modal>
+          <Modal
+            title="Workshop Details"
+            visible={isModalVisible}
+            onCancel={handleCancel}
+            footer={[
+              <Button key="back" onClick={handleCancel}>
+                Close
+              </Button>,
+            ]}
+          >
+            <p>
+              <strong>Name:</strong> {selectedWorkshop?.name}
+            </p>
+            <p>
+              <strong>Client:</strong> {selectedWorkshop?.client.firstName}{" "}
+            </p>
+            <p>
+              <strong>Type:</strong> {selectedWorkshop?.type}
+            </p>
+            <p>
+              <strong>Location:</strong> {selectedWorkshop?.location}
+            </p>
+            <p>
+              <strong>Start Date:</strong> {selectedWorkshop?.startDate}
+            </p>
+            <p>
+              <strong>End Date:</strong> {selectedWorkshop?.endDate}
+            </p>
+            <p>
+              <strong>Time Start:</strong> {selectedWorkshop?.timeStart}
+            </p>
+            <p>
+              <strong>Time End:</strong> {selectedWorkshop?.timeEnd}
+            </p>
+            <p>
+              <strong>Duration:</strong> {selectedWorkshop?.duration}
+            </p>
+            <p>
+              <strong>Status:</strong>{" "}
+              <Tag
+                color={
+                  selectedWorkshop?.status === "pending"
+                    ? "yellow"
+                    : selectedWorkshop?.status === "accepted"
+                    ? "green"
+                    : "red"
+                }
+              >
+                {selectedWorkshop?.status}
+              </Tag>
+            </p>
+            <p>
+              <strong>Max Participants:</strong>{" "}
+              {selectedWorkshop?.maxParticipants}
+            </p>
+            <p>
+              <strong>Description: </strong>
+              <div>{selectedWorkshop?.description}</div>
+            </p>
+            <p>
+              <strong>Trainers:</strong> {selectedWorkshop?.trainers}
+            </p>
+            <p>
+              <strong>Deal Size:</strong> {selectedWorkshop?.dealSize}
+            </p>
+          </Modal>
         </div>
-        {view === 'list' ? (
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Workshop Name</th>
-                <th>Address</th>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredData.map((workshop) => (
-                <tr key={workshop.id}>
-                  <td>{workshop.id}</td>
-                  <td>{workshop.name}</td>
-                  <td>{workshop.address}</td>
-                  <td>{workshop.date}</td>
-                  <td>{workshop.type}</td>
-                  <td>{workshop.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <div>
-            <Calendar
-              localizer={localizer}
-              events={events}
-              startAccessor="start"
-              endAccessor="end"
-              style={{ height: 500 }}
-              onSelectEvent={handleSelectEvent}
-            />
-            {selectedWorkshop && (
-              <div className="workshop-details">
-                <h2>{selectedWorkshop.name}</h2>
-                <p><strong>Address:</strong> {selectedWorkshop.address}</p>
-                <p><strong>Date:</strong> {selectedWorkshop.date}</p>
-                <p><strong>Type:</strong> {selectedWorkshop.type}</p>
-                <p><strong>Status:</strong> {selectedWorkshop.status}</p>
-              </div>
-            )}
-          </div>
-        )}
       </div>
-    </div>
-    <footer className="footer">
-        <div className="footer-content">
-          <div className="footer-logo">
-            <img src="/Users/hardikshah/50.003-resource-management-application/frontend-service/react-res-management-app/public/logo192.png" alt="Logo" />
-          </div>
-          <div className="footer-details">
-            <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
-            <p>Level 1, 12 Sample St, Sydney NSW 2000</p>
-            <p>1672 345 0987</p>
-            <p>1672 345 0987</p>
-            <p>info@company.io</p>
-          </div>
-          <div className="footer-social">
-            <a href="#"><i className="fab fa-facebook-f"></i></a>
-            <a href="#"><i className="fab fa-twitter"></i></a>
-            <a href="#"><i className="fab fa-instagram"></i></a>
-            <a href="#"><i className="fab fa-linkedin-in"></i></a>
-            <a href="#"><i className="fab fa-youtube"></i></a>
-          </div>
-        </div>
-        <div className="footer-bottom">
-          <p>© 2023 Company. All rights reserved.</p>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Cookies Settings</a>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

@@ -33,7 +33,9 @@ exports.adminLogin = async (req, res) => {
     
     // Check if credential and password are provided
     if (!credential || !password) {
-      return res.status(400).json({ message: "Credential and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Credential and password are required" });
     }
 
     let query = {};
@@ -199,8 +201,10 @@ exports.createAdmin = async (req, res) => {
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-    // Check if a user with the same userName already exists
-    const existingAdmin = await Admin.findOne({ username: username });
+    // Check if a user with the same username or email already exists
+    const existingAdmin = await Admin.findOne({
+      $or: [{ username: username }, { email: email }],
+    });
     if (existingAdmin) {
       response = {
         code: 409,

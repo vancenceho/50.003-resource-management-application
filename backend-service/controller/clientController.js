@@ -29,14 +29,16 @@ exports.clientLogin = async (req, res) => {
   console.log("TESTING...............1at.................");
   console.log("Request body:", req.body);
   try {
-    const credential = req.body.credential;
-    const password = req.body.password;
+    const credential = req.query.credential;
+    const password = req.query.password;
     console.log("Credential:", credential);
-    console.log("Password:", password); 
-    
+    console.log("Password:", password);
+
     // Check if credential and password are provided
     if (!credential || !password) {
-      return res.status(400).json({ message: "Credential and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Credential and password are required" });
     }
 
     let query = {};
@@ -69,13 +71,12 @@ exports.clientLogin = async (req, res) => {
     );
     //res.status(200).json(user);
     return res
-    .status(200)
-    .json({ message: "Authentication successful", token: token });
-
+      .status(200)
+      .json({ message: "Authentication successful", token: token });
   } catch (error) {
     console.error("Error logging in client:", error);
     if (!res.headersSent) {
-    res.status(500).json({ message: "Internal Server Error" });
+      res.status(500).json({ message: "Internal Server Error" });
     }
   }
 };

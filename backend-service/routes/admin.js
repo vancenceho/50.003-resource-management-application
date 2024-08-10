@@ -31,8 +31,8 @@ const { authenticateUser, authorizeRole } = require("../middleware/auth");
  */
 router.post(
   "/createAdmin",
-  //authenticateUser,
-  //authorizeRole("admin"),
+  authenticateUser,
+  authorizeRole("admin"),
   adminController.createAdmin
 );
 router.post("/login", adminController.adminLogin);
@@ -225,7 +225,6 @@ router.post(
   workshopController.allocateTrToWorkshop
 );
 
-
 /**
  * // Admin Leave Request Routes
  *
@@ -294,7 +293,7 @@ module.exports = router;
  * @details
  * Route 1: Route to get the number of past and present workshops allocated for each trainer
  * Route 2: Route to get the trend of deal sizes for workshops within a specified date range.
- * 
+ *
  * @returns
  * Route 1: Returns a 200 status code with the trainer-workshop count data.
  * Route 2: Returns a 200 status code with the average deal size trend data.
@@ -304,7 +303,7 @@ module.exports = router;
  * */
 
 router.get(
-  "/dashboard/workshopscount", 
+  "/dashboard/workshopscount",
   authenticateUser,
   authorizeRole("admin"),
   workshopController.getWorkshopsCountForTrainers

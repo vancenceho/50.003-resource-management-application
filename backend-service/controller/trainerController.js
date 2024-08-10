@@ -28,11 +28,13 @@ const secretKey = "root";
 exports.trainerLogin = async (req, res) => {
   console.log("Request body:", req.body);
   try {
-    const credential = req.body.credential;
-    const password = req.body.password;
+    const credential = req.query.credential;
+    const password = req.query.password;
     // Check if credential and password are provided
     if (!credential || !password) {
-      return res.status(400).json({ message: "Credential and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Credential and password are required" });
     }
 
     let query = {};
@@ -217,8 +219,10 @@ exports.createTrainer = async (req, res) => {
     // Hash the password before saving
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
 
-    // Check if a trainer with the same userName already exists
-    const existingTrainer = await Trainer.findOne({ username: username });
+    // Check if a trainer with the same username or email already exists
+    const existingTrainer = await Trainer.findOne({
+      $or: [{ username: username }, { email: email }],
+    });
     if (existingTrainer) {
       response = {
         code: 409,
